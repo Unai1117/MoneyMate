@@ -30,7 +30,7 @@ class PersonListCell extends ListCell<Persona>{
     }
 }
 
-public class ListViewController implements Initializable {
+public class RegisterController implements Initializable {
     //=========================================================
     @FXML
     private ListView<Persona> personasListView;

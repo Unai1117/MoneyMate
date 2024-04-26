@@ -16,10 +16,11 @@ import javafx.stage.Stage;
  * @author jsanchez
  * Modified carferl2
  */
-public class ListViewExample extends Application {
+public class App extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
+        // esto debería cargar el login/register
         FXMLLoader loader= new FXMLLoader(getClass().getResource("/view/ListView.fxml"));
         Parent root = loader.load();
         
