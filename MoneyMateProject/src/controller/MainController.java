@@ -12,7 +12,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.control.Button; 
 import javafx.event.ActionEvent;
-import javafx.scene.Parent; 
+import javafx.scene.Parent;
+import javafx.scene.layout.Pane; 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -24,6 +25,11 @@ import javafx.scene.input.MouseEvent;
  * @author unai
  */
 public class MainController implements Initializable {
+    
+    @FXML
+    private Pane mainPane; 
+    @FXML
+    private Button AddExpense;
         
     /**
      * Initializes the controller class.
@@ -34,18 +40,10 @@ public class MainController implements Initializable {
     }    
 
     @FXML
-    private void OpenNewTab(MouseEvent event) {
+    private void openAddExpensePane(MouseEvent event) {
         try{
-            FXMLLoader loader= new FXMLLoader(getClass().getResource("/view/AddExpense.fxml"));
-            Parent root = loader.load();
-            AddExpenseController controller = loader.getController(); 
-            
-            Scene scene = new Scene(root);
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.setTitle("Add Expense Window");
-            stage.show();
-            
+            Pane addExpensePane = FXMLLoader.load(getClass().getResource("/view/AddExpense.fxml")); 
+            mainPane.getChildren().setAll(addExpensePane); 
         } catch (IOException e){
             System.out.println(e);
         }
