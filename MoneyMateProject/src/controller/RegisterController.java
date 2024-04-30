@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.IOException;
 import javafx.scene.image.*;
 import java.net.URL;
 import java.util.ArrayList;
@@ -11,11 +12,14 @@ import model.Persona;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 
 class PersonListCell extends ListCell<Persona>{
     @Override
@@ -32,15 +36,10 @@ class PersonListCell extends ListCell<Persona>{
 
 public class RegisterController implements Initializable {
     //=========================================================
-    @FXML
     private ListView<Persona> personasListView;
-    @FXML
     private Button addButton;
-    @FXML
     private TextField nameTextField;
-    @FXML
     private TextField surnameTextField;
-    @FXML
     private Button deleteButton;
     //=========================================================
     // ListView and observable data type MUST be the same.
@@ -88,7 +87,6 @@ public class RegisterController implements Initializable {
         
     }
     
-    @FXML
     void addAction(ActionEvent event) {
         // add collection if every field is not empty and do not contain empty strings
         if ((!nameTextField.getText().isEmpty())
@@ -108,12 +106,19 @@ public class RegisterController implements Initializable {
             addButton.setDisable(true); 
         }
     }
-    @FXML
     void deleteAction(ActionEvent event) {
         //================================================
         // delete from the list
         
         //================================================
+    }
+    
+    private void openAddExpensePane(MouseEvent event) {
+        try{
+            Pane addExpensePane = FXMLLoader.load(getClass().getResource("/view/Main.fxml")); 
+        } catch (IOException e){
+            System.out.println(e);
+        }
     }
 
 
