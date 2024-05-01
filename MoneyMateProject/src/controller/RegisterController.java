@@ -11,7 +11,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
 /**
@@ -24,7 +26,10 @@ public class RegisterController implements Initializable {
     @FXML
     private Button register;
     @FXML
-    private Pane regPane;
+    private BorderPane regPane;
+    @FXML
+    private TextField eemail;
+    
 
     /**
      * Initializes the controller class.
@@ -32,8 +37,8 @@ public class RegisterController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-
+    }  
+    
     @FXML
     private void openLoginPane(MouseEvent event) {
         try {
@@ -43,5 +48,6 @@ public class RegisterController implements Initializable {
             System.out.println(e);
         }
     }
+
     
 }
