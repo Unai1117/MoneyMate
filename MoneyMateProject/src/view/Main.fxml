@@ -10,9 +10,9 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="594.0" prefWidth="837.0" style="-fx-background-color: #222831;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
+<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="594.0" prefWidth="837.0" style="-fx-background-color: #222831;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
    <children>
-      <Button fx:id="addExpense" alignment="CENTER" contentDisplay="RIGHT" layoutX="369.0" layoutY="21.0" mnemonicParsing="false" onMousePressed="#openAddExpensePane" prefHeight="60.0" prefWidth="61.0">
+      <Button fx:id="addExpense" alignment="CENTER" contentDisplay="RIGHT" layoutX="375.0" layoutY="389.0" mnemonicParsing="false" onMousePressed="#openAddExpensePane" prefHeight="60.0" prefWidth="61.0">
          <graphic>
             <ImageView>
                <image>
@@ -20,9 +20,9 @@
                </image>
             </ImageView>
          </graphic></Button>
-      <StackPane fx:id="chartStackPane" layoutX="14.0" layoutY="14.0" onMouseEntered="#shrinkCircle" onMouseExited="#restoreCircle" prefHeight="347.0" prefWidth="338.0">
+      <StackPane fx:id="chartStackPane" layoutX="14.0" layoutY="209.0" onMouseEntered="#shrinkCircle" onMouseExited="#restoreCircle" prefHeight="347.0" prefWidth="338.0">
          <children>
-            <PieChart fx:id="chart" labelsVisible="false" legendVisible="false" prefHeight="272.0" prefWidth="359.0" stylesheets="@../styles/chart.css" />
+            <PieChart fx:id="chart" labelsVisible="false" legendVisible="false" prefHeight="272.0" prefWidth="338.0" stylesheets="@../styles/chart.css" />
             <Circle fx:id="chartInnerCircle" fill="#222831" radius="150.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" />
             <Label fx:id="chartLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="83.0" prefWidth="240.0" text="-1536 €" textAlignment="CENTER" textFill="WHITE">
                <font>

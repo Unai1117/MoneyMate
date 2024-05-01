@@ -62,6 +62,8 @@ public class AddExpenseController implements Initializable {
     }    
     @FXML
     private void doneButton(MouseEvent event) {
+        double cost = Double.parseDouble(costField.getText()); 
+        System.out.println(cost); 
         try{
             Pane mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml")); 
             addExpensePane.getChildren().setAll(mainPane); 
