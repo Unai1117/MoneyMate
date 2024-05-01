@@ -20,11 +20,11 @@
                </image>
             </ImageView>
          </graphic></Button>
-      <StackPane fx:id="chartStackPane" layoutX="14.0" layoutY="14.0" prefHeight="347.0" prefWidth="338.0">
+      <StackPane fx:id="chartStackPane" layoutX="14.0" layoutY="14.0" onMouseEntered="#shrinkCircle" onMouseExited="#restoreCircle" prefHeight="347.0" prefWidth="338.0">
          <children>
             <PieChart fx:id="chart" labelsVisible="false" legendVisible="false" prefHeight="272.0" prefWidth="359.0" stylesheets="@../styles/chart.css" />
             <Circle fx:id="chartInnerCircle" fill="#222831" radius="150.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" />
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="83.0" prefWidth="240.0" text="-1536 €" textAlignment="CENTER" textFill="WHITE">
+            <Label fx:id="chartLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="83.0" prefWidth="240.0" text="-1536 €" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font size="46.0" />
                </font>
