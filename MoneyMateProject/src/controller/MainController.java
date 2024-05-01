@@ -51,7 +51,7 @@ public class MainController implements Initializable {
         
         chart.setData(chartData);
         
-        chartInnerCircle.radiusProperty().bind(chartStackPane.widthProperty().multiply(0.86).divide(2));
+        chartInnerCircle.radiusProperty().bind(chartStackPane.widthProperty().multiply(0.85).divide(2));
  
     }    
 
