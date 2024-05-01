@@ -113,10 +113,20 @@ public class RegisterController implements Initializable {
         //================================================
     }
     
-    private void openAddExpensePane(MouseEvent event) {
+    private void openMain(MouseEvent event) {
         try{
-            Pane addExpensePane = FXMLLoader.load(getClass().getResource("/view/Main.fxml")); 
+            Pane Main = FXMLLoader.load(getClass().getResource("/view/Main.fxml"));
+            mainPane.getChildren().setAll(addExpensePane);
         } catch (IOException e){
+            System.out.println(e);
+        }
+    }
+    
+    private void openAddExpensePane(MouseEvent event) {
+        try {
+            Pane addExpensePane = FXMLLoader.load(getClass().getResource("/view/AddExpense.fxml"));
+            mainPane.getChildren().setAll(addExpensePane);
+        } catch (IOException e) {
             System.out.println(e);
         }
     }
