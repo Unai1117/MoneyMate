@@ -48,7 +48,7 @@ public class RegisterController implements Initializable {
         
         eemail.focusedProperty().addListener((observable, oldValue, newValue) ->{
             if(!newValue){
-                checkEditEmail();
+                //checkEditEmail();
             }
         });
     }  
@@ -63,12 +63,13 @@ public class RegisterController implements Initializable {
         }
     }
     
-    private void checkEditEmail(){
+    /*private void checkEditEmail(){
         if(!Utils.checkEmail(eemail.textProperty().getValueSafe()))
             manageError(lIncorrectEmail, eemail, validEmail);
         else 
             manageCorrect(lIncorrectEmail, eemail, validEmail);
     }
+    */
 
     
 }
