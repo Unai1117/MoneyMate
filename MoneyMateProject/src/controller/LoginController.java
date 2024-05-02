@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
 /**
@@ -20,13 +21,13 @@ import javafx.scene.layout.Pane;
  * @author arnau
  */
 public class LoginController implements Initializable {
-
-    @FXML
-    private Pane logPane;
+    
     @FXML
     private Button cancelLog;
     @FXML
     private Button loginButton;
+    @FXML
+    private BorderPane logPane;
 
     /**
      * Initializes the controller class.
