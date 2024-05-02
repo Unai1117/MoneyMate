@@ -24,6 +24,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 /**
@@ -52,21 +53,40 @@ public class MainController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         ObservableList<PieChart.Data> chartData
                 = FXCollections.observableArrayList(
-                        new PieChart.Data("Test1", 13),
-                        new PieChart.Data("Test2", 25),
-                        new PieChart.Data("Test3", 10),
-                        new PieChart.Data("Test4", 22),
-                        new PieChart.Data("Test5", 30));
+                        new PieChart.Data("Restaurants", 13),
+                        new PieChart.Data("Fuel", 25),
+                        new PieChart.Data("Taxes", 10),
+                        new PieChart.Data("Events", 22),
+                        new PieChart.Data("Other", 30));
         
         chart.setData(chartData);
         chartInnerCircle.radiusProperty().bind(chartStackPane.widthProperty().multiply(0.85).divide(2));
-        chartInnerCircle.setDisable(true);
         
         for (final PieChart.Data data : chart.getData()) {
             data.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
-                    chartLabel.setText(String.valueOf(data.getPieValue() + "%"));
+                    chartLabel.setText(String.valueOf(data.getName() + "\n" + data.getPieValue() + "%"));
+                    
+                    Font font = new Font(36);
+                    chartLabel.setFont(font);
+                    
+                    ScaleTransition grow = new ScaleTransition(Duration.millis(200));
+                    grow.setNode(data.getNode());
+                    grow.setToX(1.1);
+                    grow.setToY(1.1);
+                    grow.playFromStart();
+
+                }
+            });
+            data.getNode().addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent e) {
+                    ScaleTransition shrink = new ScaleTransition(Duration.millis(200));
+                    shrink.setNode(data.getNode());
+                    shrink.setToX(1);
+                    shrink.setToY(1);
+                    shrink.playFromStart();
                 }
             });
         }
@@ -84,13 +104,23 @@ public class MainController implements Initializable {
     
     @FXML
     private void shrinkCircle(MouseEvent event) {
-        chartInnerCircle.radiusProperty().bind(chartStackPane.widthProperty().multiply(0.7).divide(2));
+        ScaleTransition shrink = new ScaleTransition(Duration.millis(200));
+        shrink.setNode(chartInnerCircle);
+        shrink.setToX(0.85);
+        shrink.setToY(0.85);
+        shrink.playFromStart();
     }
     
     @FXML
     private void restoreCircle(MouseEvent event) {
-        chartInnerCircle.radiusProperty().bind(chartStackPane.widthProperty().multiply(0.85).divide(2));
+        ScaleTransition grow = new ScaleTransition(Duration.millis(200));
+        grow.setNode(chartInnerCircle);
+        grow.setToX(1);
+        grow.setToY(1);
+        grow.playFromStart();
         chartLabel.setText("-1536 €");
+        Font font = new Font(46);
+        chartLabel.setFont(font);
     }
     
 }
