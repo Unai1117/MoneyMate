@@ -57,12 +57,6 @@ public class AddExpenseController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            acount = Acount.getInstance();
-            categoryMenu = new ChoiceBox<Category>();
-            List<Category> categorias = acount.getUserCategories(); 
-            for(int i = 0; i < categorias.size(); i++){
-                categoryMenu.getItems().add(categorias.get(i)); 
-            }
             datePicker.setDayCellFactory((DatePicker picker) -> {
                 return new DateCell() {
                     @Override
@@ -73,6 +67,12 @@ public class AddExpenseController implements Initializable {
                     }
                 };
             });
+            acount = Acount.getInstance();
+            categoryMenu = new ChoiceBox<Category>();
+            List<Category> categorias = acount.getUserCategories(); 
+            for(int i = 0; i < categorias.size(); i++){
+                categoryMenu.getItems().add(categorias.get(i)); 
+            }
         } catch (Exception e){
             System.out.println(e);
         }
