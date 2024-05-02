@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -92,10 +93,12 @@
                   <VBox prefHeight="52.0" prefWidth="504.0">
                      <children>
                         <Label text="Profile Image" />
+                        <ImageView fitHeight="84.0" fitWidth="89.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </VBox>
                </children>
             </HBox>
+            <Button fx:id="imageChooser" mnemonicParsing="false" onMouseClicked="#openFileChooser" text="Choose Image" />
          </children>
          <BorderPane.margin>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

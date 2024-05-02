@@ -4,9 +4,15 @@
  */
 package controller;
 
+import javafx.stage.*;
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
+import java.lang.System.Logger;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
@@ -21,6 +27,7 @@ import static javafx.scene.input.KeyCode.EQUALS;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
 
 /**
  * FXML Controller class
@@ -62,6 +69,7 @@ public class RegisterController implements Initializable {
         // TODO
         
         
+        
         validEmail = new SimpleBooleanProperty();
         validEmail.setValue(Boolean.FALSE);
         
@@ -86,6 +94,10 @@ public class RegisterController implements Initializable {
                 checkEquals();
             }
         });
+        
+        BooleanBinding validFields = Bindings.and(validEmail, validPassword).and(equalPasswords);
+        
+        register.disableProperty().bind(Bindings.not(validFields));
     }  
     
     @FXML
@@ -106,24 +118,52 @@ public class RegisterController implements Initializable {
     }
     
     private void checkPassword(){
-    
+        if(!Utils.checkPassword(password1.textProperty().getValueSafe()))
+            manageError(lPassDifferent, password1, validPassword);
+        else 
+            manageCorrect(lPassDifferent, password1, validPassword);
     }
     
+    @FXML
+    private void openFileChooser(MouseEvent event) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open Resource File");
+            fileChooser.showOpenDialog(null);
+        
+    }
+    
+    
+    /*public void start(final Stage stage) {
+        public void handle(final ActionEvent e) {
+                    File file = fileChooser.showOpenDialog(stage);
+                    if (file != null) {
+                        openFile(file);
+                    }
+        }
+        private void openFile(File file) {
+            try {
+                    desktop.open(file);
+            } catch (IOException ex) {
+                System.out.println(ex);
+            }
+        }*/
         
     private void checkEquals(){
         if(password1.textProperty().getValueSafe().compareTo(password2.textProperty().getValueSafe()) != EQUALS){
             showErrorMessage(lPassDifferent,password2);
             equalPasswords.setValue(Boolean.FALSE);
             password2.textProperty().setValue("");
-            password2.requestFocus();
         }else
             manageCorrect(lPassDifferent,password2,equalPasswords);
     }
     
+    
+    
+    
+    
     @FXML
     private void handleBAcceptOnAction(ActionEvent event) {
         password2.textProperty().setValue("");
-
         validEmail.setValue(Boolean.FALSE);
         validPassword.setValue(Boolean.FALSE);
         equalPasswords.setValue(Boolean.FALSE);
@@ -132,7 +172,6 @@ public class RegisterController implements Initializable {
     private void manageError(Label errorLabel,TextField textField, BooleanProperty boolProp ){
         boolProp.setValue(Boolean.FALSE);
         showErrorMessage(errorLabel,textField);
-        textField.requestFocus();
     }
     
     private void manageCorrect(Label errorLabel,TextField textField, BooleanProperty boolProp ){
