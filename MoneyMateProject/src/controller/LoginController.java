@@ -7,10 +7,13 @@ package controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -55,6 +58,27 @@ public class LoginController implements Initializable {
         } catch (IOException e) {
             System.out.println(e);
         }
+    }
+    
+    private void manageError(Label errorLabel,TextField textField, BooleanProperty boolProp ){
+        boolProp.setValue(Boolean.FALSE);
+        showErrorMessage(errorLabel,textField);
+        textField.requestFocus();
+    }
+    
+    private void manageCorrect(Label errorLabel,TextField textField, BooleanProperty boolProp ){
+        boolProp.setValue(Boolean.TRUE);
+        hideErrorMessage(errorLabel,textField);
+    }
+    
+    private void showErrorMessage(Label errorLabel,TextField textField){
+        errorLabel.visibleProperty().set(true);
+        textField.styleProperty().setValue("-fx-background-colo: #FCE5E0");
+    }
+    
+    private void hideErrorMessage(Label errorLabel,TextField textField){
+        errorLabel.visibleProperty().set(false);
+        textField.styleProperty().setValue("");
     }
     
 }

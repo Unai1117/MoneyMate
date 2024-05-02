@@ -138,7 +138,6 @@ public class RegisterController implements Initializable {
     private void manageCorrect(Label errorLabel,TextField textField, BooleanProperty boolProp ){
         boolProp.setValue(Boolean.TRUE);
         hideErrorMessage(errorLabel,textField);
-        openLoginPage();
     }
     
     private void showErrorMessage(Label errorLabel,TextField textField){
