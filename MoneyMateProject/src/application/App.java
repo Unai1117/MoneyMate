@@ -24,6 +24,8 @@ public class App extends Application {
         
         stage.setScene(scene);
         stage.setTitle("ListView for Persona");
+        stage.setMinHeight(600);
+        stage.setMinWidth(350);
         stage.show();
     }
 

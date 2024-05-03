@@ -22,20 +22,23 @@ import javafx.event.EventHandler;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
  * FXML Controller class
  *
- * @author unai
+ * @author jorge
  */
 public class MainController implements Initializable {
     
     @FXML
-    private Pane mainPane;
+    private FlowPane mainPane;
     @FXML
     private Button addExpense;
     @FXML
@@ -46,6 +49,8 @@ public class MainController implements Initializable {
     private Circle chartInnerCircle;
     @FXML
     private Label chartLabel;
+    @FXML
+    private VBox chargesPane;
 
     /**
      * Initializes the controller class.
@@ -61,6 +66,10 @@ public class MainController implements Initializable {
         
         chart.setData(chartData);
         chartInnerCircle.radiusProperty().bind(chartStackPane.widthProperty().multiply(0.85).divide(2));
+        
+        System.out.println(mainPane.widthProperty());
+        chargesPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(360 + 2* 20));
+        chargesPane.minWidthProperty().set(400);
         
         for (final PieChart.Data data : chart.getData()) {
             data.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
