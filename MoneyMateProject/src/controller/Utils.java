@@ -5,13 +5,18 @@
  */
 package controller;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.stage.FileChooser;
+import 
 
 /**
  *
  * @author sovacu
  */
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 public class Utils {
     /**
      *  A password is considered valid if follows an accepted email syntax:
@@ -56,6 +61,14 @@ public class Utils {
         Matcher matcher = pattern.matcher(password); 
         return matcher.matches();
     
+    }
+    
+    public File codeOpenFiles(Stage root){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Archivos de imagen", "*.jpg", "*.jpeg", "*.png", "*.gif");
+        
+        return fileChooser.showOpenDialog(root); 
     }
     
 }

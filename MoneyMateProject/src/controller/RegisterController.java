@@ -126,10 +126,7 @@ public class RegisterController implements Initializable {
     
     @FXML
     private void openFileChooser(MouseEvent event) {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Open Resource File");
-            fileChooser.showOpenDialog(null);
-        
+        Utils.codeOpenFiles();
     }
     
     

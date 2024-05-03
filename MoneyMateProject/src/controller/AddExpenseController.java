@@ -18,10 +18,13 @@ import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import model.*; 
+
 /**
  * FXML Controller class
  *
@@ -51,12 +54,17 @@ public class AddExpenseController implements Initializable {
     private Acount acount; 
     @FXML
     private TextField unitsField;
+    @FXML
+    private Button selectImageExpense;
+    @FXML
+    private ImageView imageView;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
+            //remove the posibility of adding an expense in a previous date
             datePicker.setDayCellFactory((DatePicker picker) -> {
                 return new DateCell() {
                     @Override
@@ -67,9 +75,13 @@ public class AddExpenseController implements Initializable {
                     }
                 };
             });
+            //get the instance of acount that will give us the user
             acount = Acount.getInstance();
+            
+            //Obtain a list of type category with the categories of the user logged in
             categoryMenu = new ChoiceBox<Category>();
             List<Category> categorias = acount.getUserCategories(); 
+            //add categories to the drop down menu to let the user select the desired category
             for(int i = 0; i < categorias.size(); i++){
                 categoryMenu.getItems().add(categorias.get(i)); 
             }
@@ -79,18 +91,26 @@ public class AddExpenseController implements Initializable {
     }    
     @FXML
     private void doneButton(MouseEvent event) {
+        //obtain all the fields needed to add an expense
         double cost = Double.parseDouble(costField.getText()); 
         String name = nameField.getText(); 
         String description = descriptionField.getText(); 
         int units = Integer.parseInt(unitsField.getText());
         LocalDate date = datePicker.getValue(); 
-        Category category = categoryMenu.getValue(); 
+        Category category = categoryMenu.getValue();
+        acount.registerCharge(name, description, cost, units, scanedImage, date, category); 
         try{
             Pane mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml")); 
             addExpensePane.getChildren().setAll(mainPane); 
         } catch (IOException e){
             System.out.println(e);
         }
+    }
+
+    @FXML
+    private void openFiles(MouseEvent event) {
+        Utils.codeOpenFiles();
+        
     }
    
     
