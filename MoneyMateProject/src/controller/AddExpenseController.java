@@ -4,6 +4,7 @@
  */
 package controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -24,6 +25,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import model.*; 
+import javafx.scene.image.Image;
 
 /**
  * FXML Controller class
@@ -109,8 +111,7 @@ public class AddExpenseController implements Initializable {
 
     @FXML
     private void openFiles(MouseEvent event) {
-        Utils.codeOpenFiles();
-        
+        Utils.codeOpenFiles();       
     }
    
     
