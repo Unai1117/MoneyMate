@@ -68,7 +68,7 @@ public class MainController implements Initializable {
         chartInnerCircle.radiusProperty().bind(chartStackPane.widthProperty().multiply(0.85).divide(2));
         
         System.out.println(mainPane.widthProperty());
-        chargesPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(360 + 2* 20));
+        chargesPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(360 + 3 * 20));
         chargesPane.minWidthProperty().set(400);
         
         for (final PieChart.Data data : chart.getData()) {
