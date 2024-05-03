@@ -23,6 +23,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import static javafx.scene.input.KeyCode.EQUALS;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -126,7 +127,7 @@ public class RegisterController implements Initializable {
     
     @FXML
     private void openFileChooser(MouseEvent event) {
-        Utils.codeOpenFiles();
+        Image image = Utils.codeOpenFiles();
     }
     
     

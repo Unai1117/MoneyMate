@@ -17,7 +17,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         // esto debería cargar el login/register
-        FXMLLoader loader= new FXMLLoader(getClass().getResource("/view/Register.fxml"));
+        FXMLLoader loader= new FXMLLoader(getClass().getResource("/view/Main.fxml"));
         Parent root = loader.load();
         
         Scene scene = new Scene(root);

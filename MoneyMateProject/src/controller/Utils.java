@@ -8,13 +8,13 @@ package controller;
 import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javafx.stage.FileChooser;
-import 
+import javafx.stage.FileChooser; 
 
 /**
  *
  * @author sovacu
  */
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 public class Utils {
@@ -63,12 +63,15 @@ public class Utils {
     
     }
     
-    public File codeOpenFiles(Stage root){
+    public static Image codeOpenFiles(){
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
-        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Archivos de imagen", "*.jpg", "*.jpeg", "*.png", "*.gif");
+        File selectedFile = fileChooser.showOpenDialog(null);
         
-        return fileChooser.showOpenDialog(root); 
+        if(selectedFile != null){
+            Image scanedImage = new Image(selectedFile.toURI().toString());
+            return scanedImage; 
+        } else return null; 
     }
     
 }

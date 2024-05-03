@@ -60,6 +60,8 @@ public class AddExpenseController implements Initializable {
     private Button selectImageExpense;
     @FXML
     private ImageView imageView;
+    
+    private Image scanedImage; 
     /**
      * Initializes the controller class.
      */
@@ -92,7 +94,7 @@ public class AddExpenseController implements Initializable {
         }
     }    
     @FXML
-    private void doneButton(MouseEvent event) {
+    private void doneButton(MouseEvent event) throws AcountDAOException {
         //obtain all the fields needed to add an expense
         double cost = Double.parseDouble(costField.getText()); 
         String name = nameField.getText(); 
@@ -100,8 +102,8 @@ public class AddExpenseController implements Initializable {
         int units = Integer.parseInt(unitsField.getText());
         LocalDate date = datePicker.getValue(); 
         Category category = categoryMenu.getValue();
-        acount.registerCharge(name, description, cost, units, scanedImage, date, category); 
         try{
+            acount.registerCharge(name, description, cost, units, scanedImage, date, category); 
             Pane mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml")); 
             addExpensePane.getChildren().setAll(mainPane); 
         } catch (IOException e){
@@ -110,8 +112,10 @@ public class AddExpenseController implements Initializable {
     }
 
     @FXML
+    //obtain image
     private void openFiles(MouseEvent event) {
-        Utils.codeOpenFiles();       
+        scanedImage = Utils.codeOpenFiles();
+        System.out.println(scanedImage.toString());
     }
    
     
