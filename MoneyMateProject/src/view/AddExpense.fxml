@@ -121,7 +121,7 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </VBox>
-                  <VBox prefHeight="76.0" prefWidth="261.0">
+                  <VBox prefHeight="59.0" prefWidth="261.0">
                      <children>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
@@ -136,13 +136,29 @@
                               <Insets bottom="10.0" />
                            </padding>
                            <VBox.margin>
-                              <Insets bottom="10.0" />
+                              <Insets />
                            </VBox.margin>
                         </HBox>
-                        <TextField fx:id="newCategoryField" maxWidth="150.0" prefHeight="26.0" prefWidth="150.0" />
+                        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" />
+                        <TextField fx:id="newCategoryField" maxWidth="150.0" prefHeight="26.0" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin></TextField>
+                        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Description: ">
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </Text>
+                        <TextArea fx:id="descriptionNewCategory" prefHeight="200.0" prefWidth="200.0" />
                      </children>
+                     <padding>
+                        <Insets bottom="10.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
                   </VBox>
-                  <VBox prefHeight="162.0" prefWidth="196.0">
+                  <VBox maxHeight="72.0" prefHeight="36.0" prefWidth="117.0">
                      <children>
                         <Button fx:id="selectImageExpense" alignment="BOTTOM_LEFT" mnemonicParsing="false" onMouseClicked="#openFiles" text="Select Image">
                            <VBox.margin>
@@ -156,7 +172,7 @@
                         </ImageView>
                      </children>
                      <VBox.margin>
-                        <Insets bottom="10.0" top="30.0" />
+                        <Insets bottom="10.0" />
                      </VBox.margin>
                   </VBox>
                </children>

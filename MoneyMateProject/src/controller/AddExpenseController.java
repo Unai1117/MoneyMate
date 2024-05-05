@@ -71,6 +71,10 @@ public class AddExpenseController implements Initializable {
     private CheckBox newCategoryBox;
     @FXML
     private TextField newCategoryField;
+    @FXML
+    private TextArea descriptionNewCategory;
+    
+    private Category category; 
     /**
      * Initializes the controller class.
      */
@@ -88,12 +92,17 @@ public class AddExpenseController implements Initializable {
                     }
                 };
             });
-            
+        
             //bind disable property to newCategoryfield
             newCategoryField.disableProperty().bind(Bindings.not(newCategoryBox.selectedProperty()));
+            descriptionNewCategory.disableProperty().bind(Bindings.not(newCategoryBox.selectedProperty()));
             //get the instance of acount that will give us the user
             acount = Acount.getInstance();
-            
+            if(newCategoryField.getText() != null){
+                acount.registerCategory(newCategoryField.getText(), descriptionNewCategory.getText()); 
+            } else {
+                category = categoryMenu.getValue(); 
+            }            
             //Obtain a list of type category with the categories of the user logged in
             categoryMenu = new ChoiceBox<Category>();
             List<Category> categorias = acount.getUserCategories(); 
@@ -127,13 +136,7 @@ public class AddExpenseController implements Initializable {
         String name = nameField.getText(); 
         String description = descriptionField.getText(); 
         int units = Integer.parseInt(unitsField.getText());
-        LocalDate date = datePicker.getValue();
-//        if(newCategoryField.getText() != null){
-//            Category category = 
-//        } else {
-        Category category = categoryMenu.getValue(); 
-//        }
-        
+        LocalDate date = datePicker.getValue(); 
         try{
             acount.registerCharge(name, description, cost, units, scanedImage, date, category); 
             Pane mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml")); 
