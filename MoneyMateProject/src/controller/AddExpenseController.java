@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -92,39 +93,38 @@ public class AddExpenseController implements Initializable {
                     }
                 };
             });
-        
             //bind disable property to newCategoryfield
             newCategoryField.disableProperty().bind(Bindings.not(newCategoryBox.selectedProperty()));
             descriptionNewCategory.disableProperty().bind(Bindings.not(newCategoryBox.selectedProperty()));
             //get the instance of acount that will give us the user
             acount = Acount.getInstance();
-            if(newCategoryField.getText() != null){
-                acount.registerCategory(newCategoryField.getText(), descriptionNewCategory.getText()); 
-            } else {
-                category = categoryMenu.getValue(); 
-            }            
+            
             //Obtain a list of type category with the categories of the user logged in
             categoryMenu = new ChoiceBox<Category>();
-            List<Category> categorias = acount.getUserCategories(); 
+            List<Category> categorias = acount.getUserCategories();
             //add categories to the drop down menu to let the user select the desired category
             categoryMenu.getItems().addAll(categorias);
-            //bind disable property
-            /*
-            doneButton.disableProperty().bind(Bindings.createBooleanBinding(
-                    () -> nameField.getText().isEmpty() || 
-                          descriptionField.getText().isEmpty() || 
-                          costField.getText().isEmpty() ||
-                          unitsField.getText().isEmpty() ||
-                          datePicker.getValue() == null ||
-                          categoryMenu.getValue() == null,
-                    nameField.textProperty(),
-                    descriptionField.textProperty(),
-                    costField.textProperty(),
-                    unitsField.textProperty(),
-                    datePicker.valueProperty(),
-                    categoryMenu.valueProperty()
-            ));
-            */
+            //obtain selected or added category
+            if(newCategoryField.getText() != null && descriptionNewCategory.getText() != null){
+                String categoryName = newCategoryField.getText();
+                acount.registerCategory(categoryName, descriptionNewCategory.getText());
+                boolean flag = false;
+                for(int i = 0; i < categorias.size() && !flag; i++){
+                    Category aux = categorias.get(i); 
+                    if(aux.getName().equals(categoryName)){
+                        flag = true; 
+                        category = aux; 
+                    }
+                }
+            } else if(category == null){
+                category = categoryMenu.getValue(); 
+            }
+            
+            
+            
+            //bind disable property for the done button, we want to wait to have all fields except for the category
+            
+            
         } catch (Exception e){
             System.out.println(e);
         }
@@ -138,7 +138,7 @@ public class AddExpenseController implements Initializable {
         int units = Integer.parseInt(unitsField.getText());
         LocalDate date = datePicker.getValue(); 
         try{
-            acount.registerCharge(name, description, cost, units, scanedImage, date, category); 
+            acount.registerCharge(name, description, cost, units, scanedImage, date, category);
             Pane mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml")); 
             doneButton.getScene().setRoot(mainPane);
         } catch (IOException e){
@@ -152,6 +152,4 @@ public class AddExpenseController implements Initializable {
         scanedImage = Utils.codeOpenFiles();
         System.out.println(scanedImage.toString());
     }
-   
-    
 }
