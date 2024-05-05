@@ -67,6 +67,8 @@ public class Utils {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         File selectedFile = fileChooser.showOpenDialog(null);
+        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Archivos de imagen", "*.jpg", "*.jpeg", "*.png", "*.gif");
+        fileChooser.getExtensionFilters().add(imageFilter);
         
         if(selectedFile != null){
             Image scanedImage = new Image(selectedFile.toURI().toString());
