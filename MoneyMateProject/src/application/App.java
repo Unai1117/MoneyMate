@@ -23,7 +23,7 @@ public class App extends Application {
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
-        stage.setTitle("ListView for Persona");
+        stage.setTitle("MoneyMate");
         stage.setMinHeight(600);
         stage.setMinWidth(350);
         stage.show();

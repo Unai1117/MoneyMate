@@ -1,6 +1,24 @@
 .root {
-    -fx-padding: 20px;
     -fx-background-color: #222831;
+}
+
+.button {
+    -fx-background-color: #31363F;
+    -fx-text-fill: #EEEEEE;
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+    -fx-font-size: 15px;
+}
+
+.button-secondary {
+    -fx-background-color: transparent;
+    -fx-border-color: #31363F;
+    -fx-border-width: 3px;
+    -fx-border-radius: 10px;
+}
+
+.label {
+    -fx-text-fill: #EEEEEE;
 }
 
 .chart-pie {

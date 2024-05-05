@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DateCell;
@@ -26,6 +27,8 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import model.*; 
 import javafx.scene.image.Image;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
 /**
  * FXML Controller class
@@ -105,7 +108,7 @@ public class AddExpenseController implements Initializable {
         try{
             acount.registerCharge(name, description, cost, units, scanedImage, date, category); 
             Pane mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml")); 
-            addExpensePane.getChildren().setAll(mainPane); 
+            doneButton.getScene().setRoot(mainPane);
         } catch (IOException e){
             System.out.println(e);
         }
