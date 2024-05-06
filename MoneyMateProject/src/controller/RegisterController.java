@@ -6,7 +6,9 @@ package controller;
 
 import javafx.stage.*;
 import java.awt.Desktop;
+import java.awt.Image;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.System.Logger;
 import java.net.URL;
@@ -19,15 +21,18 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import static javafx.scene.input.KeyCode.EQUALS;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 /**
  * FXML Controller class
@@ -50,6 +55,8 @@ public class RegisterController implements Initializable {
     private Label lIncorrectEmail;
     @FXML 
     private Label lPassDifferent;
+    @FXML 
+    private ImageView imageView;
     
     
     //properties to control valid fields
@@ -130,6 +137,28 @@ public class RegisterController implements Initializable {
             fileChooser.setTitle("Open Resource File");
             fileChooser.showOpenDialog(null);
         
+    }
+    String fileToSave;
+    @FXML
+    private void onOpen(MouseEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open resource");
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Text files", "*.txt"),
+                new ExtensionFilter("Images", "*.png", "*.jpg", "*.gif"),
+                new ExtensionFilter("Sounds", "*.wav", "*.mp3", "*.aac"),
+                new ExtensionFilter("All", "*.*"));
+        File selectedFile = fileChooser.showOpenDialog(
+                null);
+        if (selectedFile != null) {
+            fileToSave = selectedFile.getAbsolutePath();
+            try{
+                Image avatar = new Image(new FileInputStream(fileToSave));
+                imageView.imageProperty().setValue(avatar);
+            } catch (Exception e){
+                System.out.println(e);
+            }
+        }
     }
     
     
