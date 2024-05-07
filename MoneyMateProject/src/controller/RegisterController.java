@@ -118,7 +118,7 @@ public class RegisterController implements Initializable {
         
         BooleanBinding validFields = Bindings.and(validEmail, validPassword).and(equalPasswords);
         
-        register.disableProperty().bind(Bindings.not(validFields));
+        //register.disableProperty().bind(Bindings.not(validFields));
     }  
     
     private void checkEditEmail(){
