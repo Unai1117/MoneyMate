@@ -27,8 +27,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.Image;
-import javafx.scene.image.Image;
 import static javafx.scene.input.KeyCode.EQUALS;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
