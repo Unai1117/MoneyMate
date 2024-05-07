@@ -34,6 +34,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import model.*;
 
 /**
  * FXML Controller class
@@ -178,21 +179,6 @@ public class RegisterController implements Initializable {
         }
     }
     
-    
-    /*public void start(final Stage stage) {
-        public void handle(final ActionEvent e) {
-                    File file = fileChooser.showOpenDialog(stage);
-                    if (file != null) {
-                        openFile(file);
-                    }
-        }
-        private void openFile(File file) {
-            try {
-                    desktop.open(file);
-            } catch (IOException ex) {
-                System.out.println(ex);
-            }
-        }*/
         
     private void checkEquals(){
         if(password1.textProperty().getValueSafe().compareTo(password2.textProperty().getValueSafe()) != EQUALS){
@@ -205,7 +191,10 @@ public class RegisterController implements Initializable {
     
     
     
-    
+    /*@FXML
+    private void acceptRegister(){
+        if ()
+    }*/
     
     @FXML
     private void handleBAcceptOnAction(ActionEvent event) {
@@ -234,4 +223,9 @@ public class RegisterController implements Initializable {
         errorLabel.visibleProperty().set(false);
         textField.styleProperty().setValue("");
     }
+
+    //registerUser();
+
+
+
 }
