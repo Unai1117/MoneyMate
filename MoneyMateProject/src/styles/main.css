@@ -1,5 +1,6 @@
 .root {
-    -fx-background-color: #222831;
+    -fx-bg: #222831;
+    -fx-background-color: -fx-bg;
 }
 
 .button {
@@ -17,11 +18,51 @@
     -fx-border-radius: 10px;
 }
 
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
+
+.scroll-bar {
+    -fx-background-color: -fx-bg;
+}
+
+.scroll-bar .track,
+.scroll-bar.track {
+    -fx-background-color: -fx-bg;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar .decrement-button,
+.scroll-bar .increment-button {
+    -fx-background-color: -fx-bg;
+    -fx-border-color: -fx-bg;
+    -fx-background-radius: 0;
+    
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #585858;
+    -fx-background-insets: 3, 0, 0;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-co
+}
+
+.scroll-bar:hover .thumb {
+    -fx-background-color: #76ABAE;
+}
+
 .label {
     -fx-text-fill: #EEEEEE;
 }
 
 .chart-pie {
-    -fx-border-color: #222831;
+    -fx-border-color: -fx-bg;
     -fx-border-width: 5px;
 }

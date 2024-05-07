@@ -25,7 +25,7 @@ public class App extends Application {
         stage.setScene(scene);
         stage.setTitle("MoneyMate");
         stage.setMinHeight(600);
-        stage.setMinWidth(350);
+        stage.setMinWidth(400);
         stage.show();
     }
 
