@@ -76,6 +76,8 @@ public class AddExpenseController implements Initializable {
     private TextArea descriptionNewCategory;
     
     private Category category; 
+    
+    private List<Category> categorias; 
     /**
      * Initializes the controller class.
      */
@@ -98,29 +100,9 @@ public class AddExpenseController implements Initializable {
             descriptionNewCategory.disableProperty().bind(Bindings.not(newCategoryBox.selectedProperty()));
             //get the instance of acount that will give us the user
             acount = Acount.getInstance();
-            
-            //Obtain a list of type category with the categories of the user logged in
-            categoryMenu = new ChoiceBox<Category>();
-            List<Category> categorias = acount.getUserCategories();
-            //add categories to the drop down menu to let the user select the desired category
-            categoryMenu.getItems().addAll(categorias);
-            //obtain selected or added category
-            if(newCategoryField.getText() != null && descriptionNewCategory.getText() != null){
-                String categoryName = newCategoryField.getText();
-                acount.registerCategory(categoryName, descriptionNewCategory.getText());
-                boolean flag = false;
-                for(int i = 0; i < categorias.size() && !flag; i++){
-                    Category aux = categorias.get(i); 
-                    if(aux.getName().equals(categoryName)){
-                        flag = true; 
-                        category = aux; 
-                    }
-                }
-            } else if(category == null){
-                category = categoryMenu.getValue(); 
-            }
-            
-            
+            //obtain List of categories of the user
+            categorias = acount.getUserCategories();
+            categoryMenu.getItems().addAll(categorias); 
             
             //bind disable property for the done button, we want to wait to have all fields except for the category
             
@@ -136,7 +118,24 @@ public class AddExpenseController implements Initializable {
         String name = nameField.getText(); 
         String description = descriptionField.getText(); 
         int units = Integer.parseInt(unitsField.getText());
-        LocalDate date = datePicker.getValue(); 
+        LocalDate date = datePicker.getValue();
+        if(newCategoryField.getText() != null && descriptionNewCategory.getText() != null){
+                String categoryName = newCategoryField.getText();
+                if(acount.registerCategory(categoryName, descriptionNewCategory.getText())){
+                    System.out.print("se ha añadido");
+                }
+                categorias = acount.getUserCategories(); 
+                boolean flag = false;
+                for(int i = 0; i < categorias.size() && !flag; i++){
+                    Category aux = categorias.get(i); 
+                    if(aux.getName().equals(categoryName)){
+                        flag = true; 
+                        category = aux; 
+                    }
+                }
+            } else if(category == null){
+                category = categoryMenu.getValue(); 
+            }
         try{
             acount.registerCharge(name, description, cost, units, scanedImage, date, category);
             Pane mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml")); 
