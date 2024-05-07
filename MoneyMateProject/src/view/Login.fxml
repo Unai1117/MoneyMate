@@ -10,15 +10,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane fx:id="logPane" prefHeight="428.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
    <center>
       <VBox alignment="CENTER" prefHeight="250.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
             <VBox prefHeight="36.0" prefWidth="574.0">
                <children>
-                  <Label text="Nickname or Email" />
-                  <TextField />
+                  <Label text="Nickname" />
+                  <TextField fx:id="nnickname" />
                </children>
                <VBox.margin>
                   <Insets left="20.0" right="20.0" top="20.0" />
@@ -27,7 +26,7 @@
             <VBox prefHeight="42.0" prefWidth="332.0">
                <children>
                   <Label text="Password" />
-                  <PasswordField />
+                  <PasswordField fx:id="password1" />
                </children>
                <VBox.margin>
                   <Insets left="20.0" right="20.0" top="20.0" />

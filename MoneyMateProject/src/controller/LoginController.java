@@ -7,16 +7,20 @@ package controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import model.Acount;
+import model.AcountDAOException;
 
 /**
  * FXML Controller class
@@ -31,30 +35,54 @@ public class LoginController implements Initializable {
     private Button loginButton;
     @FXML
     private BorderPane logPane;
+    @FXML
+    private TextField nnickname;
+    @FXML
+    private PasswordField password1;
+    
+    private Acount acount;
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        
+        try {
+            acount = Acount.getInstance();
+        } catch (AcountDAOException | IOException ex) {
+            java.util.logging.Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }    
+
+    @FXML
+    private void openMainPane(MouseEvent event) throws AcountDAOException {
+        if ((nnickname.getText() != null || !nnickname.getText().trim().isEmpty()) && (password1.getText() != null || !password1.getText().trim().isEmpty())){
+            String nickname = nnickname.textProperty().getValueSafe();
+            String password = password1.textProperty().getValueSafe();
+            if(acount.logInUserByCredentials(nickname, password)){
+                try {
+                    Pane mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml"));
+                    logPane.getScene().setRoot(mainPane);
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
+            }
+            
+            
+        }
+        
+        
+    }
 
     @FXML
     private void openRegisterPane(MouseEvent event) {
         try {
             Pane regPage = FXMLLoader.load(getClass().getResource("/view/Register.fxml"));
-            logPane.getChildren().setAll(regPage);
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-    }
-
-    @FXML
-    private void openMainPane(MouseEvent event) {
-        try {
-            Pane mainPage = FXMLLoader.load(getClass().getResource("/view/Main.fxml"));
-            logPane.getChildren().setAll(mainPage);
+            logPane.getScene().setRoot(regPage);
         } catch (IOException e) {
             System.out.println(e);
         }

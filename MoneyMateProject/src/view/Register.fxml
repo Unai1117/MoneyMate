@@ -34,7 +34,7 @@
                   <VBox prefHeight="25.0" prefWidth="332.0">
                      <children>
                         <Label text="Name:" />
-                        <TextField minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
+                        <TextField fx:id="nname" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
                      </children>
                   </VBox>
                </children>
@@ -44,7 +44,7 @@
                   <VBox prefHeight="25.0" prefWidth="332.0">
                      <children>
                         <Label text="Nickname:" />
-                        <TextField minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
+                        <TextField fx:id="nnickname" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
                      </children>
                   </VBox>
                   <Label alignment="BASELINE_LEFT" text="Incorrect Nickname." textFill="RED" visible="false" />
@@ -98,7 +98,7 @@
                   </VBox>
                </children>
             </HBox>
-            <Button fx:id="imageChooser" mnemonicParsing="false" onMouseClicked="#onOpen" text="Choose Image" />
+            <Button fx:id="imageChooser" mnemonicParsing="false" text="Choose Image" />
          </children>
          <BorderPane.margin>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -113,7 +113,8 @@
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="register" alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#handleBAcceptOnAction" text="Register">
+            <Button fx:id="logButton" mnemonicParsing="false" onMouseClicked="#goLogin" text="Login" />
+            <Button fx:id="register" alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" onMouseClicked="#acceptRegister" text="Register">
                <HBox.margin>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </HBox.margin>

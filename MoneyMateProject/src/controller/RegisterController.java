@@ -12,7 +12,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.System.Logger;
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
@@ -57,7 +60,12 @@ public class RegisterController implements Initializable {
     @FXML 
     private Label lPassDifferent;
     @FXML 
-    private ImageView imageView;
+    private TextField nname;
+    @FXML 
+    private TextField nnickname;
+    
+    private Acount acount;
+    
     
     
     //properties to control valid fields
@@ -71,12 +79,17 @@ public class RegisterController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-        
-        
+       
+        try {
+            acount = Acount.getInstance();
+        } catch (AcountDAOException | IOException ex) {
+            java.util.logging.Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         validEmail = new SimpleBooleanProperty();
         validEmail.setValue(Boolean.FALSE);
@@ -107,16 +120,6 @@ public class RegisterController implements Initializable {
         
         register.disableProperty().bind(Bindings.not(validFields));
     }  
-    
-    @FXML
-    private void openLoginPane(MouseEvent event) {
-        try {
-            Pane logPage = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-            regPane.getChildren().setAll(logPage);
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-    }
     
     private void checkEditEmail(){
         if(!Utils.checkEmail(eemail.textProperty().getValueSafe()))
@@ -162,7 +165,7 @@ public class RegisterController implements Initializable {
         }
     }*/
     
-    @FXML
+    /*@FXML
     public javafx.scene.image.Image codeOpenFiles() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
@@ -176,9 +179,19 @@ public class RegisterController implements Initializable {
         } else {
             return null;
         }
-    }
+    }*/
     
         
+    @FXML
+    private void goLogin(MouseEvent event){
+        try {
+                Pane loginPane = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
+                regPane.getScene().setRoot(loginPane);
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+    }
+    
     private void checkEquals(){
         if(password1.textProperty().getValueSafe().compareTo(password2.textProperty().getValueSafe()) != EQUALS){
             showErrorMessage(lPassDifferent,password2);
@@ -190,13 +203,32 @@ public class RegisterController implements Initializable {
     
     
     
-    /*@FXML
-    private void acceptRegister(){
-        if ()
-    }*/
-    
     @FXML
-    private void handleBAcceptOnAction(ActionEvent event) {
+    private void acceptRegister(MouseEvent event) throws AcountDAOException{
+        if ((Objects.equals(validEmail.getValue(), Boolean.TRUE)) && (Objects.equals(validPassword.getValue(), Boolean.TRUE)) && (Objects.equals(equalPasswords.getValue(), Boolean.TRUE))){
+            String name = nname.textProperty().getValueSafe();
+            String surname = null;
+            String email= eemail.textProperty().getValueSafe();
+            String login = nnickname.textProperty().getValueSafe();
+            String password = password2.textProperty().getValueSafe();
+            Image image = null;
+            LocalDate date = LocalDate.now();
+            
+            acount.registerUser(name, surname, email, login, password, null, date);
+            
+            try {
+                Pane loginPane = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
+                regPane.getScene().setRoot(loginPane);
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+        } else {
+            handleBAcceptOnAction();
+        }
+    }
+    
+    
+    private void handleBAcceptOnAction() {
         password2.textProperty().setValue("");
         validEmail.setValue(Boolean.FALSE);
         validPassword.setValue(Boolean.FALSE);
