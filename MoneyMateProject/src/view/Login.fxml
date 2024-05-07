@@ -16,7 +16,7 @@
          <children>
             <VBox prefHeight="36.0" prefWidth="574.0">
                <children>
-                  <Label text="Nickname" />
+                  <Label text="Username" />
                   <TextField fx:id="nnickname" />
                </children>
                <VBox.margin>
@@ -31,6 +31,15 @@
                <VBox.margin>
                   <Insets left="20.0" right="20.0" top="20.0" />
                </VBox.margin>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="30.0" prefWidth="500.0">
+               <children>
+                  <Label fx:id="incorrectLabel" text="Incorrect Username or Password" textFill="RED" visible="false">
+                     <VBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+               </children>
             </VBox>
          </children>
       </VBox>

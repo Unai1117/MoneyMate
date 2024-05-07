@@ -39,8 +39,12 @@ public class LoginController implements Initializable {
     private TextField nnickname;
     @FXML
     private PasswordField password1;
+    @FXML
+    private Label incorrectLabel;
     
     private Acount acount;
+    
+    
 
     /**
      * Initializes the controller class.
@@ -70,6 +74,8 @@ public class LoginController implements Initializable {
                 } catch (IOException e) {
                     System.out.println(e);
                 }
+            } else {
+                incorrectLabel.visibleProperty().set(true);
             }
             
             
