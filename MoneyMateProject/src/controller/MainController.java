@@ -88,18 +88,18 @@ public class MainController implements Initializable {
         mainScroll.prefWidthProperty().bind(mainPane.widthProperty());
 
         mainFlowPane.prefHeightProperty().bind(mainPane.heightProperty().subtract(100));
-        mainFlowPane.prefWidthProperty().bind(mainPane.widthProperty());
+        mainFlowPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(2));
 
         mainPane.widthProperty().addListener((obs, oldVal, newVal) -> {
             // Collapsed
-            if (newVal.intValue() < 364 + 3 * 20 + CHARGES_PANE_SIZE) {
+            if (newVal.intValue() < 366 + 3 * 20 + CHARGES_PANE_SIZE) {
                 chargesPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(2 * 20));
                 chargesPane.prefHeightProperty().bind(charges.heightProperty().add(2));
                 chargesPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
                 mainScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
             } // Full
             else {
-                chargesPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(364 + 3 * 20));
+                chargesPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(366 + 3 * 20));
                 chargesPane.prefHeightProperty().bind(mainPane.heightProperty().subtract(20 * 2 + 2));
                 chargesPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
                 mainScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
