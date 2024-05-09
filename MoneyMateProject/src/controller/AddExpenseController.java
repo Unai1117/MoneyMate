@@ -57,7 +57,7 @@ public class AddExpenseController implements Initializable {
     @FXML
     private DatePicker datePicker;
     @FXML
-    private ChoiceBox<Category> categoryMenu;
+    private ChoiceBox<String> categoryMenu;
     
     private Acount acount; 
     @FXML
@@ -102,8 +102,9 @@ public class AddExpenseController implements Initializable {
             acount = Acount.getInstance();
             //obtain List of categories of the user
             categorias = acount.getUserCategories();
-            categoryMenu.getItems().addAll(categorias); 
-            
+            for(int i = 0; i < categorias.size(); i++){
+                categoryMenu.getItems().add(categorias.get(i).getName()); 
+            }
             //bind disable property for the done button, we want to wait to have all fields except for the category
             
             
@@ -119,11 +120,9 @@ public class AddExpenseController implements Initializable {
         String description = descriptionField.getText(); 
         int units = Integer.parseInt(unitsField.getText());
         LocalDate date = datePicker.getValue();
-        if(newCategoryField.getText() != null && descriptionNewCategory.getText() != null){
+        if(!newCategoryField.getText().isEmpty() && !descriptionNewCategory.getText().isEmpty()){
                 String categoryName = newCategoryField.getText();
-                if(acount.registerCategory(categoryName, descriptionNewCategory.getText())){
-                    System.out.print("se ha añadido");
-                }
+                acount.registerCategory(categoryName, descriptionNewCategory.getText()); 
                 categorias = acount.getUserCategories(); 
                 boolean flag = false;
                 for(int i = 0; i < categorias.size() && !flag; i++){
@@ -134,7 +133,15 @@ public class AddExpenseController implements Initializable {
                     }
                 }
             } else if(category == null){
-                category = categoryMenu.getValue(); 
+                String nameCat = categoryMenu.getValue();
+                boolean flag = false; 
+                for(int i = 0; i < categorias.size() && !flag; i++){
+                    String aux = categorias.get(i).getName(); 
+                    if(aux.equals(nameCat)){
+                        flag = true; 
+                        category = categorias.get(i); 
+                    }
+                }
             }
         try{
             acount.registerCharge(name, description, cost, units, scanedImage, date, category);
