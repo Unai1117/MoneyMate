@@ -21,7 +21,10 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
@@ -45,6 +48,8 @@ public class MainController implements Initializable {
     @FXML
     public Pane mainPane;
     @FXML
+    public StackPane mainStackPane;
+    @FXML
     private Button addExpense;
     @FXML
     private PieChart chart;
@@ -62,6 +67,10 @@ public class MainController implements Initializable {
     private ScrollPane mainScroll;
     @FXML
     private FlowPane mainFlowPane;
+    @FXML
+    private MenuItem manageUserButton;
+    @FXML
+    private MenuItem manageCategoriesButton;
 
     private final int CHARGES_PANE_SIZE = 400;
 
@@ -83,12 +92,15 @@ public class MainController implements Initializable {
         chargesPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(364 + 3 * 20));
         chargesPane.prefHeightProperty().bind(mainPane.heightProperty().subtract(20 * 2 + 2));
         chargesPane.minWidthProperty().set(CHARGES_PANE_SIZE);
+        
+        mainStackPane.prefHeightProperty().bind(mainPane.heightProperty());
+        mainStackPane.prefWidthProperty().bind(mainPane.widthProperty());
 
-        mainScroll.prefHeightProperty().bind(mainPane.heightProperty());
-        mainScroll.prefWidthProperty().bind(mainPane.widthProperty());
+        mainScroll.prefHeightProperty().bind(mainStackPane.heightProperty());
+        mainScroll.prefWidthProperty().bind(mainStackPane.widthProperty());
 
-        mainFlowPane.prefHeightProperty().bind(mainPane.heightProperty().subtract(100));
-        mainFlowPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(2));
+        mainFlowPane.prefHeightProperty().bind(mainStackPane.heightProperty().subtract(2));
+        mainFlowPane.prefWidthProperty().bind(mainStackPane.widthProperty().subtract(2));
 
         mainPane.widthProperty().addListener((obs, oldVal, newVal) -> {
             // Collapsed
@@ -104,10 +116,6 @@ public class MainController implements Initializable {
                 chargesPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
                 mainScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
             }
-        });
-
-        mainPane.heightProperty().addListener((obs, oldVal, newVal) -> {
-
         });
 
         for (final PieChart.Data data : chart.getData()) {
@@ -138,6 +146,12 @@ public class MainController implements Initializable {
                 }
             });
         }
+        
+        Image manageUserIcon = new Image(getClass().getResourceAsStream("../assets/icons/user-gear.png"));
+        Utils.iconToMenuItem(manageUserIcon, manageUserButton);
+        Image manageCategoriesIcon = new Image(getClass().getResourceAsStream("../assets/icons/tag.png"));
+        Utils.iconToMenuItem(manageCategoriesIcon, manageCategoriesButton);
+        
     }
 
     @FXML

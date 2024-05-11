@@ -8,6 +8,7 @@ package controller;
 import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 
 /**
@@ -15,6 +16,7 @@ import javafx.stage.FileChooser;
  * @author sovacu
  */
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -80,6 +82,13 @@ public class Utils {
         } else {
             return null;
         }
+    }
+    
+    public static void iconToMenuItem(Image image, MenuItem menuItem) {
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(20);
+        imageView.setFitWidth(20);
+        menuItem.setGraphic(imageView);
     }
 
 }
