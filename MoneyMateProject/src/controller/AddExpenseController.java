@@ -116,10 +116,9 @@ public class AddExpenseController implements Initializable {
             //obtain List of categories of the user
             categorias = acount.getUserCategories();
             for(int i = 0; i < categorias.size(); i++){
-                categoryMenu.getItems().add(categorias.get(i).getName()); 
+                String[] names = categorias.get(i).getName().split("\\|");
+                categoryMenu.getItems().add(names[0]); 
             }
-            //bind disable property for the done button, we want to wait to have all fields except for the category
-            
             
         } catch (Exception e){
             System.out.println(e);
