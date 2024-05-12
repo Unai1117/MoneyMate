@@ -15,8 +15,15 @@
 }
 
 .menu-item {
-    -fx-background-color: -fx-p;
+    -fx-background-color: transparent;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
 }
+
+.menu-item:hover {
+    -fx-background-color: rgba(0,0,0,0.2);
+}
+
 .context-menu {
     -fx-background-color: -fx-p;
     -fx-padding: 10px;

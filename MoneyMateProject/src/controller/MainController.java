@@ -113,11 +113,9 @@ public class MainController implements Initializable {
                 
                 if (categoryTotal / totalMoney < 0.01) otherTotal += categoryTotal;
                 else userCategoriesData.add(new PieChart.Data(key.getName(), categoryTotal / totalMoney * 100));
-                System.out.println(key.getName() + " " + categoryTotal / totalMoney);
             }
 
             userCategoriesData.add(new PieChart.Data("Other", otherTotal / totalMoney * 100));
-            System.out.println(userCategoriesData);
             chart.setData(userCategoriesData);
             chartLabel.setText("-" + totalMoney + " €");
 
@@ -125,21 +123,6 @@ public class MainController implements Initializable {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        /*List<Category> userCategories;
-        try {
-            userCategories = model.Acount.getInstance().getUserCategories();
-            for (int i = 0; i < userCategories.size(); i++) {
-                Category userCategory = userCategories.get(i);
-                String catName = userCategory.getName().split("|")[0];
-                String catColor = userCategory.getName().split("|")[1];
-                // categories.add(new PieChart.Data(""));
-            }
-            chart.setData(categories);
-        } catch (AcountDAOException ex) {
-            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
         chartInnerCircle.radiusProperty().bind(chartStackPane.widthProperty().multiply(0.85).divide(2));
 
         chargesPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(364 + 3 * 20));
