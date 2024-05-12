@@ -12,10 +12,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import java.io.IOException;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.ScaleTransition;
-import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -24,19 +28,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 import javafx.util.Duration;
+import model.*;
 
 /**
  * FXML Controller class
@@ -74,25 +73,79 @@ public class MainController implements Initializable {
 
     private final int CHARGES_PANE_SIZE = 400;
 
+    private List<Charge> userCharges;
+    private List<Category> userCategories;
+    private double totalMoney;
+
+    private ObservableList<PieChart.Data> userCategoriesData = FXCollections.observableArrayList();
+
     /**
      * Initializes the controller class.
      */
     public void initialize(URL url, ResourceBundle rb) {
-        ObservableList<PieChart.Data> chartData
-                = FXCollections.observableArrayList(
-                        new PieChart.Data("Restaurants", 13),
-                        new PieChart.Data("Fuel", 25),
-                        new PieChart.Data("Taxes", 10),
-                        new PieChart.Data("Events", 22),
-                        new PieChart.Data("Other", 30));
+        try {
+            userCharges = Acount.getInstance().getUserCharges();
+            userCategories = Acount.getInstance().getUserCategories();
 
-        chart.setData(chartData);
+            Map<Category, List<Charge>> map = new HashMap();
+            for (int i = 0; i < userCharges.size(); i++) {
+                Charge charge = userCharges.get(i);
+                totalMoney += charge.getCost() * charge.getUnits();
+                Category category = charge.getCategory();
+                if (map.containsKey(category)) {
+                    List<Charge> aux = map.remove(category);
+                    aux.add(charge);
+                    map.put(category, aux);
+                } else {
+                    List<Charge> aux = new ArrayList();
+                    aux.add(charge);
+                    map.put(category, aux);
+                }
+            }
+
+            double otherTotal = 0;
+            for (Category key : map.keySet()) {
+                double categoryTotal = 0;
+                List<Charge> charges = map.get(key);
+                for (int i = 0; i < charges.size(); i++) {
+                    categoryTotal += charges.get(i).getCost() * charges.get(i).getUnits();
+                }
+                
+                if (categoryTotal / totalMoney < 0.01) otherTotal += categoryTotal;
+                else userCategoriesData.add(new PieChart.Data(key.getName(), categoryTotal / totalMoney * 100));
+                System.out.println(key.getName() + " " + categoryTotal / totalMoney);
+            }
+
+            userCategoriesData.add(new PieChart.Data("Other", otherTotal / totalMoney * 100));
+            System.out.println(userCategoriesData);
+            chart.setData(userCategoriesData);
+            chartLabel.setText("-" + totalMoney + " €");
+
+        } catch (AcountDAOException | IOException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        /*List<Category> userCategories;
+        try {
+            userCategories = model.Acount.getInstance().getUserCategories();
+            for (int i = 0; i < userCategories.size(); i++) {
+                Category userCategory = userCategories.get(i);
+                String catName = userCategory.getName().split("|")[0];
+                String catColor = userCategory.getName().split("|")[1];
+                // categories.add(new PieChart.Data(""));
+            }
+            chart.setData(categories);
+        } catch (AcountDAOException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
         chartInnerCircle.radiusProperty().bind(chartStackPane.widthProperty().multiply(0.85).divide(2));
 
         chargesPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(364 + 3 * 20));
         chargesPane.prefHeightProperty().bind(mainPane.heightProperty().subtract(20 * 2 + 2));
         chargesPane.minWidthProperty().set(CHARGES_PANE_SIZE);
-        
+
         mainStackPane.prefHeightProperty().bind(mainPane.heightProperty());
         mainStackPane.prefWidthProperty().bind(mainPane.widthProperty());
 
@@ -122,7 +175,7 @@ public class MainController implements Initializable {
             data.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
-                    chartLabel.setText(String.valueOf(data.getName() + "\n" + data.getPieValue() + "%"));
+                    chartLabel.setText(String.valueOf(data.getName() + "\n" + String.format("%.1f", data.getPieValue()) + "%"));
 
                     Font font = new Font(36);
                     chartLabel.setFont(font);
@@ -146,12 +199,12 @@ public class MainController implements Initializable {
                 }
             });
         }
-        
+
         Image manageUserIcon = new Image(getClass().getResourceAsStream("../assets/icons/user-gear.png"));
         Utils.iconToMenuItem(manageUserIcon, manageUserButton);
         Image manageCategoriesIcon = new Image(getClass().getResourceAsStream("../assets/icons/tag.png"));
         Utils.iconToMenuItem(manageCategoriesIcon, manageCategoriesButton);
-        
+
     }
 
     @FXML
@@ -180,7 +233,7 @@ public class MainController implements Initializable {
         grow.setToX(1);
         grow.setToY(1);
         grow.playFromStart();
-        chartLabel.setText("-1536 €");
+        chartLabel.setText("-" + totalMoney + " €");
         Font font = new Font(46);
         chartLabel.setFont(font);
     }
