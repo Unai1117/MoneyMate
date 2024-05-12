@@ -82,7 +82,7 @@
                   </VBox>
                   <VBox prefHeight="131.0" prefWidth="239.0">
                      <children>
-                        <Button fx:id="selectImageExpense" alignment="BOTTOM_LEFT" mnemonicParsing="false" onMouseClicked="#openFiles" text="Select Image">
+                        <Button fx:id="selectImageExpense" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#openFiles" text="Select Image">
                            <VBox.margin>
                               <Insets />
                            </VBox.margin>

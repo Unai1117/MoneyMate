@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import javafx.animation.ScaleTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
@@ -118,6 +119,19 @@ public class MainController implements Initializable {
             userCategoriesData.add(new PieChart.Data("Other", otherTotal / totalMoney * 100));
             chart.setData(userCategoriesData);
             chartLabel.setText("-" + totalMoney + " €");
+            
+            manageCategoriesButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    try{
+                        Pane manageCategoriesPane = FXMLLoader.load(getClass().getResource("/view/manageCate.fxml"));
+                        addExpense.getScene().setRoot(manageCategoriesPane);
+                    } catch(Exception e){
+                        System.out.println(e); 
+                    }
+                    
+                }
+            });
 
         } catch (AcountDAOException | IOException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
@@ -220,5 +234,7 @@ public class MainController implements Initializable {
         Font font = new Font(46);
         chartLabel.setFont(font);
     }
+    
+    
 
 }

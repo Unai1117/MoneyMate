@@ -102,10 +102,12 @@ public class AddExpenseController implements Initializable {
                 };
             });
             //disable new property when categoryMenu has something selected
+            /*
             newCategoryBox.disableProperty().bind(categoryMenu.valueProperty().isNotNull());
             newCategoryField.disableProperty().bind(categoryMenu.valueProperty().isNotNull());
             descriptionNewCategory.disableProperty().bind(categoryMenu.valueProperty().isNotNull());
             colorPick.disableProperty().bind(categoryMenu.valueProperty().isNotNull());
+            */
             //bind disable property to newCategoryfield
             newCategoryField.disableProperty().bind(Bindings.not(newCategoryBox.selectedProperty()));
             descriptionNewCategory.disableProperty().bind(Bindings.not(newCategoryBox.selectedProperty()));
