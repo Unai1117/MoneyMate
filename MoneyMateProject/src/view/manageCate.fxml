@@ -59,6 +59,11 @@
          <children>
             <Button fx:id="addButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addAction" text="Add" />
             <Button fx:id="deleteButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteAction" text="Delete" />
+            <Button fx:id="exitButton" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#exitAction" prefWidth="71.0" text="Exit" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets top="200.0" />
+               </VBox.margin>
+            </Button>
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

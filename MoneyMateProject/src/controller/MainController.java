@@ -79,6 +79,8 @@ public class MainController implements Initializable {
     private double totalMoney;
 
     private ObservableList<PieChart.Data> userCategoriesData = FXCollections.observableArrayList();
+    @FXML
+    private Button addExpense1;
 
     /**
      * Initializes the controller class.
@@ -120,18 +122,7 @@ public class MainController implements Initializable {
             chart.setData(userCategoriesData);
             chartLabel.setText("-" + totalMoney + " €");
             
-            manageCategoriesButton.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    try{
-                        Pane manageCategoriesPane = FXMLLoader.load(getClass().getResource("/view/manageCate.fxml"));
-                        addExpense.getScene().setRoot(manageCategoriesPane);
-                    } catch(Exception e){
-                        System.out.println(e); 
-                    }
-                    
-                }
-            });
+            
 
         } catch (AcountDAOException | IOException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
@@ -234,7 +225,15 @@ public class MainController implements Initializable {
         Font font = new Font(46);
         chartLabel.setFont(font);
     }
-    
-    
+
+    @FXML
+    private void openCatMenu(ActionEvent event) {
+        try{
+            Pane manageCategoriesPane = FXMLLoader.load(getClass().getResource("/view/manageCate.fxml"));
+            addExpense.getScene().setRoot(manageCategoriesPane);
+        } catch(Exception e){
+            System.out.println(e); 
+        }
+    }
 
 }

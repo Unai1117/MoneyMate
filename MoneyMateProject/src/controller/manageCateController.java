@@ -12,11 +12,15 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 /**
@@ -43,6 +47,8 @@ public class manageCateController implements Initializable {
     private TextField descriptionTextField;
     @FXML
     private ColorPicker colorP;
+    @FXML
+    private Button exitButton;
 
     /**
      * Initializes the controller class.
@@ -98,7 +104,31 @@ public class manageCateController implements Initializable {
 
     @FXML
     private void deleteAction(ActionEvent event) {
-        
+        String wantToDelete = categoriesListView.getSelectionModel().getSelectedItem();
+        for(int i = 0; i < categorias.size(); i++){
+            String[] names2 = categorias.get(i).getName().split("\\|");
+            String aux = names2[0];
+            try{
+                if(aux.equals(wantToDelete)){
+                    Category catWantToDelete = categorias.get(i); 
+                    acount.removeCategory(catWantToDelete); 
+                    break; 
+                }
+            } catch(Exception e){System.out.println(e);}
+        }
+        categoriesListView.getItems().remove(categoriesListView.getSelectionModel().getSelectedItem());  
+    }
+
+
+
+    @FXML
+    private void exitAction(MouseEvent event) {
+        try{
+            Pane mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml"));
+            exitButton.getScene().setRoot(mainPane);
+        } catch (Exception e) {
+            System.out.println(e); 
+        }
     }
     
 }

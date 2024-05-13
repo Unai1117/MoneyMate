@@ -184,6 +184,5 @@ public class AddExpenseController implements Initializable {
         } catch (Exception e) {
             System.out.println(e); 
         }
-         
     }
 }
