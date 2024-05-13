@@ -32,7 +32,9 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -62,7 +64,7 @@ public class MainController implements Initializable {
     @FXML
     private ScrollPane chargesPane;
     @FXML
-    private AnchorPane charges;
+    private VBox chargesList;
     @FXML
     private ScrollPane mainScroll;
     @FXML
@@ -71,6 +73,8 @@ public class MainController implements Initializable {
     private MenuItem manageUserButton;
     @FXML
     private MenuItem manageCategoriesButton;
+    @FXML
+    private MenuItem logoutButton;
 
     private final int CHARGES_PANE_SIZE = 400;
 
@@ -89,6 +93,7 @@ public class MainController implements Initializable {
         try {
             userCharges = Acount.getInstance().getUserCharges();
             userCategories = Acount.getInstance().getUserCategories();
+            List<String> chartColors = new ArrayList<>();
 
             Map<Category, List<Charge>> map = new HashMap();
             for (int i = 0; i < userCharges.size(); i++) {
@@ -113,16 +118,30 @@ public class MainController implements Initializable {
                 for (int i = 0; i < charges.size(); i++) {
                     categoryTotal += charges.get(i).getCost() * charges.get(i).getUnits();
                 }
-                
-                if (categoryTotal / totalMoney < 0.01) otherTotal += categoryTotal;
-                else userCategoriesData.add(new PieChart.Data(key.getName(), categoryTotal / totalMoney * 100));
+
+                if (categoryTotal / totalMoney < 0.01) {
+                    otherTotal += categoryTotal;
+                } else {
+                    chartColors.add(key.getName().split("\\|")[1]);
+                    userCategoriesData.add(new PieChart.Data(key.getName().split("\\|")[0], categoryTotal / totalMoney * 100));
+                }
             }
 
             userCategoriesData.add(new PieChart.Data("Other", otherTotal / totalMoney * 100));
             chart.setData(userCategoriesData);
             chartLabel.setText("-" + totalMoney + " €");
-            
-            
+
+            int colorIndex = 0;
+            for (PieChart.Data data : userCategoriesData) {
+                if (colorIndex == userCategoriesData.size() - 1 && "Other".equals(data.getName())) {
+                    data.getNode().setStyle("-fx-pie-color: #9c9c9c");
+
+                } else {
+                    data.getNode().setStyle("-fx-pie-color: " + chartColors.get(colorIndex).replace("0x", "#"));
+
+                }
+                colorIndex++;
+            }
 
         } catch (AcountDAOException | IOException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
@@ -143,18 +162,22 @@ public class MainController implements Initializable {
         mainFlowPane.prefHeightProperty().bind(mainStackPane.heightProperty().subtract(2));
         mainFlowPane.prefWidthProperty().bind(mainStackPane.widthProperty().subtract(2));
 
+        chargesList.prefWidthProperty().bind(chargesPane.widthProperty());
+
         mainPane.widthProperty().addListener((obs, oldVal, newVal) -> {
             // Collapsed
             if (newVal.intValue() < 366 + 3 * 20 + CHARGES_PANE_SIZE) {
                 chargesPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(2 * 20));
-                chargesPane.prefHeightProperty().bind(charges.heightProperty().add(2));
+                chargesPane.prefHeightProperty().bind(chargesList.heightProperty().add(2));
                 chargesPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                chargesList.prefWidthProperty().bind(chargesPane.widthProperty());
                 mainScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
             } // Full
             else {
                 chargesPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(366 + 3 * 20));
                 chargesPane.prefHeightProperty().bind(mainPane.heightProperty().subtract(20 * 2 + 2));
                 chargesPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+                chargesList.prefWidthProperty().bind(chargesPane.widthProperty().subtract(20));
                 mainScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
             }
         });
@@ -192,7 +215,23 @@ public class MainController implements Initializable {
         Utils.iconToMenuItem(manageUserIcon, manageUserButton);
         Image manageCategoriesIcon = new Image(getClass().getResourceAsStream("../assets/icons/tag.png"));
         Utils.iconToMenuItem(manageCategoriesIcon, manageCategoriesButton);
+        Image logoutIcon = new Image(getClass().getResourceAsStream("../assets/icons/sign-out.png"));
+        Utils.iconToMenuItem(logoutIcon, logoutButton);
 
+        for (Charge userCharge : userCharges) {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("/view/ChargeItem.fxml"));
+
+            try {
+                HBox item = fxmlLoader.load();
+                ChargeItemController cic = fxmlLoader.getController();
+                cic.setData(userCharge);
+                chargesList.getChildren().add(item);
+            } catch (IOException ex) {
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
     }
 
     @FXML
@@ -228,11 +267,11 @@ public class MainController implements Initializable {
 
     @FXML
     private void openCatMenu(ActionEvent event) {
-        try{
+        try {
             Pane manageCategoriesPane = FXMLLoader.load(getClass().getResource("/view/manageCate.fxml"));
             addExpense.getScene().setRoot(manageCategoriesPane);
-        } catch(Exception e){
-            System.out.println(e); 
+        } catch (Exception e) {
+            System.out.println(e);
         }
     }
 

@@ -17,9 +17,7 @@ import javafx.stage.FileChooser;
  */
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Stage;
 
 public class Utils {
 
@@ -30,7 +28,6 @@ public class Utils {
      * @param email String which contains the email to check
      * @return True if the email is valid. False otherwise.
      */
-
     public static Boolean checkEmail(String email) {
         if (email == null) {
             return false;
@@ -83,7 +80,7 @@ public class Utils {
             return null;
         }
     }
-    
+
     public static void iconToMenuItem(Image image, MenuItem menuItem) {
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(20);
