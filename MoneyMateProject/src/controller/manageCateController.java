@@ -7,6 +7,7 @@ package controller;
 import model.*; 
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
@@ -14,7 +15,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -105,18 +109,25 @@ public class manageCateController implements Initializable {
     @FXML
     private void deleteAction(ActionEvent event) {
         String wantToDelete = categoriesListView.getSelectionModel().getSelectedItem();
-        for(int i = 0; i < categorias.size(); i++){
-            String[] names2 = categorias.get(i).getName().split("\\|");
-            String aux = names2[0];
-            try{
-                if(aux.equals(wantToDelete)){
-                    Category catWantToDelete = categorias.get(i); 
-                    acount.removeCategory(catWantToDelete); 
-                    break; 
-                }
-            } catch(Exception e){System.out.println(e);}
-        }
-        categoriesListView.getItems().remove(categoriesListView.getSelectionModel().getSelectedItem());  
+
+        Alert alert = new Alert(AlertType.CONFIRMATION); 
+        alert.setTitle("Delete confirmation"); 
+        alert.setContentText("Are you soure you want to dele this category? This will delete all the charges of this category.");
+        Optional<ButtonType> result = alert.showAndWait(); 
+        if(result.get() == ButtonType.OK){
+            for(int i = 0; i < categorias.size(); i++){
+                String[] names2 = categorias.get(i).getName().split("\\|");
+                String aux = names2[0];
+                try{
+                    if(aux.equals(wantToDelete)){
+                        Category catWantToDelete = categorias.get(i); 
+                        acount.removeCategory(catWantToDelete); 
+                        break; 
+                    }
+                } catch(Exception e){System.out.println(e);}
+            }
+            categoriesListView.getItems().remove(categoriesListView.getSelectionModel().getSelectedItem());  
+        }     
     }
 
 
