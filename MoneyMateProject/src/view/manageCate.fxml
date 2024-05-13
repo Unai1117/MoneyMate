@@ -28,22 +28,26 @@
             <TextField fx:id="nameTextField" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets right="10.0" />
-               </GridPane.margin></TextField>
+               </GridPane.margin>
+            </TextField>
             <Label minHeight="-Infinity" minWidth="-Infinity" text="Name">
                <padding>
                   <Insets left="15.0" right="3.0" />
                </padding>
                <GridPane.margin>
                   <Insets />
-               </GridPane.margin></Label>
+               </GridPane.margin>
+            </Label>
             <Label minHeight="-Infinity" minWidth="-Infinity" text="Description" GridPane.rowIndex="1">
                <padding>
                   <Insets left="15.0" right="3.0" />
-               </padding></Label>
+               </padding>
+            </Label>
             <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="10.0" />
-               </GridPane.margin></TextField>
+               </GridPane.margin>
+            </TextField>
             <ColorPicker fx:id="colorP" GridPane.columnIndex="2" />
          </children>
          <padding>
@@ -59,7 +63,7 @@
          <children>
             <Button fx:id="addButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addAction" text="Add" />
             <Button fx:id="deleteButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteAction" text="Delete" />
-            <Button fx:id="exitButton" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#exitAction" prefWidth="71.0" text="Exit" VBox.vgrow="ALWAYS">
+            <Button fx:id="exitButton" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#exitAction" prefWidth="71.0" text="Exit">
                <VBox.margin>
                   <Insets top="200.0" />
                </VBox.margin>
@@ -74,6 +78,7 @@
       <ListView fx:id="categoriesListView" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="200.0" prefWidth="380.0" style="-fx-background-color: lavender;" stylesheets="@../styles/main.css" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="30.0" left="30.0" />
-         </BorderPane.margin></ListView>
+         </BorderPane.margin>
+      </ListView>
    </center>
 </BorderPane>
