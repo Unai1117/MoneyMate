@@ -30,7 +30,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import model.*; 
+import model.*;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -61,30 +61,31 @@ public class AddExpenseController implements Initializable {
     private DatePicker datePicker;
     @FXML
     private ChoiceBox<String> categoryMenu;
-    
-    private Acount acount; 
+
+    private Acount acount;
     @FXML
     private TextField unitsField;
     @FXML
     private Button selectImageExpense;
-    
-    private Image scanedImage; 
+
+    private Image scanedImage;
     @FXML
     private CheckBox newCategoryBox;
     @FXML
     private TextField newCategoryField;
     @FXML
     private TextArea descriptionNewCategory;
-    
-    private Category category; 
-    
-    private List<Category> categorias; 
+
+    private Category category;
+
+    private List<Category> categorias;
     @FXML
     private Button cancelButton;
-    
-    private Pane mainPane; 
+
+    private Pane mainPane;
     @FXML
     private ColorPicker colorPick;
+
     /**
      * Initializes the controller class.
      */
@@ -98,7 +99,7 @@ public class AddExpenseController implements Initializable {
                     public void updateItem(LocalDate date, boolean empty) {
                         super.updateItem(date, empty);
                         LocalDate today = LocalDate.now();
-                        setDisable(empty || date.compareTo(today) < 0 );
+                        setDisable(empty || date.compareTo(today) < 0);
                     }
                 };
             });
@@ -108,7 +109,7 @@ public class AddExpenseController implements Initializable {
             newCategoryField.disableProperty().bind(categoryMenu.valueProperty().isNotNull());
             descriptionNewCategory.disableProperty().bind(categoryMenu.valueProperty().isNotNull());
             colorPick.disableProperty().bind(categoryMenu.valueProperty().isNotNull());
-            */
+             */
             //bind disable property to newCategoryfield
             newCategoryField.disableProperty().bind(Bindings.not(newCategoryBox.selectedProperty()));
             descriptionNewCategory.disableProperty().bind(Bindings.not(newCategoryBox.selectedProperty()));
@@ -118,61 +119,65 @@ public class AddExpenseController implements Initializable {
             acount = Acount.getInstance();
             //obtain List of categories of the user
             categorias = acount.getUserCategories();
-            for(int i = 0; i < categorias.size(); i++){
+            for (int i = 0; i < categorias.size(); i++) {
                 String[] names = categorias.get(i).getName().split("\\|");
-                categoryMenu.getItems().add(names[0]); 
+                categoryMenu.getItems().add(names[0]);
             }
-            
-        } catch (Exception e){
+
+        } catch (Exception e) {
             System.out.println(e);
         }
-    }    
+    }
+
     @FXML
     private void doneButton(MouseEvent event) throws AcountDAOException {
         //obtain all the fields needed to add an expense
-        double cost = Double.parseDouble(costField.getText()); 
-        String name = nameField.getText(); 
-        String description = descriptionField.getText(); 
+        double cost = Double.parseDouble(costField.getText());
+        String name = nameField.getText();
+        String description = descriptionField.getText();
         int units = Integer.parseInt(unitsField.getText());
         LocalDate date = datePicker.getValue();
-        if(descriptionNewCategory.getText().isEmpty()){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error message");
-            alert.setContentText("Please fill the description field");
-            alert.showAndWait(); 
-        }
-        if(!newCategoryField.getText().isEmpty() && !descriptionNewCategory.getText().isEmpty()){
-            Color selectedColor = colorPick.getValue();
-            String colorString = selectedColor.toString();
-            String categoryName = newCategoryField.getText() + "|" + colorString; 
-            System.out.println(colorString);
-            acount.registerCategory(categoryName, descriptionNewCategory.getText()); 
-            categorias = acount.getUserCategories(); 
-            boolean flag = false;
-            for(int i = 0; i < categorias.size() && !flag; i++){
-                Category aux = categorias.get(i); 
-                if(aux.getName().equals(categoryName)){
-                    flag = true; 
-                    category = aux; 
+
+        if (!newCategoryField.getText().isEmpty()) {
+            if (descriptionNewCategory.getText().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error message");
+                alert.setContentText("Please fill the description field");
+                alert.showAndWait();
+                return;
+            } else {
+                Color selectedColor = colorPick.getValue();
+                String colorString = selectedColor.toString();
+                String categoryName = newCategoryField.getText() + "|" + colorString;
+                System.out.println(colorString);
+                acount.registerCategory(categoryName, descriptionNewCategory.getText());
+                categorias = acount.getUserCategories();
+                boolean flag = false;
+                for (int i = 0; i < categorias.size() && !flag; i++) {
+                    Category aux = categorias.get(i);
+                    if (aux.getName().equals(categoryName)) {
+                        flag = true;
+                        category = aux;
+                    }
                 }
             }
-        } else if(category == null){
+        } else if (category == null) {
             String nameCat = categoryMenu.getValue();
-            boolean flag = false; 
-            for(int i = 0; i < categorias.size() && !flag; i++){
-                String[] parts = categorias.get(i).getName().split("\\|"); 
-                String aux = parts[0]; 
-                if(aux.equals(nameCat)){
-                    flag = true; 
-                    category = categorias.get(i); 
+            boolean flag = false;
+            for (int i = 0; i < categorias.size() && !flag; i++) {
+                String[] parts = categorias.get(i).getName().split("\\|");
+                String aux = parts[0];
+                if (aux.equals(nameCat)) {
+                    flag = true;
+                    category = categorias.get(i);
                 }
             }
         }
-        try{
+        try {
             acount.registerCharge(name, description, cost, units, scanedImage, date, category);
-            mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml")); 
+            mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml"));
             doneButton.getScene().setRoot(mainPane);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e);
         }
     }
@@ -185,11 +190,11 @@ public class AddExpenseController implements Initializable {
 
     @FXML
     private void cancelAction(MouseEvent event) {
-        try{
+        try {
             mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml"));
             cancelButton.getScene().setRoot(mainPane);
         } catch (Exception e) {
-            System.out.println(e); 
+            System.out.println(e);
         }
     }
 }
