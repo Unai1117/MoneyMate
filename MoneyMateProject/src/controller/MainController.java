@@ -46,7 +46,7 @@ import model.*;
  * @author jorge
  */
 public class MainController implements Initializable {
-
+    
     @FXML
     public Pane mainPane;
     @FXML
@@ -75,13 +75,13 @@ public class MainController implements Initializable {
     private MenuItem manageCategoriesButton;
     @FXML
     private MenuItem logoutButton;
-
+    
     private final int CHARGES_PANE_SIZE = 400;
-
+    
     private List<Charge> userCharges;
     private List<Category> userCategories;
     private double totalMoney;
-
+    
     private ObservableList<PieChart.Data> userCategoriesData = FXCollections.observableArrayList();
     @FXML
     private Button addExpense1;
@@ -91,10 +91,11 @@ public class MainController implements Initializable {
      */
     public void initialize(URL url, ResourceBundle rb) {
         try {
+            // Generates a Category - Charges map
             userCharges = Acount.getInstance().getUserCharges();
             userCategories = Acount.getInstance().getUserCategories();
             List<String> chartColors = new ArrayList<>();
-
+            
             Map<Category, List<Charge>> map = new HashMap();
             for (int i = 0; i < userCharges.size(); i++) {
                 Charge charge = userCharges.get(i);
@@ -110,7 +111,7 @@ public class MainController implements Initializable {
                     map.put(category, aux);
                 }
             }
-
+            
             double otherTotal = 0;
             for (Category key : map.keySet()) {
                 double categoryTotal = 0;
@@ -119,54 +120,58 @@ public class MainController implements Initializable {
                     categoryTotal += charges.get(i).getCost() * charges.get(i).getUnits();
                 }
 
+                // If the relative total is less than 1%, merge categories in "other"
                 if (categoryTotal / totalMoney < 0.01) {
                     otherTotal += categoryTotal;
                 } else {
                     chartColors.add(key.getName().split("\\|")[1]);
-                    userCategoriesData.add(new PieChart.Data(key.getName().split("\\|")[0], categoryTotal / totalMoney * 100));
+                    userCategoriesData.add(new PieChart.Data(key.getName().split("\\|")[0], categoryTotal));
                 }
             }
-
-            userCategoriesData.add(new PieChart.Data("Other", otherTotal / totalMoney * 100));
+            
+            userCategoriesData.add(new PieChart.Data("Other", otherTotal));
             chart.setData(userCategoriesData);
             chartLabel.setText("-" + totalMoney + " €");
 
+            // Set the appropriate colors to the chart pies
             int colorIndex = 0;
             for (PieChart.Data data : userCategoriesData) {
                 if (colorIndex == userCategoriesData.size() - 1 && "Other".equals(data.getName())) {
                     data.getNode().setStyle("-fx-pie-color: #9c9c9c");
-
+                    
                 } else {
                     data.getNode().setStyle("-fx-pie-color: " + chartColors.get(colorIndex).replace("0x", "#"));
-
+                    
                 }
                 colorIndex++;
             }
-
+            
         } catch (AcountDAOException | IOException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        // Inner circle default value
         chartInnerCircle.radiusProperty().bind(chartStackPane.widthProperty().multiply(0.85).divide(2));
-
-        chargesPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(364 + 3 * 20));
-        chargesPane.prefHeightProperty().bind(mainPane.heightProperty().subtract(20 * 2 + 2));
+        
         chargesPane.minWidthProperty().set(CHARGES_PANE_SIZE);
 
+        // same as mainPane
         mainStackPane.prefHeightProperty().bind(mainPane.heightProperty());
         mainStackPane.prefWidthProperty().bind(mainPane.widthProperty());
 
+        //same as mainPane/stackPane
         mainScroll.prefHeightProperty().bind(mainStackPane.heightProperty());
         mainScroll.prefWidthProperty().bind(mainStackPane.widthProperty());
 
+        // same as stackpane/scrollpane - 2 for the scrollpane (it needs 2 extra pixels to fit all the contents
         mainFlowPane.prefHeightProperty().bind(mainStackPane.heightProperty().subtract(2));
         mainFlowPane.prefWidthProperty().bind(mainStackPane.widthProperty().subtract(2));
 
-        chargesList.prefWidthProperty().bind(chargesPane.widthProperty());
-
+        // change sizes based on window size
         mainPane.widthProperty().addListener((obs, oldVal, newVal) -> {
             // Collapsed
             if (newVal.intValue() < 366 + 3 * 20 + CHARGES_PANE_SIZE) {
+                // 2 * padding
                 chargesPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(2 * 20));
                 chargesPane.prefHeightProperty().bind(chargesList.heightProperty().add(2));
                 chargesPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -182,21 +187,22 @@ public class MainController implements Initializable {
             }
         });
 
+        // chart animations
         for (final PieChart.Data data : chart.getData()) {
             data.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
-                    chartLabel.setText(String.valueOf(data.getName() + "\n" + String.format("%.1f", data.getPieValue()) + "%"));
-
+                    chartLabel.setText(String.valueOf(data.getName() + "\n" + String.format("%.1f", data.getPieValue()) + " €"));
+                    
                     Font font = new Font(36);
                     chartLabel.setFont(font);
-
+                    
                     ScaleTransition grow = new ScaleTransition(Duration.millis(200));
                     grow.setNode(data.getNode());
                     grow.setToX(1.1);
                     grow.setToY(1.1);
                     grow.playFromStart();
-
+                    
                 }
             });
             data.getNode().addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
@@ -211,6 +217,7 @@ public class MainController implements Initializable {
             });
         }
 
+        // add images to menu items
         Image manageUserIcon = new Image(getClass().getResourceAsStream("../assets/icons/user-gear.png"));
         Utils.iconToMenuItem(manageUserIcon, manageUserButton);
         Image manageCategoriesIcon = new Image(getClass().getResourceAsStream("../assets/icons/tag.png"));
@@ -218,22 +225,36 @@ public class MainController implements Initializable {
         Image logoutIcon = new Image(getClass().getResourceAsStream("../assets/icons/sign-out.png"));
         Utils.iconToMenuItem(logoutIcon, logoutButton);
 
+        // create charges
         for (Charge userCharge : userCharges) {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/ChargeItem.fxml"));
-
+            
             try {
                 HBox item = fxmlLoader.load();
                 ChargeItemController cic = fxmlLoader.getController();
                 cic.setData(userCharge);
+                cic.setOnRemove(() -> {
+                    chargesList.getChildren().remove(item);
+                    totalMoney -= userCharge.getCost() * userCharge.getUnits();
+                    chartLabel.setText("-" + totalMoney + " €");
+                    
+                    for (PieChart.Data data : userCategoriesData) {
+                        if (data.getName().equals(userCharge.getCategory().getName().split("\\|")[0])) {
+                            data.setPieValue(data.getPieValue() - userCharge.getCost() * userCharge.getUnits());
+                            break;
+                        }
+                    }
+                    
+                });
                 chargesList.getChildren().add(item);
             } catch (IOException ex) {
                 Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
             }
-
+            
         }
     }
-
+    
     @FXML
     private void openAddExpensePane(MouseEvent event) {
         try {
@@ -243,7 +264,7 @@ public class MainController implements Initializable {
             System.out.println(e);
         }
     }
-
+    
     @FXML
     private void shrinkCircle(MouseEvent event) {
         ScaleTransition shrink = new ScaleTransition(Duration.millis(200));
@@ -252,7 +273,7 @@ public class MainController implements Initializable {
         shrink.setToY(0.85);
         shrink.playFromStart();
     }
-
+    
     @FXML
     private void restoreCircle(MouseEvent event) {
         ScaleTransition grow = new ScaleTransition(Duration.millis(200));
@@ -264,7 +285,7 @@ public class MainController implements Initializable {
         Font font = new Font(46);
         chartLabel.setFont(font);
     }
-
+    
     @FXML
     private void openCatMenu(ActionEvent event) {
         try {
@@ -274,5 +295,5 @@ public class MainController implements Initializable {
             System.out.println(e);
         }
     }
-
+    
 }
