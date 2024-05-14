@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="regPane" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
+<BorderPane fx:id="regPane" style="-fx-background-color: white;" styleClass="root" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
    <top>
       <HBox alignment="CENTER" prefHeight="42.0" prefWidth="500.0" style="-fx-background-color: #222831;" BorderPane.alignment="CENTER">
          <children>
@@ -27,7 +27,7 @@
       </HBox>
    </top>
    <center>
-      <VBox alignment="CENTER" prefHeight="250.0" prefWidth="300.0" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="250.0" prefWidth="300.0" styleClass="root" BorderPane.alignment="CENTER">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
@@ -101,20 +101,20 @@
             <Button fx:id="imageChooser" mnemonicParsing="false" text="Choose Image" />
          </children>
          <BorderPane.margin>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            <Insets />
          </BorderPane.margin>
       </VBox>
    </center>
    <bottom>
-      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="100.0" style="-fx-background-color: #222831;" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="100.0" styleClass="root" BorderPane.alignment="CENTER">
          <children>
-            <Button alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" text="Cancel">
+            <Button alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" styleClass="button-secondary" text="Cancel">
                <HBox.margin>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="logButton" mnemonicParsing="false" onMouseClicked="#goLogin" text="Login" />
-            <Button fx:id="register" alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" onMouseClicked="#acceptRegister" text="Register">
+            <Button fx:id="logButton" mnemonicParsing="false" onMouseClicked="#goLogin" styleClass="button-secondary" text="Login" />
+            <Button fx:id="register" alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" onMouseClicked="#acceptRegister" styleClass="button-secondary" text="Register">
                <HBox.margin>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </HBox.margin>

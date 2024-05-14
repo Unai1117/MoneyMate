@@ -296,4 +296,14 @@ public class MainController implements Initializable {
         }
     }
     
+    @FXML
+    private void openUserMod(ActionEvent event) {
+        try {
+            Pane manageUserPane = FXMLLoader.load(getClass().getResource("/view/manageUser.fxml"));
+            addExpense.getScene().setRoot(manageUserPane);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
 }

@@ -20,7 +20,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="mainPane" prefHeight="627.0" prefWidth="989.0" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
+<Pane fx:id="mainPane" prefHeight="627.0" prefWidth="989.0" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
    <children>
       <StackPane fx:id="mainStackPane" alignment="TOP_LEFT" prefHeight="627.0" prefWidth="989.0">
          <children>
@@ -89,7 +89,7 @@
             </ScrollPane>
             <MenuButton alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="51.0" prefWidth="60.0" style="-fx-background-radius: 100%;">
               <items>
-                <MenuItem fx:id="manageUserButton" mnemonicParsing="false" text="Mange User" />
+                <MenuItem fx:id="manageUserButton" mnemonicParsing="false" onAction="#openUserMod" text="Mange User" />
                 <MenuItem fx:id="manageCategoriesButton" mnemonicParsing="false" onAction="#openCatMenu" text="Manage Categories" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="logoutButton" mnemonicParsing="false" styleClass="destructive" text="Log out" />

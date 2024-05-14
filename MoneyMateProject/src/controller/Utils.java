@@ -13,7 +13,7 @@ import javafx.stage.FileChooser;
 
 /**
  *
- * @author sovacu
+ * @author arnau
  */
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
