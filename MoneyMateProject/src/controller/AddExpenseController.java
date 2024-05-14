@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -134,11 +135,17 @@ public class AddExpenseController implements Initializable {
         String description = descriptionField.getText(); 
         int units = Integer.parseInt(unitsField.getText());
         LocalDate date = datePicker.getValue();
+        if(descriptionNewCategory.getText().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error message");
+            alert.setContentText("Please fill the description field");
+            alert.showAndWait(); 
+        }
         if(!newCategoryField.getText().isEmpty() && !descriptionNewCategory.getText().isEmpty()){
             Color selectedColor = colorPick.getValue();
             String colorString = selectedColor.toString();
             String categoryName = newCategoryField.getText() + "|" + colorString; 
-            System.out.println(colorString); 
+            System.out.println(colorString);
             acount.registerCategory(categoryName, descriptionNewCategory.getText()); 
             categorias = acount.getUserCategories(); 
             boolean flag = false;
