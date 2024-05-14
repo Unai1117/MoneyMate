@@ -43,7 +43,7 @@ import model.*;
  *
  * @author arnau
  */
-public class RegisterController implements Initializable {
+public class manageUserController implements Initializable {
 
     @FXML
     private Button register;
@@ -90,7 +90,7 @@ public class RegisterController implements Initializable {
         try {
             acount = Acount.getInstance();
         } catch (AcountDAOException | IOException ex) {
-            java.util.logging.Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(manageUserController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         //Booleans for checking fields
