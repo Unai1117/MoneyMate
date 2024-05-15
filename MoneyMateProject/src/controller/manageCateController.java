@@ -53,6 +53,8 @@ public class manageCateController implements Initializable {
     private ColorPicker colorP;
     @FXML
     private Button exitButton;
+    
+    private List<Charge> userCharges; 
 
     /**
      * Initializes the controller class.
@@ -98,7 +100,6 @@ public class manageCateController implements Initializable {
              
             //change focus to inital textfield
             nameTextField.requestFocus();
-            addButton.setDisable(true);
             }  
         } catch(Exception e){
             System.out.println(e); 
@@ -109,24 +110,42 @@ public class manageCateController implements Initializable {
     @FXML
     private void deleteAction(ActionEvent event) {
         String wantToDelete = categoriesListView.getSelectionModel().getSelectedItem();
-
-        Alert alert = new Alert(AlertType.CONFIRMATION); 
-        alert.setTitle("Delete confirmation"); 
-        alert.setContentText("Are you soure you want to dele this category? This will delete all the charges of this category.");
-        Optional<ButtonType> result = alert.showAndWait(); 
-        if(result.get() == ButtonType.OK){
-            for(int i = 0; i < categorias.size(); i++){
-                String[] names2 = categorias.get(i).getName().split("\\|");
-                String aux = names2[0];
-                try{
+        try{
+            userCharges = acount.getUserCharges();
+            boolean flag = false;
+            String s = null;
+            Category cat = null;
+            for(int i = 0; i < userCharges.size() && !flag; i++){
+                cat = userCharges.get(i).getCategory();
+                String[] arr = cat.getName().split("\\|");
+                if(arr[0].equals(wantToDelete)){
+                    flag = true;
+                    s = arr[0];
+                }
+            }
+            if(flag){
+                Alert alert = new Alert(AlertType.CONFIRMATION); 
+                alert.setTitle("Delete confirmation"); 
+                alert.setContentText("Are you soure you want to dele this category? This will delete all the charges of this category.");
+                Optional<ButtonType> result = alert.showAndWait(); 
+                if(result.get() == ButtonType.OK){
+                    acount.removeCategory(cat); 
+                    categoriesListView.getItems().remove(categoriesListView.getSelectionModel().getSelectedItem());  
+                }
+            } else {
+                for(int i = 0; i < categorias.size(); i++){
+                    String[] names2 = categorias.get(i).getName().split("\\|");
+                    String aux = names2[0];
                     if(aux.equals(wantToDelete)){
                         Category catWantToDelete = categorias.get(i); 
                         acount.removeCategory(catWantToDelete); 
                         break; 
                     }
-                } catch(Exception e){System.out.println(e);}
+                    categoriesListView.getItems().remove(categoriesListView.getSelectionModel().getSelectedItem()); 
+                }
             }
-            categoriesListView.getItems().remove(categoriesListView.getSelectionModel().getSelectedItem());  
+        } catch (Exception e){
+            System.out.println(e);
         }     
     }
 
