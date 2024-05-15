@@ -92,24 +92,6 @@ public class AddExpenseController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            //remove the posibility of adding an expense in a previous date
-            datePicker.setDayCellFactory((DatePicker picker) -> {
-                return new DateCell() {
-                    @Override
-                    public void updateItem(LocalDate date, boolean empty) {
-                        super.updateItem(date, empty);
-                        LocalDate today = LocalDate.now();
-                        setDisable(empty || date.compareTo(today) < 0);
-                    }
-                };
-            });
-            //disable new property when categoryMenu has something selected
-            /*
-            newCategoryBox.disableProperty().bind(categoryMenu.valueProperty().isNotNull());
-            newCategoryField.disableProperty().bind(categoryMenu.valueProperty().isNotNull());
-            descriptionNewCategory.disableProperty().bind(categoryMenu.valueProperty().isNotNull());
-            colorPick.disableProperty().bind(categoryMenu.valueProperty().isNotNull());
-             */
             //bind disable property to newCategoryfield
             newCategoryField.disableProperty().bind(Bindings.not(newCategoryBox.selectedProperty()));
             descriptionNewCategory.disableProperty().bind(Bindings.not(newCategoryBox.selectedProperty()));
