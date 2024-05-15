@@ -111,6 +111,7 @@ public class manageCateController implements Initializable {
     private void deleteAction(ActionEvent event) {
         String wantToDelete = categoriesListView.getSelectionModel().getSelectedItem();
         try{
+            //check if the category has charges
             userCharges = acount.getUserCharges();
             boolean flag = false;
             String s = null;
@@ -123,6 +124,7 @@ public class manageCateController implements Initializable {
                     s = arr[0];
                 }
             }
+            //if category has charges ask for confirmation
             if(flag){
                 Alert alert = new Alert(AlertType.CONFIRMATION); 
                 alert.setTitle("Delete confirmation"); 
@@ -132,7 +134,7 @@ public class manageCateController implements Initializable {
                     acount.removeCategory(cat); 
                     categoriesListView.getItems().remove(categoriesListView.getSelectionModel().getSelectedItem());  
                 }
-            } else {
+            } else {//remove the category because it doesn't have any charges
                 for(int i = 0; i < categorias.size(); i++){
                     String[] names2 = categorias.get(i).getName().split("\\|");
                     String aux = names2[0];
