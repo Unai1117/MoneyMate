@@ -135,15 +135,21 @@ public class manageCateController implements Initializable {
                     categoriesListView.getItems().remove(categoriesListView.getSelectionModel().getSelectedItem());  
                 }
             } else {//remove the category because it doesn't have any charges
-                for(int i = 0; i < categorias.size(); i++){
-                    String[] names2 = categorias.get(i).getName().split("\\|");
-                    String aux = names2[0];
-                    if(aux.equals(wantToDelete)){
-                        Category catWantToDelete = categorias.get(i); 
-                        acount.removeCategory(catWantToDelete); 
-                        break; 
+                Alert alert = new Alert(AlertType.CONFIRMATION); 
+                alert.setTitle("Delete confirmation"); 
+                alert.setContentText("Are you soure you want to dele this category?");
+                Optional<ButtonType> result = alert.showAndWait(); 
+                if(result.get() == ButtonType.OK){
+                    for(int i = 0; i < categorias.size(); i++){
+                        String[] names2 = categorias.get(i).getName().split("\\|");
+                        String aux = names2[0];
+                        if(aux.equals(wantToDelete)){
+                            Category catWantToDelete = categorias.get(i); 
+                            acount.removeCategory(catWantToDelete); 
+                            break; 
+                        } 
                     }
-                    categoriesListView.getItems().remove(categoriesListView.getSelectionModel().getSelectedItem()); 
+                    categoriesListView.getItems().remove(categoriesListView.getSelectionModel().getSelectedItem());
                 }
             }
         } catch (Exception e){
