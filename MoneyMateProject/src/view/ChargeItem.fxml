@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
@@ -36,7 +37,8 @@
       <Region minWidth="0.0" prefHeight="46.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
       <MenuButton alignment="CENTER_RIGHT" mnemonicParsing="false" prefHeight="46.0" prefWidth="32.0">
          <items>
-            <MenuItem mnemonicParsing="false" text="Action 1" />
+            <MenuItem fx:id="viewImageButton" mnemonicParsing="false" onAction="#viewImage" text="View Image" />
+            <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem fx:id="deleteChargeButton" mnemonicParsing="false" onAction="#deleteCharge" styleClass="destructive" text="Delete Charge" />
          </items>
          <graphic>

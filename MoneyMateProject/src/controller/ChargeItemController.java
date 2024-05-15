@@ -14,13 +14,18 @@ import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import model.Acount;
 import model.AcountDAOException;
 import model.Charge;
@@ -45,11 +50,16 @@ public class ChargeItemController implements Initializable {
     private Circle color;
     @FXML
     private MenuItem deleteChargeButton;
+    @FXML
+    private MenuItem viewImageButton;
 
     Charge charge;
     Runnable action;
 
+    Image scannedImage;
+
     public void setData(Charge charge) {
+        // Populate labels
         this.charge = charge;
         price.setText("-" + charge.getCost() + " €");
         name.setText(charge.getName());
@@ -58,16 +68,24 @@ public class ChargeItemController implements Initializable {
         date.setText(localDate.format(formatter));
         category.setText(charge.getCategory().getName().split("\\|")[0]);
         color.setFill(Color.web(charge.getCategory().getName().split("\\|")[1]));
+        scannedImage = charge.getImageScan();
+        // Checks if image exists
+        if (scannedImage == null || scannedImage.getHeight() == 0.0) {
+            viewImageButton.setText("Add Image");
+        }
     }
-    
+
     public void setOnRemove(Runnable action) {
         this.action = action;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // Add images to menu
         Image manageUserIcon = new Image(getClass().getResourceAsStream("../assets/icons/trash.png"));
         Utils.iconToMenuItem(manageUserIcon, deleteChargeButton);
+        Image viewImageIcon = new Image(getClass().getResourceAsStream("../assets/icons/image-square.png"));
+        Utils.iconToMenuItem(viewImageIcon, viewImageButton);
     }
 
     @FXML
@@ -80,5 +98,45 @@ public class ChargeItemController implements Initializable {
         } catch (AcountDAOException | IOException ex) {
             Logger.getLogger(ChargeItemController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @FXML
+    private void viewImage(ActionEvent event) {
+        if (scannedImage == null || scannedImage.getHeight() == 0.0) {
+            scannedImage = Utils.codeOpenFiles();
+            if (scannedImage != null) {
+                charge.setImageScan(scannedImage);
+                viewImageButton.setText("View Image");
+            }
+
+        } else {
+            Stage imageStage = new Stage();
+            Image image = scannedImage;
+            ImageView imageView = new ImageView(image);
+
+            imageView.setPreserveRatio(true);
+            imageView.setSmooth(true);
+            imageView.setCache(true);
+
+            StackPane stackPane = new StackPane(imageView);
+
+            Scene scene = new Scene(stackPane, 600, 600);
+
+            imageView.setFitWidth(scene.widthProperty().doubleValue());
+            imageView.setFitHeight(scene.heightProperty().doubleValue());
+
+            scene.widthProperty().addListener((observable, oldValue, newValue) -> {
+                imageView.setFitWidth(newValue.doubleValue());
+            });
+
+            scene.heightProperty().addListener((observable, oldValue, newValue) -> {
+                imageView.setFitHeight(newValue.doubleValue());
+            });
+
+            imageStage.setTitle("Image Viewer");
+            imageStage.setScene(scene);
+            imageStage.show();
+        }
+
     }
 }
