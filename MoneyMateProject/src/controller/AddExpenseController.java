@@ -85,6 +85,8 @@ public class AddExpenseController implements Initializable {
     private Pane mainPane;
     @FXML
     private ColorPicker colorPick;
+    @FXML
+    private Text textImage;
 
     /**
      * Initializes the controller class.
@@ -168,6 +170,8 @@ public class AddExpenseController implements Initializable {
     //obtain image
     private void openFiles(MouseEvent event) {
         scanedImage = Utils.codeOpenFiles();
+        String[] arr = scanedImage.getUrl().split("/");
+        textImage.setText(arr[arr.length - 1]);
     }
 
     @FXML
