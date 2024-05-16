@@ -309,7 +309,8 @@ public class MainController implements Initializable {
     }
     
     @FXML
-    private void logOut(ActionEvent event) {
+    private void logOut(ActionEvent event) throws AcountDAOException, IOException {
+        Acount.getInstance().logOutUser();
         try {
             Pane logIn = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
             addExpense.getScene().setRoot(logIn);
