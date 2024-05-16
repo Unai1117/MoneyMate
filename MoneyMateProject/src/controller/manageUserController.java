@@ -34,6 +34,8 @@ import static javafx.scene.input.KeyCode.EQUALS;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import model.*;
@@ -46,6 +48,33 @@ import model.*;
 public class manageUserController implements Initializable {
     
     private Acount acount;
+    private User user;
+    
+    
+    @FXML
+    private Circle circle;
+    @FXML
+    private Button register;
+    @FXML
+    private Button cancel;
+    @FXML
+    private BorderPane regPane;
+    @FXML
+    private TextField eemail1;
+    @FXML
+    private PasswordField password1;
+    @FXML
+    private PasswordField password2;
+    @FXML
+    private Label lIncorrectEmail;
+    @FXML 
+    private Label lPassDifferent;
+    @FXML 
+    private TextField nname1;
+    @FXML 
+    private Label nickname;
+    @FXML
+    private Image scanedImage;
     
 
     /**
@@ -61,5 +90,31 @@ public class manageUserController implements Initializable {
         } catch (AcountDAOException | IOException ex) {
             java.util.logging.Logger.getLogger(manageUserController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        user = acount.getLoggedUser();
+        
+        circle.setFill(new ImagePattern(user.getImage()));
+        nickname.setText(user.getNickName());
+        nname1.setText(user.getName() + user.getSurname());
+        eemail1.setText(user.getEmail());
     }
+    
+    @FXML
+    private void openMainPane(ActionEvent event) {
+        try {
+            Pane mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml"));
+            regPane.getScene().setRoot(mainPane);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
+    private void putImage(){
+        
+    }
+    
+    /*@FXML 
+    private void toSecondaryColour(MouseEvent event){
+        cancel.setStyle("button-secondary");
+    }*/
 }

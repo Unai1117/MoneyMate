@@ -98,7 +98,7 @@
                   </VBox>
                </children>
             </HBox>
-            <Button fx:id="imageChooser" mnemonicParsing="false" text="Choose Image" />
+            <Button fx:id="imageChooser" mnemonicParsing="false" onMouseClicked="#openFiles" text="Choose Image" />
          </children>
          <BorderPane.margin>
             <Insets />

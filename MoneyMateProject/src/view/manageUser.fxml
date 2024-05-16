@@ -5,129 +5,99 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="600.0" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.manageUserController">
+<Pane fx:id="regPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="600.0" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.manageUserController">
    <children>
       <BorderPane prefHeight="400.0" prefWidth="600.0">
+         <bottom>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" styleClass="root" BorderPane.alignment="CENTER">
+               <children>
+                  <Button fx:id="cancel" mnemonicParsing="false" onMouseClicked="#openMainPane" text="Cancel">
+                     <HBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" text="Save">
+                     <HBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </bottom>
+         <top>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="root" BorderPane.alignment="CENTER">
+               <children>
+                  <Circle fx:id="circle" fill="DODGERBLUE" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Label fx:id="nickname" text="Jorge">
+                     <font>
+                        <Font size="46.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="20.0" />
+                     </VBox.margin>
+                  </Label>
+               </children>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+            </VBox>
+         </top>
          <center>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                <children>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                  <HBox alignment="CENTER">
                      <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../../../../../../Desktop/asd.jpg" />
-                           </image>
-                        </ImageView>
-                     </children>
-                  </HBox>
-                  <VBox prefHeight="200.0" prefWidth="100.0">
-                     <children>
-                        <VBox alignment="CENTER" prefHeight="250.0" prefWidth="300.0" styleClass="root">
+                        <VBox alignment="CENTER">
                            <children>
-                              <HBox prefHeight="100.0" prefWidth="200.0">
-                                 <children>
-                                    <VBox prefHeight="25.0" prefWidth="332.0">
-                                       <children>
-                                          <Label text="Name:" />
-                                          <TextField fx:id="nname" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
-                                       </children>
-                                    </VBox>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="4.0">
-                                 <children>
-                                    <VBox prefHeight="25.0" prefWidth="332.0">
-                                       <children>
-                                          <Label text="Nickname:" />
-                                          <TextField fx:id="nnickname" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
-                                       </children>
-                                    </VBox>
-                                    <Label alignment="BASELINE_LEFT" text="Incorrect Nickname." textFill="RED" visible="false" />
-                                 </children>
-                                 <opaqueInsets>
-                                    <Insets />
-                                 </opaqueInsets>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                              </HBox>
-                              <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="4.0">
-                                 <children>
-                                    <VBox prefHeight="25.0" prefWidth="332.0">
-                                       <children>
-                                          <Label text="Email:" />
-                                          <TextField fx:id="eemail" minHeight="26.0" minWidth="150.0" prefHeight="25.0" prefWidth="350.0" promptText="yourEmail@domain.com" />
-                                       </children>
-                                    </VBox>
-                                    <Label fx:id="lIncorrectEmail" text="Incorrect Email." textFill="RED" visible="false" />
-                                 </children>
-                              </HBox>
-                              <HBox prefHeight="100.0" prefWidth="200.0">
-                                 <children>
-                                    <VBox prefHeight="25.0" prefWidth="332.0">
-                                       <children>
-                                          <Label text="Password:" />
-                                          <PasswordField fx:id="password1" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
-                                       </children>
-                                    </VBox>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="4.0">
-                                 <children>
-                                    <VBox prefHeight="25.0" prefWidth="332.0">
-                                       <children>
-                                          <Label text="Confirm Password:" />
-                                          <PasswordField fx:id="password2" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="317.0" />
-                                       </children>
-                                    </VBox>
-                                    <Label fx:id="lPassDifferent" alignment="BOTTOM_LEFT" prefHeight="17.0" prefWidth="124.0" text="Incorrect Password." textFill="RED" visible="false" />
-                                 </children>
-                              </HBox>
-                              <HBox prefHeight="100.0" prefWidth="200.0">
-                                 <children>
-                                    <VBox prefHeight="52.0" prefWidth="504.0">
-                                       <children>
-                                          <Label text="Profile Image" />
-                                          <ImageView fx:id="imageView" fitHeight="84.0" fitWidth="89.0" pickOnBounds="true" preserveRatio="true" />
-                                       </children>
-                                    </VBox>
-                                 </children>
-                              </HBox>
-                              <Button fx:id="imageChooser" mnemonicParsing="false" text="Choose Image">
-                                 <VBox.margin>
-                                    <Insets right="100.0" />
-                                 </VBox.margin>
-                              </Button>
+                              <Label alignment="CENTER" contentDisplay="CENTER" text="Name:" />
+                              <TextField fx:id="nname1" alignment="CENTER" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
                            </children>
-                           <VBox.margin>
-                              <Insets left="140.0" right="20.0" top="20.0" />
-                           </VBox.margin>
                         </VBox>
                      </children>
-                  </VBox>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                  </HBox>
+                  <HBox alignment="CENTER">
                      <children>
-                        <Button mnemonicParsing="false" text="Cancel">
-                           <HBox.margin>
-                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                           </HBox.margin>
-                        </Button>
-                        <Button mnemonicParsing="false" text="Save">
-                           <HBox.margin>
-                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                           </HBox.margin>
-                        </Button>
+                        <VBox alignment="CENTER">
+                           <children>
+                              <Label contentDisplay="CENTER" text="Email:" />
+                              <TextField fx:id="eemail1" alignment="CENTER" minHeight="26.0" minWidth="150.0" prefHeight="25.0" prefWidth="350.0" promptText="yourEmail@domain.com" />
+                           </children>
+                        </VBox>
                      </children>
                   </HBox>
-               </children></VBox>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <VBox alignment="CENTER">
+                           <children>
+                              <Label contentDisplay="CENTER" text="New Password:" />
+                              <PasswordField fx:id="password1" alignment="CENTER" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <VBox alignment="CENTER">
+                           <children>
+                              <Label text="Confirm Password:" />
+                              <PasswordField fx:id="password2" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
          </center>
+         <padding>
+            <Insets top="20.0" />
+         </padding>
       </BorderPane>
    </children>
 </Pane>
