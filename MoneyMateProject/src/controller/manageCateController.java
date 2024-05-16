@@ -113,22 +113,20 @@ public class manageCateController implements Initializable {
         try{
             //check if the category has charges
             userCharges = acount.getUserCharges();
-            boolean flag = false;
-            String s = null;
             Category cat = null;
-            for(int i = 0; i < userCharges.size() && !flag; i++){
+            int res = 0; 
+            for(int i = 0; i < userCharges.size(); i++){
                 cat = userCharges.get(i).getCategory();
                 String[] arr = cat.getName().split("\\|");
                 if(arr[0].equals(wantToDelete)){
-                    flag = true;
-                    s = arr[0];
+                    res++; 
                 }
             }
             //if category has charges ask for confirmation
-            if(flag){
+            if(res > 0){
                 Alert alert = new Alert(AlertType.CONFIRMATION); 
                 alert.setTitle("Delete confirmation"); 
-                alert.setContentText("Are you soure you want to dele this category? This will delete all the charges of this category.");
+                alert.setContentText("Are you soure you want to dele this category? This will delete " + res + " charge(s) of this category.");
                 Optional<ButtonType> result = alert.showAndWait(); 
                 if(result.get() == ButtonType.OK){
                     acount.removeCategory(cat); 
