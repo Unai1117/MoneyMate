@@ -2,6 +2,7 @@
     -fx-bg: #222831;
     -fx-p: #31363F;
     -fx-s: #EEEEEE;
+    -fx-accent: #76ABAE;
     -fx-destructive: #ed0c2a;
     -fx-background-color: -fx-bg;
 }
@@ -60,6 +61,10 @@
     -fx-border-radius: 10px;
 }
 
+.button-accent {
+    -fx-background-color: -fx-accent;
+}
+
 .scroll-pane {
     -fx-background-color: transparent;
     -fx-border-width: 0;
@@ -92,13 +97,8 @@
     -fx-background-insets: 3, 0, 0;
 }
 
-.scroll-bar .increment-arrow,
-.scroll-bar .decrement-arrow {
-
-}
-
 .scroll-bar:hover .thumb {
-    -fx-background-color: #76ABAE;
+    -fx-background-color: -fx-accent;
 }
 
 .label {
@@ -114,4 +114,106 @@
     -fx-background-color: -fx-p;
     -fx-text-fill: -fx-s;
     -fx-font-size: 17px;
+}
+
+.color-picker {
+    -fx-background-color: -fx-p;
+    -fx-pref-height: 40px;
+    -fx-border-width: 3px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px;
+}
+
+.list-view {
+    -fx-background-color: -fx-p;
+    -fx-background-radius: 10px;
+}
+
+.list-view .list-cell {
+    -fx-text-fill: -fx-s;
+    -fx-pref-height: 50px;
+    -fx-background-radius: 10px;
+    -fx-font-size: 20px;
+}
+
+.list-view .list-cell:even {
+    -fx-background-color: -fx-p;
+}
+
+.list-view .list-cell:odd {
+    -fx-background-color: -fx-bg;
+}
+
+.list-view .list-cell:selected {
+    -fx-background-color: -fx-accent;
+}
+
+.list-cell:filled:hover {
+    -fx-cursor: hand;
+}
+
+.text-field {
+    -fx-background-color: -fx-bg;
+    -fx-border-color: -fx-p;
+    -fx-border-width: 3px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-pref-height: 40px;
+    -fx-padding: 10px;
+    -fx-text-fill: -fx-s;
+
+}
+
+.header {
+    -fx-pref-height: 100px;
+    -fx-min-height: 100px;
+    -fx-spacing: 20px;
+}
+
+.header .button {
+    -fx-pref-height: 60px;
+    -fx-pref-width: 60px;
+    -fx-background-radius: 100%;
+}
+
+.header .label {
+    -fx-font-size: 30px;
+}
+
+.input-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.8);
+}
+
+.input-vbox {
+    -fx-spacing: 20px;
+}
+
+.input-component {
+    -fx-pref-height: 74px;
+    -fx-min-height: 74px;
+    -fx-spacing: 10px;
+}
+
+.input-component .text-field {
+    -fx-border-width: 0;
+}
+
+.input-component .label {
+    -fx-font-size: 16px;
+    -fx-padding: 0;
+}
+
+.input-component .color-picker {
+    -fx-pref-width: 150px;
+}
+
+.input-component-button-container {
+    -fx-pref-height: 100px;
+    -fx-spacing: 80px;
+    -fx-alignment: bottom-center;
+}
+
+.input-component-button-container .button {
+    -fx-pref-width: 120px;
 }
