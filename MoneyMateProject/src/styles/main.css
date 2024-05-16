@@ -109,3 +109,9 @@
     -fx-border-color: -fx-bg;
     -fx-border-width: 5px;
 }
+
+.tooltip {
+    -fx-background-color: -fx-p;
+    -fx-text-fill: -fx-s;
+    -fx-font-size: 17px;
+}

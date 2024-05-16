@@ -94,6 +94,7 @@ public class MainController implements Initializable {
         try {
             // Generates a Category - Charges map
             userCharges = Acount.getInstance().getUserCharges();
+            // userCharges.sort((o1, o2) -> o1.getDate().compareTo(o2.getDate()));
             userCategories = Acount.getInstance().getUserCategories();
             List<String> chartColors = new ArrayList<>();
             
