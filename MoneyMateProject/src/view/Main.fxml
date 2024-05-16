@@ -92,7 +92,7 @@
                 <MenuItem fx:id="manageUserButton" mnemonicParsing="false" onAction="#openUserMod" text="Mange User" />
                 <MenuItem fx:id="manageCategoriesButton" mnemonicParsing="false" onAction="#openCatMenu" text="Manage Categories" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="logoutButton" mnemonicParsing="false" styleClass="destructive" text="Log out" />
+                  <MenuItem fx:id="logoutButton" mnemonicParsing="false" onAction="#logOut" styleClass="destructive" text="Log out" />
               </items>
                <graphic>
                   <ImageView>

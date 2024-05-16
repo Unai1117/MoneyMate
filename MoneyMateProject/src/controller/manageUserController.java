@@ -58,7 +58,7 @@ public class manageUserController implements Initializable {
     @FXML
     private Button cancel;
     @FXML
-    private BorderPane regPane;
+    private Pane regPane;
     @FXML
     private TextField eemail1;
     @FXML
@@ -90,17 +90,25 @@ public class manageUserController implements Initializable {
         } catch (AcountDAOException | IOException ex) {
             java.util.logging.Logger.getLogger(manageUserController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        //Image image = '/assets.icon/user.png/;
         user = acount.getLoggedUser();
         
-        circle.setFill(new ImagePattern(user.getImage()));
+        if (user.getImage() != null) {
+            circle.setFill(new ImagePattern(user.getImage()));
+        } else {
+            circle.setFill(new ImagePattern(null));
+        }
         nickname.setText(user.getNickName());
-        nname1.setText(user.getName() + user.getSurname());
+        if (user.getSurname() == null){
+            nname1.setText(user.getName());
+        } else {
+            nname1.setText(user.getName() + " " + user.getSurname());
+        }
         eemail1.setText(user.getEmail());
     }
     
     @FXML
-    private void openMainPane(ActionEvent event) {
+    private void openMainPane(MouseEvent event) {
         try {
             Pane mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml"));
             regPane.getScene().setRoot(mainPane);

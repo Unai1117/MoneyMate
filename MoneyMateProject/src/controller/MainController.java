@@ -85,6 +85,7 @@ public class MainController implements Initializable {
     private ObservableList<PieChart.Data> userCategoriesData = FXCollections.observableArrayList();
     @FXML
     private Button addExpense1;
+    
 
     /**
      * Initializes the controller class.
@@ -253,6 +254,7 @@ public class MainController implements Initializable {
             }
             
         }
+                
     }
     
     @FXML
@@ -301,6 +303,16 @@ public class MainController implements Initializable {
         try {
             Pane manageUserPane = FXMLLoader.load(getClass().getResource("/view/manageUser.fxml"));
             addExpense.getScene().setRoot(manageUserPane);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
+    @FXML
+    private void logOut(ActionEvent event) {
+        try {
+            Pane logIn = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
+            addExpense.getScene().setRoot(logIn);
         } catch (Exception e) {
             System.out.println(e);
         }
