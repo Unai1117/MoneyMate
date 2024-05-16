@@ -12,11 +12,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.ScaleTransition;
@@ -46,7 +49,7 @@ import model.*;
  * @author jorge
  */
 public class MainController implements Initializable {
-    
+
     @FXML
     public Pane mainPane;
     @FXML
@@ -75,17 +78,16 @@ public class MainController implements Initializable {
     private MenuItem manageCategoriesButton;
     @FXML
     private MenuItem logoutButton;
-    
+
     private final int CHARGES_PANE_SIZE = 400;
-    
+
     private List<Charge> userCharges;
     private List<Category> userCategories;
     private double totalMoney;
-    
+
     private ObservableList<PieChart.Data> userCategoriesData = FXCollections.observableArrayList();
     @FXML
     private Button addExpense1;
-    
 
     /**
      * Initializes the controller class.
@@ -94,10 +96,9 @@ public class MainController implements Initializable {
         try {
             // Generates a Category - Charges map
             userCharges = Acount.getInstance().getUserCharges();
-            // userCharges.sort((o1, o2) -> o1.getDate().compareTo(o2.getDate()));
             userCategories = Acount.getInstance().getUserCategories();
             List<String> chartColors = new ArrayList<>();
-            
+
             Map<Category, List<Charge>> map = new HashMap();
             for (int i = 0; i < userCharges.size(); i++) {
                 Charge charge = userCharges.get(i);
@@ -113,7 +114,7 @@ public class MainController implements Initializable {
                     map.put(category, aux);
                 }
             }
-            
+
             double otherTotal = 0;
             for (Category key : map.keySet()) {
                 double categoryTotal = 0;
@@ -130,7 +131,7 @@ public class MainController implements Initializable {
                     userCategoriesData.add(new PieChart.Data(key.getName().split("\\|")[0], categoryTotal));
                 }
             }
-            
+
             userCategoriesData.add(new PieChart.Data("Other", otherTotal));
             chart.setData(userCategoriesData);
             chartLabel.setText("-" + totalMoney + " €");
@@ -140,21 +141,21 @@ public class MainController implements Initializable {
             for (PieChart.Data data : userCategoriesData) {
                 if (colorIndex == userCategoriesData.size() - 1 && "Other".equals(data.getName())) {
                     data.getNode().setStyle("-fx-pie-color: #9c9c9c");
-                    
+
                 } else {
                     data.getNode().setStyle("-fx-pie-color: " + chartColors.get(colorIndex).replace("0x", "#"));
-                    
+
                 }
                 colorIndex++;
             }
-            
+
         } catch (AcountDAOException | IOException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         // Inner circle default value
         chartInnerCircle.radiusProperty().bind(chartStackPane.widthProperty().multiply(0.85).divide(2));
-        
+
         chargesPane.minWidthProperty().set(CHARGES_PANE_SIZE);
 
         // same as mainPane
@@ -195,16 +196,16 @@ public class MainController implements Initializable {
                 @Override
                 public void handle(MouseEvent e) {
                     chartLabel.setText(String.valueOf(data.getName() + "\n" + String.format("%.1f", data.getPieValue()) + " €"));
-                    
+
                     Font font = new Font(36);
                     chartLabel.setFont(font);
-                    
+
                     ScaleTransition grow = new ScaleTransition(Duration.millis(200));
                     grow.setNode(data.getNode());
                     grow.setToX(1.1);
                     grow.setToY(1.1);
                     grow.playFromStart();
-                    
+
                 }
             });
             data.getNode().addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
@@ -227,37 +228,47 @@ public class MainController implements Initializable {
         Image logoutIcon = new Image(getClass().getResourceAsStream("../assets/icons/sign-out.png"));
         Utils.iconToMenuItem(logoutIcon, logoutButton);
 
-        // create charges
+        // Sorts the list of charges (we cannot sort it directly, so we use an aux structure)
+        TreeMap<LocalDate, List<Charge>> sortedCharges = new TreeMap<>();
+
         for (Charge userCharge : userCharges) {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/view/ChargeItem.fxml"));
-            
-            try {
-                HBox item = fxmlLoader.load();
-                ChargeItemController cic = fxmlLoader.getController();
-                cic.setData(userCharge);
-                cic.setOnRemove(() -> {
-                    chargesList.getChildren().remove(item);
-                    totalMoney -= userCharge.getCost() * userCharge.getUnits();
-                    chartLabel.setText("-" + totalMoney + " €");
-                    
-                    for (PieChart.Data data : userCategoriesData) {
-                        if (data.getName().equals(userCharge.getCategory().getName().split("\\|")[0])) {
-                            data.setPieValue(data.getPieValue() - userCharge.getCost() * userCharge.getUnits());
-                            break;
-                        }
-                    }
-                    
-                });
-                chargesList.getChildren().add(item);
-            } catch (IOException ex) {
-                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
+            sortedCharges.computeIfAbsent(userCharge.getDate(), k -> new ArrayList<>()).add(userCharge);
         }
-                
+
+        for (Map.Entry<LocalDate, List<Charge>> entry : sortedCharges.entrySet()) {
+            List<Charge> chargesOnDate = entry.getValue();
+            // We add the sorted charges to the layout
+            for (Charge sortedCharge : chargesOnDate) {
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("/view/ChargeItem.fxml"));
+
+                try {
+                    HBox item = fxmlLoader.load();
+                    ChargeItemController cic = fxmlLoader.getController();
+                    cic.setData(sortedCharge);
+                    // callback function to remove an item
+                    cic.setOnRemove(() -> {
+                        chargesList.getChildren().remove(item);
+                        totalMoney -= sortedCharge.getCost() * sortedCharge.getUnits();
+                        chartLabel.setText("-" + totalMoney + " €");
+
+                        for (PieChart.Data data : userCategoriesData) {
+                            if (data.getName().equals(sortedCharge.getCategory().getName().split("\\|")[0])) {
+                                data.setPieValue(data.getPieValue() - sortedCharge.getCost() * sortedCharge.getUnits());
+                                break;
+                            }
+                        }
+
+                    });
+                    chargesList.getChildren().add(item);
+                } catch (IOException ex) {
+                    Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
     }
-    
+
     @FXML
     private void openAddExpensePane(MouseEvent event) {
         try {
@@ -267,7 +278,7 @@ public class MainController implements Initializable {
             System.out.println(e);
         }
     }
-    
+
     @FXML
     private void shrinkCircle(MouseEvent event) {
         ScaleTransition shrink = new ScaleTransition(Duration.millis(200));
@@ -276,7 +287,7 @@ public class MainController implements Initializable {
         shrink.setToY(0.85);
         shrink.playFromStart();
     }
-    
+
     @FXML
     private void restoreCircle(MouseEvent event) {
         ScaleTransition grow = new ScaleTransition(Duration.millis(200));
@@ -288,7 +299,7 @@ public class MainController implements Initializable {
         Font font = new Font(46);
         chartLabel.setFont(font);
     }
-    
+
     @FXML
     private void openCatMenu(ActionEvent event) {
         try {
@@ -298,7 +309,7 @@ public class MainController implements Initializable {
             System.out.println(e);
         }
     }
-    
+
     @FXML
     private void openUserMod(ActionEvent event) {
         try {
@@ -308,7 +319,7 @@ public class MainController implements Initializable {
             System.out.println(e);
         }
     }
-    
+
     @FXML
     private void logOut(ActionEvent event) throws AcountDAOException, IOException {
         Acount.getInstance().logOutUser();
@@ -319,5 +330,5 @@ public class MainController implements Initializable {
             System.out.println(e);
         }
     }
-    
+
 }
