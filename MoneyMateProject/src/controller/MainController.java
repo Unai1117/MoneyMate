@@ -41,6 +41,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import javafx.util.Pair;
 import model.*;
 
 /**
@@ -93,65 +94,9 @@ public class MainController implements Initializable {
      * Initializes the controller class.
      */
     public void initialize(URL url, ResourceBundle rb) {
-        try {
-            // Generates a Category - Charges map
-            userCharges = Acount.getInstance().getUserCharges();
-            userCategories = Acount.getInstance().getUserCategories();
-            List<String> chartColors = new ArrayList<>();
+        chart.setData(userCategoriesData);
 
-            Map<Category, List<Charge>> map = new HashMap();
-            for (int i = 0; i < userCharges.size(); i++) {
-                Charge charge = userCharges.get(i);
-                totalMoney += charge.getCost() * charge.getUnits();
-                Category category = charge.getCategory();
-                if (map.containsKey(category)) {
-                    List<Charge> aux = map.remove(category);
-                    aux.add(charge);
-                    map.put(category, aux);
-                } else {
-                    List<Charge> aux = new ArrayList();
-                    aux.add(charge);
-                    map.put(category, aux);
-                }
-            }
-
-            double otherTotal = 0;
-            for (Category key : map.keySet()) {
-                double categoryTotal = 0;
-                List<Charge> charges = map.get(key);
-                for (int i = 0; i < charges.size(); i++) {
-                    categoryTotal += charges.get(i).getCost() * charges.get(i).getUnits();
-                }
-
-                // If the relative total is less than 1%, merge categories in "other"
-                if (categoryTotal / totalMoney < 0.01) {
-                    otherTotal += categoryTotal;
-                } else {
-                    chartColors.add(key.getName().split("\\|")[1]);
-                    userCategoriesData.add(new PieChart.Data(key.getName().split("\\|")[0], categoryTotal));
-                }
-            }
-
-            userCategoriesData.add(new PieChart.Data("Other", otherTotal));
-            chart.setData(userCategoriesData);
-            chartLabel.setText("-" + totalMoney + " €");
-
-            // Set the appropriate colors to the chart pies
-            int colorIndex = 0;
-            for (PieChart.Data data : userCategoriesData) {
-                if (colorIndex == userCategoriesData.size() - 1 && "Other".equals(data.getName())) {
-                    data.getNode().setStyle("-fx-pie-color: #9c9c9c");
-
-                } else {
-                    data.getNode().setStyle("-fx-pie-color: " + chartColors.get(colorIndex).replace("0x", "#"));
-
-                }
-                colorIndex++;
-            }
-
-        } catch (AcountDAOException | IOException ex) {
-            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        computeChartData();
 
         // Inner circle default value
         chartInnerCircle.radiusProperty().bind(chartStackPane.widthProperty().multiply(0.85).divide(2));
@@ -190,36 +135,6 @@ public class MainController implements Initializable {
             }
         });
 
-        // chart animations
-        for (final PieChart.Data data : chart.getData()) {
-            data.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent e) {
-                    chartLabel.setText(String.valueOf(data.getName() + "\n" + String.format("%.1f", data.getPieValue()) + " €"));
-
-                    Font font = new Font(36);
-                    chartLabel.setFont(font);
-
-                    ScaleTransition grow = new ScaleTransition(Duration.millis(200));
-                    grow.setNode(data.getNode());
-                    grow.setToX(1.1);
-                    grow.setToY(1.1);
-                    grow.playFromStart();
-
-                }
-            });
-            data.getNode().addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent e) {
-                    ScaleTransition shrink = new ScaleTransition(Duration.millis(200));
-                    shrink.setNode(data.getNode());
-                    shrink.setToX(1);
-                    shrink.setToY(1);
-                    shrink.playFromStart();
-                }
-            });
-        }
-
         // add images to menu items
         Image manageUserIcon = new Image(getClass().getResourceAsStream("../assets/icons/user-gear.png"));
         Utils.iconToMenuItem(manageUserIcon, manageUserButton);
@@ -249,15 +164,7 @@ public class MainController implements Initializable {
                     // callback function to remove an item
                     cic.setOnRemove(() -> {
                         chargesList.getChildren().remove(item);
-                        totalMoney -= sortedCharge.getCost() * sortedCharge.getUnits();
-                        chartLabel.setText("-" + totalMoney + " €");
-
-                        for (PieChart.Data data : userCategoriesData) {
-                            if (data.getName().equals(sortedCharge.getCategory().getName().split("\\|")[0])) {
-                                data.setPieValue(data.getPieValue() - sortedCharge.getCost() * sortedCharge.getUnits());
-                                break;
-                            }
-                        }
+                        computeChartData();
 
                     });
                     chargesList.getChildren().add(item);
@@ -295,7 +202,11 @@ public class MainController implements Initializable {
         grow.setToX(1);
         grow.setToY(1);
         grow.playFromStart();
-        chartLabel.setText("-" + totalMoney + " €");
+        if (totalMoney == 0) {
+            chartLabel.setText("0.0 €");
+        } else {
+            chartLabel.setText("-" + totalMoney + " €");
+        }
         Font font = new Font(46);
         chartLabel.setFont(font);
     }
@@ -329,6 +240,125 @@ public class MainController implements Initializable {
         } catch (Exception e) {
             System.out.println(e);
         }
+    }
+
+    private void computeChartData() {
+        totalMoney = 0;
+        try {
+            // Generates a Category - Charges map
+            userCharges = Acount.getInstance().getUserCharges();
+            userCategories = Acount.getInstance().getUserCategories();
+            //List<String> chartColors = new ArrayList<>();
+            Map<Category, List<Charge>> map = new HashMap();
+            for (int i = 0; i < userCharges.size(); i++) {
+                Charge charge = userCharges.get(i);
+                totalMoney += charge.getCost() * charge.getUnits();
+                Category category = charge.getCategory();
+                if (map.containsKey(category)) {
+                    List<Charge> aux = map.remove(category);
+                    aux.add(charge);
+                    map.put(category, aux);
+                } else {
+                    List<Charge> aux = new ArrayList();
+                    aux.add(charge);
+                    map.put(category, aux);
+                }
+            }
+
+            Map<String, Pair<Double, String>> auxMap = new HashMap();
+            double otherTotal = 0;
+            for (Category key : map.keySet()) {
+                double categoryTotal = 0;
+                List<Charge> charges = map.get(key);
+                for (int i = 0; i < charges.size(); i++) {
+                    categoryTotal += charges.get(i).getCost() * charges.get(i).getUnits();
+                }
+
+                // If the relative total is less than 5%, merge categories in "other"
+                if (categoryTotal / totalMoney < 0.05) {
+                    otherTotal += categoryTotal;
+                } else {
+                    auxMap.put(key.getName().split("\\|")[0], new Pair(categoryTotal, key.getName().split("\\|")[1]));
+                }
+            }
+
+            auxMap.put("Other", new Pair(otherTotal, "#9c9c9c"));
+
+            if (userCharges.isEmpty()) {
+                auxMap.put("No charges!", new Pair(1.0, "#EEEEEE"));
+            } else {
+                auxMap.put("No charges!", new Pair(0.0, "#EEEEEE"));
+
+            }
+
+            Set<String> auxMapKeys = auxMap.keySet();
+            for (PieChart.Data data : userCategoriesData) {
+                if (auxMap.containsKey(data.getName())) {
+                    data.setPieValue(auxMap.get(data.getName()).getKey());
+                    data.getNode().setStyle("-fx-pie-color: " + auxMap.get(data.getName()).getValue().replace("0x", "#"));
+                    auxMapKeys.remove(data.getName());
+                } else {
+                    data.setPieValue(0.0);
+                }
+            }
+
+            auxMapKeys.forEach(key -> {
+                Pair<Double, String> auxData = auxMap.get(key);
+                System.out.println(auxData);
+                PieChart.Data newData = new PieChart.Data(key, auxData.getKey());
+                userCategoriesData.add(newData);
+                newData.getNode().setStyle("-fx-pie-color: " + auxData.getValue().replace("0x", "#"));
+            });
+
+            if (totalMoney == 0) {
+                chartLabel.setText("0.0 €");
+            } else {
+                chartLabel.setText("-" + totalMoney + " €");
+            }
+
+        } catch (AcountDAOException | IOException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        // chart animations
+        for (final PieChart.Data data : chart.getData()) {
+            // for some reason javafx does not update the color properly when the chart is empty.
+            // this does the trick
+            if (userCharges.isEmpty()) {
+                data.getNode().setStyle("-fx-pie-color: #EEEEEE");
+            }
+            data.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent e) {
+                    if ("No charges!".equals(data.getName())) {
+                        chartLabel.setText(String.valueOf(data.getName()));
+                    } else {
+                        chartLabel.setText(String.valueOf(data.getName() + "\n" + String.format("%.1f", data.getPieValue()) + " €"));
+                    }
+
+                    Font font = new Font(36);
+                    chartLabel.setFont(font);
+
+                    ScaleTransition grow = new ScaleTransition(Duration.millis(200));
+                    grow.setNode(data.getNode());
+                    grow.setToX(1.1);
+                    grow.setToY(1.1);
+                    grow.playFromStart();
+
+                }
+            });
+            data.getNode().addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent e) {
+                    ScaleTransition shrink = new ScaleTransition(Duration.millis(200));
+                    shrink.setNode(data.getNode());
+                    shrink.setToX(1);
+                    shrink.setToY(1);
+                    shrink.playFromStart();
+                }
+            });
+        }
+
     }
 
 }
