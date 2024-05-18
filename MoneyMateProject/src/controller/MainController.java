@@ -31,9 +31,11 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -82,6 +84,10 @@ public class MainController implements Initializable {
     private MenuItem manageCategoriesButton;
     @FXML
     private MenuItem logoutButton;
+    @FXML
+    private ImageView userAvatar;
+    @FXML
+    private MenuButton menuButton;
 
     private final int CHARGES_PANE_SIZE = 400;
 
@@ -97,86 +103,102 @@ public class MainController implements Initializable {
      * Initializes the controller class.
      */
     public void initialize(URL url, ResourceBundle rb) {
-        chart.setData(userCategoriesData);
+        try {
+            chart.setData(userCategoriesData);
 
-        computeChartData();
+            computeChartData();
 
-        // Inner circle default value
-        chartInnerCircle.radiusProperty().bind(chartStackPane.widthProperty().multiply(0.85).divide(2));
+            // Inner circle default value
+            chartInnerCircle.radiusProperty().bind(chartStackPane.widthProperty().multiply(0.85).divide(2));
 
-        chargesPane.minWidthProperty().set(CHARGES_PANE_SIZE);
+            chargesPane.minWidthProperty().set(CHARGES_PANE_SIZE);
 
-        // same as mainPane
-        mainStackPane.prefHeightProperty().bind(mainPane.heightProperty());
-        mainStackPane.prefWidthProperty().bind(mainPane.widthProperty());
+            // same as mainPane
+            mainStackPane.prefHeightProperty().bind(mainPane.heightProperty());
+            mainStackPane.prefWidthProperty().bind(mainPane.widthProperty());
 
-        //same as mainPane/stackPane
-        mainScroll.prefHeightProperty().bind(mainStackPane.heightProperty());
-        mainScroll.prefWidthProperty().bind(mainStackPane.widthProperty());
+            //same as mainPane/stackPane
+            mainScroll.prefHeightProperty().bind(mainStackPane.heightProperty());
+            mainScroll.prefWidthProperty().bind(mainStackPane.widthProperty());
 
-        // same as stackpane/scrollpane - 2 for the scrollpane (it needs 2 extra pixels to fit all the contents
-        mainFlowPane.prefHeightProperty().bind(mainStackPane.heightProperty().subtract(2));
-        mainFlowPane.prefWidthProperty().bind(mainStackPane.widthProperty().subtract(2));
+            // same as stackpane/scrollpane - 2 for the scrollpane (it needs 2 extra pixels to fit all the contents
+            mainFlowPane.prefHeightProperty().bind(mainStackPane.heightProperty().subtract(2));
+            mainFlowPane.prefWidthProperty().bind(mainStackPane.widthProperty().subtract(2));
 
-        // change sizes based on window size
-        mainPane.widthProperty().addListener((obs, oldVal, newVal) -> {
-            // Collapsed
-            if (newVal.intValue() < 366 + 3 * 20 + CHARGES_PANE_SIZE) {
-                // 2 * padding
-                chargesPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(2 * 20));
-                chargesPane.prefHeightProperty().bind(chargesList.heightProperty().add(2));
-                chargesPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-                chargesList.prefWidthProperty().bind(chargesPane.widthProperty());
-                mainScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-            } // Full
-            else {
-                chargesPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(366 + 3 * 20));
-                chargesPane.prefHeightProperty().bind(mainPane.heightProperty().subtract(20 * 2 + 2));
-                chargesPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-                chargesList.prefWidthProperty().bind(chargesPane.widthProperty().subtract(20));
-                mainScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            // change sizes based on window size
+            mainPane.widthProperty().addListener((obs, oldVal, newVal) -> {
+                // Collapsed
+                if (newVal.intValue() < 366 + 3 * 20 + CHARGES_PANE_SIZE) {
+                    // 2 * padding
+                    chargesPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(2 * 20));
+                    chargesPane.prefHeightProperty().bind(chargesList.heightProperty().add(2));
+                    chargesPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                    chargesList.prefWidthProperty().bind(chargesPane.widthProperty());
+                    mainScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+                } // Full
+                else {
+                    chargesPane.prefWidthProperty().bind(mainPane.widthProperty().subtract(366 + 3 * 20));
+                    chargesPane.prefHeightProperty().bind(mainPane.heightProperty().subtract(20 * 2 + 2));
+                    chargesPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+                    chargesList.prefWidthProperty().bind(chargesPane.widthProperty().subtract(20));
+                    mainScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                }
+            });
+
+            // add images to menu items
+            Image manageUserIcon = new Image(getClass().getResourceAsStream("../assets/icons/user-gear.png"));
+            Utils.iconToMenuItem(manageUserIcon, manageUserButton);
+            Image manageCategoriesIcon = new Image(getClass().getResourceAsStream("../assets/icons/tag.png"));
+            Utils.iconToMenuItem(manageCategoriesIcon, manageCategoriesButton);
+            Image logoutIcon = new Image(getClass().getResourceAsStream("../assets/icons/sign-out.png"));
+            Utils.iconToMenuItem(logoutIcon, logoutButton);
+
+            // Sorts the list of charges (we cannot sort it directly, so we use an aux structure)
+            TreeMap<LocalDate, List<Charge>> sortedCharges = new TreeMap<>();
+
+            for (Charge userCharge : userCharges) {
+                sortedCharges.computeIfAbsent(userCharge.getDate(), k -> new ArrayList<>()).add(userCharge);
             }
-        });
 
-        // add images to menu items
-        Image manageUserIcon = new Image(getClass().getResourceAsStream("../assets/icons/user-gear.png"));
-        Utils.iconToMenuItem(manageUserIcon, manageUserButton);
-        Image manageCategoriesIcon = new Image(getClass().getResourceAsStream("../assets/icons/tag.png"));
-        Utils.iconToMenuItem(manageCategoriesIcon, manageCategoriesButton);
-        Image logoutIcon = new Image(getClass().getResourceAsStream("../assets/icons/sign-out.png"));
-        Utils.iconToMenuItem(logoutIcon, logoutButton);
+            for (Map.Entry<LocalDate, List<Charge>> entry : sortedCharges.entrySet()) {
+                List<Charge> chargesOnDate = entry.getValue();
+                // We add the sorted charges to the layout
+                for (Charge sortedCharge : chargesOnDate) {
+                    FXMLLoader fxmlLoader = new FXMLLoader();
+                    fxmlLoader.setLocation(getClass().getResource("/view/ChargeItem.fxml"));
 
-        // Sorts the list of charges (we cannot sort it directly, so we use an aux structure)
-        TreeMap<LocalDate, List<Charge>> sortedCharges = new TreeMap<>();
+                    try {
+                        HBox item = fxmlLoader.load();
+                        ChargeItemController cic = fxmlLoader.getController();
+                        cic.setData(sortedCharge);
+                        // callback function to remove an item
+                        cic.setOnRemove(() -> {
+                            chargesList.getChildren().remove(item);
+                            computeChartData();
 
-        for (Charge userCharge : userCharges) {
-            sortedCharges.computeIfAbsent(userCharge.getDate(), k -> new ArrayList<>()).add(userCharge);
-        }
-
-        for (Map.Entry<LocalDate, List<Charge>> entry : sortedCharges.entrySet()) {
-            List<Charge> chargesOnDate = entry.getValue();
-            // We add the sorted charges to the layout
-            for (Charge sortedCharge : chargesOnDate) {
-                FXMLLoader fxmlLoader = new FXMLLoader();
-                fxmlLoader.setLocation(getClass().getResource("/view/ChargeItem.fxml"));
-
-                try {
-                    HBox item = fxmlLoader.load();
-                    ChargeItemController cic = fxmlLoader.getController();
-                    cic.setData(sortedCharge);
-                    // callback function to remove an item
-                    cic.setOnRemove(() -> {
-                        chargesList.getChildren().remove(item);
-                        computeChartData();
-
-                    });
-                    chargesList.getChildren().add(item);
-                } catch (IOException ex) {
-                    Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+                        });
+                        chargesList.getChildren().add(item);
+                    } catch (IOException ex) {
+                        Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
-        }
+            // User avatar
+            Image avatar = Acount.getInstance().getLoggedUser().getImage();
 
+            if (avatar != null && avatar.getHeight() > 0) {
+                userAvatar.setImage(avatar);
+                userAvatar.fitWidthProperty().set(56.0);
+                userAvatar.fitHeightProperty().set(56.0);
+
+                Circle clip = new Circle(28, 28, 28);
+                userAvatar.setClip(clip);
+                menuButton.setStyle("-fx-background-color: #EEEEEE; -fx-background-radius: 100%");
+
+            }
+        } catch (AcountDAOException | IOException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML
