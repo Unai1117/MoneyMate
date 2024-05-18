@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="852.0" prefWidth="1041.0" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddExpenseController">
+<StackPane prefHeight="852.0" prefWidth="1041.0" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddExpenseController">
    <children>
       <VBox fx:id="addExpensePane" prefHeight="852.0" prefWidth="1283.0">
          <children>
@@ -110,6 +110,7 @@
                                                 </ImageView>
                                              </graphic>
                                           </Button>
+                                          <ImageView fx:id="showImage" fitHeight="345.0" fitWidth="288.0" pickOnBounds="true" preserveRatio="true" />
                                        </children>
                                     </VBox>
                                  </children>

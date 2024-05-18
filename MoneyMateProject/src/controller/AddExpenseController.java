@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -47,7 +49,7 @@ import javafx.stage.Window;
  * @author unai
  */
 public class AddExpenseController implements Initializable {
-    
+
     @FXML
     private VBox addExpensePane;
     @FXML
@@ -55,36 +57,32 @@ public class AddExpenseController implements Initializable {
     @FXML
     private TextField nameField;
     @FXML
-    private Text descriptionLabel;
-    @FXML
     private TextArea descriptionField;
-    @FXML
-    private Text costLabel;
     @FXML
     private TextField costField;
     @FXML
     private DatePicker datePicker;
     @FXML
     private ChoiceBox<String> categoryMenu;
-    
+
     private Acount acount;
     @FXML
     private TextField unitsField;
     @FXML
     private Button selectImageExpense;
-    
+
     private Image scanedImage;
     @FXML
     private TextField newCategoryField;
     @FXML
     private TextField descriptionNewCategory;
-    
+
     private Category category;
-    
+
     private List<Category> categorias;
     @FXML
     private Button cancelButton;
-    
+
     private Pane mainPane;
     @FXML
     private ColorPicker colorPick;
@@ -92,12 +90,18 @@ public class AddExpenseController implements Initializable {
     private ScrollPane scrollPane;
     @FXML
     private FlowPane flowPane;
-    
+
     @FXML
     private HBox inputOverlay;
-    
+
     @FXML
     private VBox responsiveVBox;
+    @FXML
+    private Button openInputOverlay;
+    @FXML
+    private ImageView showImage;
+    @FXML
+    private Button addButton;
 
     /**
      * Initializes the controller class.
@@ -113,15 +117,36 @@ public class AddExpenseController implements Initializable {
                 String[] names = categorias.get(i).getName().split("\\|");
                 categoryMenu.getItems().add(names[0]);
             }
+
+            //doneButton disable when it does not have the required filds
+            BooleanProperty categorySelected = new SimpleBooleanProperty();
+            BooleanProperty dateSelected = new SimpleBooleanProperty();
+
+            doneButton.disableProperty().bind(nameField.textProperty().isEmpty());
+            doneButton.disableProperty().bind(descriptionField.textProperty().isEmpty());
+            doneButton.disableProperty().bind(costField.textProperty().isEmpty());
+            doneButton.disableProperty().bind(unitsField.textProperty().isEmpty());
+
+            categoryMenu.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+                categorySelected.set(newVal != null);
+            });
+
+            datePicker.valueProperty().addListener((obs, oldVal, newVal) -> {
+                dateSelected.set(newVal != null);
+            });
             
+            doneButton.disableProperty().bind(Bindings.createBooleanBinding(()
+                    -> !categorySelected.get() || !dateSelected.get(),
+                    categorySelected, dateSelected
+            ));
         } catch (Exception e) {
             System.out.println(e);
         }
-        
+
         flowPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(2));
         responsiveVBox.maxWidthProperty().bind(scrollPane.widthProperty().subtract(50));
     }
-    
+
     @FXML
     private void doneButton(MouseEvent event) throws AcountDAOException {
         //obtain all the fields needed to add an expense
@@ -130,7 +155,7 @@ public class AddExpenseController implements Initializable {
         String description = descriptionField.getText();
         int units = Integer.parseInt(unitsField.getText());
         LocalDate date = datePicker.getValue();
-        
+
         if (!newCategoryField.getText().isEmpty()) {
             if (descriptionNewCategory.getText().isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -174,13 +199,14 @@ public class AddExpenseController implements Initializable {
             System.out.println(e);
         }
     }
-    
+
     @FXML
     //obtain image
     private void openFiles(MouseEvent event) {
         scanedImage = Utils.codeOpenFiles();
+        showImage.setImage(scanedImage);
     }
-    
+
     @FXML
     private void cancelAction(MouseEvent event) {
         try {
@@ -190,19 +216,19 @@ public class AddExpenseController implements Initializable {
             System.out.println(e);
         }
     }
-    
+
     @FXML
     private void openInputOverlay(ActionEvent event) {
         inputOverlay.setVisible(true);
         newCategoryField.requestFocus();
-        
+
     }
-    
+
     @FXML
     private void closeInputOverlay(ActionEvent event) {
         inputOverlay.setVisible(false);
     }
-    
+
     @FXML
     private void addAction(ActionEvent event) {
         try {
@@ -212,7 +238,7 @@ public class AddExpenseController implements Initializable {
                     && (descriptionNewCategory.getText().trim().length() != 0)) {
                 //============================================
                 // add to the list
-                
+
                 categoryMenu.getItems().add(newCategoryField.getText().trim());
                 categoryMenu.setValue(newCategoryField.getText().trim());
                 //color for the category
@@ -233,6 +259,6 @@ public class AddExpenseController implements Initializable {
         } catch (Exception e) {
             System.out.println(e);
         }
-        
+
     }
 }
