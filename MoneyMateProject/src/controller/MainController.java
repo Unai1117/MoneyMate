@@ -23,15 +23,18 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.ScaleTransition;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
@@ -179,7 +182,7 @@ public class MainController implements Initializable {
     @FXML
     private void openAddExpensePane(MouseEvent event) {
         try {
-            Pane addExpensePane = FXMLLoader.load(getClass().getResource("/view/AddExpense.fxml"));
+            StackPane addExpensePane = FXMLLoader.load(getClass().getResource("/view/AddExpense.fxml"));
             addExpense.getScene().setRoot(addExpensePane);
         } catch (IOException e) {
             System.out.println(e);
@@ -295,16 +298,14 @@ public class MainController implements Initializable {
             for (PieChart.Data data : userCategoriesData) {
                 if (auxMap.containsKey(data.getName())) {
                     data.setPieValue(auxMap.get(data.getName()).getKey());
-                    data.getNode().setStyle("-fx-pie-color: " + auxMap.get(data.getName()).getValue().replace("0x", "#"));
                     auxMapKeys.remove(data.getName());
                 } else {
-                    data.setPieValue(0.0);
+                    Platform.runLater(() -> userCategoriesData.remove(data));
                 }
             }
 
             auxMapKeys.forEach(key -> {
                 Pair<Double, String> auxData = auxMap.get(key);
-                System.out.println(auxData);
                 PieChart.Data newData = new PieChart.Data(key, auxData.getKey());
                 userCategoriesData.add(newData);
                 newData.getNode().setStyle("-fx-pie-color: " + auxData.getValue().replace("0x", "#"));
@@ -322,11 +323,6 @@ public class MainController implements Initializable {
 
         // chart animations
         for (final PieChart.Data data : chart.getData()) {
-            // for some reason javafx does not update the color properly when the chart is empty.
-            // this does the trick
-            if (userCharges.isEmpty()) {
-                data.getNode().setStyle("-fx-pie-color: #EEEEEE");
-            }
             data.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {

@@ -47,8 +47,6 @@ public class ChargeItemController implements Initializable {
     @FXML
     private Label date;
     @FXML
-    private Label category;
-    @FXML
     private Circle color;
     @FXML
     private MenuItem deleteChargeButton;
@@ -68,7 +66,6 @@ public class ChargeItemController implements Initializable {
         LocalDate localDate = charge.getDate();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
         date.setText(localDate.format(formatter) + " • " + charge.getUnits() + " units");
-        category.setText(charge.getCategory().getName().split("\\|")[0]);
         color.setFill(Color.web(charge.getCategory().getName().split("\\|")[1]));
         scannedImage = charge.getImageScan();
         // Checks if image exists
@@ -77,7 +74,7 @@ public class ChargeItemController implements Initializable {
         }
 
         // Add a tooltip with the description
-        Tooltip tooltip = new Tooltip(charge.getDescription().isEmpty() ? "No description." : charge.getDescription());
+        Tooltip tooltip = new Tooltip(charge.getCategory().getName().split("\\|")[0].toUpperCase() + "\n" + (charge.getDescription().isEmpty() ? "No description." : charge.getDescription()));
         tooltip.setShowDelay(Duration.ZERO);
         Tooltip.install(chargeMain, tooltip);
 

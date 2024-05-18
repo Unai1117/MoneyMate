@@ -153,22 +153,28 @@
     -fx-cursor: hand;
 }
 
-.text-field {
-    -fx-background-color: -fx-bg;
+.text-field, .text-area {
+    -fx-background-color: -fx-p;
     -fx-border-color: -fx-p;
-    -fx-border-width: 3px;
+    -fx-border-width: 0px;
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
     -fx-pref-height: 40px;
     -fx-padding: 10px;
     -fx-text-fill: -fx-s;
+}
 
+.text-area .content {
+    -fx-background-color: -fx-p;
+    -fx-padding: 0;
 }
 
 .header {
     -fx-pref-height: 100px;
     -fx-min-height: 100px;
     -fx-spacing: 20px;
+    -fx-padding: 20px;
+    -fx-alignment: center-left;
 }
 
 .header .button {
@@ -187,12 +193,17 @@
 
 .input-vbox {
     -fx-spacing: 20px;
+    -fx-hgap: 30px;
+    -fx-vgap: 20px;
 }
 
 .input-component {
-    -fx-pref-height: 74px;
-    -fx-min-height: 74px;
+    -fx-pref-height: -1;
+    -fx-min-height: -1;
+    -fx-pref-width: -1;
     -fx-spacing: 10px;
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
 }
 
 .input-component .text-field {
@@ -216,4 +227,28 @@
 
 .input-component-button-container .button {
     -fx-pref-width: 120px;
+}
+
+.date-picker {
+    -fx-background-color: -fx-p;
+    -fx-background-radius: 10px;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: -fx-p;
+    -fx-background-radius: 10px;
+
+}
+
+.choice-box {
+    -fx-background-color: -fx-p;
+    -fx-pref-height: 40px;
+    -fx-background-radius: 10px;
+    -fx-min-height: 40px;
+    -fx-padding: 10px;
+}
+
+.choice-box .label {
+    -fx-font-size: 13px;
+
 }
