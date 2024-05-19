@@ -109,6 +109,7 @@ public class AddExpenseController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
+            showImage.setFitHeight(0.0);
             //get the instance of acount that will give us the user
             acount = Acount.getInstance();
             //obtain List of categories of the user
@@ -134,7 +135,7 @@ public class AddExpenseController implements Initializable {
             datePicker.valueProperty().addListener((obs, oldVal, newVal) -> {
                 dateSelected.set(newVal != null);
             });
-            
+
             doneButton.disableProperty().bind(Bindings.createBooleanBinding(()
                     -> !categorySelected.get() || !dateSelected.get(),
                     categorySelected, dateSelected
@@ -204,6 +205,7 @@ public class AddExpenseController implements Initializable {
     //obtain image
     private void openFiles(MouseEvent event) {
         scanedImage = Utils.codeOpenFiles();
+        showImage.setFitHeight(345.0);
         showImage.setImage(scanedImage);
     }
 

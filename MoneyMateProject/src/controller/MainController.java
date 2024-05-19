@@ -188,6 +188,8 @@ public class MainController implements Initializable {
 
             if (avatar != null && avatar.getHeight() > 0) {
                 userAvatar.setImage(avatar);
+                userAvatar.setCache(true);
+                userAvatar.setSmooth(true);
                 userAvatar.fitWidthProperty().set(56.0);
                 userAvatar.fitHeightProperty().set(56.0);
 
@@ -260,7 +262,7 @@ public class MainController implements Initializable {
     private void logOut(ActionEvent event) throws AcountDAOException, IOException {
         Acount.getInstance().logOutUser();
         try {
-            Pane logIn = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
+            StackPane logIn = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
             addExpense.getScene().setRoot(logIn);
         } catch (Exception e) {
             System.out.println(e);

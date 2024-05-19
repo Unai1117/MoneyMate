@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import javafx.beans.property.BooleanProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,6 +20,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import model.Acount;
 import model.AcountDAOException;
 
@@ -28,46 +30,43 @@ import model.AcountDAOException;
  * @author arnau
  */
 public class LoginController implements Initializable {
-    
-    @FXML
-    private Button cancelLog;
+
     @FXML
     private Button loginButton;
     @FXML
-    private BorderPane logPane;
+    private StackPane logPane;
     @FXML
     private TextField nnickname;
     @FXML
     private PasswordField password1;
     @FXML
     private Label incorrectLabel;
-    
+
     private Acount acount;
-    
-    
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        
+
         try {
             acount = Acount.getInstance();
         } catch (AcountDAOException | IOException ex) {
             java.util.logging.Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }    
+    }
 
     @FXML
     private void openMainPane(MouseEvent event) throws AcountDAOException {
-        if ((nnickname.getText() != null || !nnickname.getText().trim().isEmpty()) && (password1.getText() != null || !password1.getText().trim().isEmpty())){
+        if ((nnickname.getText() != null || !nnickname.getText().trim().isEmpty()) && (password1.getText() != null || !password1.getText().trim().isEmpty())) {
             String nickname = nnickname.textProperty().getValueSafe();
             String password = password1.textProperty().getValueSafe();
-            if(acount.logInUserByCredentials(nickname, password)){
+            if (acount.logInUserByCredentials(nickname, password)) {
                 try {
                     Pane mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml"));
                     logPane.getScene().setRoot(mainPane);
@@ -77,15 +76,13 @@ public class LoginController implements Initializable {
             } else {
                 incorrectLabel.visibleProperty().set(true);
             }
-            
-            
+
         }
-        
-        
+
     }
 
     @FXML
-    private void openRegisterPane(MouseEvent event) {
+    private void openRegisterPane(ActionEvent event) {
         try {
             Pane regPage = FXMLLoader.load(getClass().getResource("/view/Register.fxml"));
             logPane.getScene().setRoot(regPage);
@@ -93,26 +90,26 @@ public class LoginController implements Initializable {
             System.out.println(e);
         }
     }
-    
-    private void manageError(Label errorLabel,TextField textField, BooleanProperty boolProp ){
+
+    private void manageError(Label errorLabel, TextField textField, BooleanProperty boolProp) {
         boolProp.setValue(Boolean.FALSE);
-        showErrorMessage(errorLabel,textField);
+        showErrorMessage(errorLabel, textField);
         textField.requestFocus();
     }
-    
-    private void manageCorrect(Label errorLabel,TextField textField, BooleanProperty boolProp ){
+
+    private void manageCorrect(Label errorLabel, TextField textField, BooleanProperty boolProp) {
         boolProp.setValue(Boolean.TRUE);
-        hideErrorMessage(errorLabel,textField);
+        hideErrorMessage(errorLabel, textField);
     }
-    
-    private void showErrorMessage(Label errorLabel,TextField textField){
+
+    private void showErrorMessage(Label errorLabel, TextField textField) {
         errorLabel.visibleProperty().set(true);
         textField.styleProperty().setValue("-fx-background-colo: #FCE5E0");
     }
-    
-    private void hideErrorMessage(Label errorLabel,TextField textField){
+
+    private void hideErrorMessage(Label errorLabel, TextField textField) {
         errorLabel.visibleProperty().set(false);
         textField.styleProperty().setValue("");
     }
-    
+
 }

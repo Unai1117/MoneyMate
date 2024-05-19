@@ -136,7 +136,7 @@ public class manageCateController implements Initializable {
             if (res > 0) {
                 Alert alert = new Alert(AlertType.CONFIRMATION);
                 alert.setTitle("Delete confirmation");
-                alert.setContentText("Are you soure you want to dele this category? This will delete " + res + " charge(s) of this category.");
+                alert.setContentText("Are you sure you want to delete this category? This will delete " + res + " associated charge(s).");
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {
                     acount.removeCategory(cat);
@@ -145,7 +145,7 @@ public class manageCateController implements Initializable {
             } else {//remove the category because it doesn't have any charges
                 Alert alert = new Alert(AlertType.CONFIRMATION);
                 alert.setTitle("Delete confirmation");
-                alert.setContentText("Are you soure you want to dele this category?");
+                alert.setContentText("Are you sure you want to delete this category? No charges will be deleted.");
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {
                     for (int i = 0; i < categorias.size(); i++) {

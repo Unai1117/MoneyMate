@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="852.0" prefWidth="1041.0" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddExpenseController">
+<StackPane prefHeight="768.0" prefWidth="714.0" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddExpenseController">
    <children>
       <VBox fx:id="addExpensePane" prefHeight="852.0" prefWidth="1283.0">
          <children>
@@ -52,13 +52,13 @@
                                        <children>
                                           <VBox prefHeight="200.0" prefWidth="100.0" styleClass="input-component">
                                              <children>
-                                                <Label prefWidth="100.0" text="Name" />
+                                                <Label prefWidth="100.0" text="Name*" />
                                                 <TextField fx:id="nameField" maxWidth="300.0" prefHeight="74.0" prefWidth="200.0" />
                                              </children>
                                           </VBox>
                                           <VBox prefHeight="200.0" prefWidth="100.0" styleClass="input-component">
                                              <children>
-                                                <Label prefWidth="100.0" text="Description" />
+                                                <Label prefWidth="100.0" text="Description*" />
                                                 <TextArea fx:id="descriptionField" maxWidth="500.0" prefHeight="58.0" prefWidth="443.0" />
                                              </children>
                                           </VBox>
@@ -66,7 +66,7 @@
                                              <children>
                                                 <VBox prefHeight="92.0" prefWidth="119.0" styleClass="input-component">
                                                    <children>
-                                                      <Label prefWidth="100.0" text="Cost" />
+                                                      <Label prefWidth="100.0" text="Cost*" />
                                                       <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                          <children>
                                                             <TextField fx:id="costField" maxWidth="118.0" prefHeight="26.0" prefWidth="118.0" promptText="Price (€)" />
@@ -78,7 +78,7 @@
                                                 </VBox>
                                                 <VBox prefHeight="200.0" prefWidth="100.0" styleClass="input-component">
                                                    <children>
-                                                      <Label prefWidth="100.0" text="Date" />
+                                                      <Label prefWidth="100.0" text="Date*" />
                                                       <DatePicker fx:id="datePicker" prefHeight="38.0" prefWidth="120.0" />
                                                    </children>
                                                 </VBox>
@@ -86,12 +86,19 @@
                                           </FlowPane>
                                           <VBox prefHeight="200.0" prefWidth="100.0" styleClass="input-component">
                                              <children>
-                                                <Label text="Category" />
+                                                <Label prefWidth="100.0" text="Category*" />
                                                 <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                                                    <children>
-                                                      <ChoiceBox fx:id="categoryMenu" maxHeight="-Infinity" prefHeight="36.0" prefWidth="176.0" />
+                                                      <ChoiceBox fx:id="categoryMenu" maxHeight="-Infinity" prefHeight="36.0" prefWidth="158.0" />
                                                       <Label minWidth="-Infinity" text="or" />
-                                                      <Button fx:id="openInputOverlay" minHeight="60.0" mnemonicParsing="false" onAction="#openInputOverlay" prefWidth="120.0" text="Create new" />
+                                                      <Button fx:id="openInputOverlay" minHeight="60.0" mnemonicParsing="false" onAction="#openInputOverlay" prefWidth="159.0" text="Create new">
+                                                         <graphic>
+                                                            <ImageView>
+                                                               <image>
+                                                                  <Image url="@../assets/icons/plus.png" />
+                                                               </image>
+                                                            </ImageView>
+                                                         </graphic></Button>
                                                    </children>
                                                 </HBox>
                                              </children>
@@ -101,7 +108,7 @@
                                     <VBox prefHeight="394.0" prefWidth="196.0" styleClass="input-component">
                                        <children>
                                           <Label text="Image" />
-                                          <Button fx:id="selectImageExpense" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#openFiles" prefWidth="60.0">
+                                          <Button fx:id="selectImageExpense" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#openFiles" prefWidth="156.0" text="Choose file">
                                              <graphic>
                                                 <ImageView>
                                                    <image>
@@ -110,7 +117,7 @@
                                                 </ImageView>
                                              </graphic>
                                           </Button>
-                                          <ImageView fx:id="showImage" fitHeight="345.0" fitWidth="288.0" pickOnBounds="true" preserveRatio="true" />
+                                          <ImageView fx:id="showImage" fitHeight="1.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" />
                                        </children>
                                     </VBox>
                                  </children>
@@ -131,6 +138,9 @@
                      </content>
                   </ScrollPane>
                </children>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" />
+               </padding>
             </StackPane>
          </children>
       </VBox>

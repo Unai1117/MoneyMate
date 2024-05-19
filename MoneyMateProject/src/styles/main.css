@@ -160,6 +160,7 @@
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
     -fx-pref-height: 40px;
+    -fx-min-height: 40px;
     -fx-padding: 10px;
     -fx-text-fill: -fx-s;
 }
@@ -251,4 +252,11 @@
 .choice-box .label {
     -fx-font-size: 13px;
 
+}
+
+.link-button {
+    -fx-background-color: transparent;
+    -fx-max-height: 10px;
+    -fx-text-fill: -fx-accent;
+    -fx-padding: 0;
 }

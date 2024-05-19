@@ -28,12 +28,15 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import static javafx.scene.input.KeyCode.EQUALS;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import model.*;
@@ -48,7 +51,7 @@ public class RegisterController implements Initializable {
     @FXML
     private Button register;
     @FXML
-    private BorderPane regPane;
+    private VBox regPane;
     @FXML
     private TextField eemail;
     @FXML
@@ -57,132 +60,143 @@ public class RegisterController implements Initializable {
     private PasswordField password2;
     @FXML
     private Label lIncorrectEmail;
-    @FXML 
+    @FXML
     private Label lPassDifferent;
-    @FXML 
+    @FXML
     private TextField nname;
-    @FXML 
+    @FXML
     private TextField nnickname;
     @FXML
     private Image scanedImage;
-    
+    @FXML
+    private StackPane stackPane;
+    @FXML
+    private ScrollPane scrollPane;
+    @FXML
+    private ImageView imageView;
+
     private Acount acount;
-    
-    
-    
+
     //properties to control valid fields
     private BooleanProperty validEmail;
     private BooleanProperty validPassword;
     private BooleanProperty equalPasswords;
-    
-    private final int EQUALS = 0; 
-    
-    
+
+    private final int EQUALS = 0;
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-       //Initialise Account
+        //Initialise Account
         try {
             acount = Acount.getInstance();
         } catch (AcountDAOException | IOException ex) {
             java.util.logging.Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         //Booleans for checking fields
         validEmail = new SimpleBooleanProperty();
         validEmail.setValue(Boolean.FALSE);
-        
+
         validPassword = new SimpleBooleanProperty();
         validPassword.setValue(Boolean.FALSE);
-        
+
         equalPasswords = new SimpleBooleanProperty();
         equalPasswords.setValue(Boolean.FALSE);
-        
-        eemail.focusedProperty().addListener((observable, oldValue, newValue) ->{
-            if(!newValue){
+
+        eemail.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
                 checkEditEmail();
             }
         });
-        password1.focusedProperty().addListener((observable, oldValue, newValue) ->{
-            if(!newValue){
+        password1.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
                 checkPassword();
             }
         });
-        password2.focusedProperty().addListener((observable, oldValue, newValue) ->{
-            if(!newValue){
+        password2.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
                 checkEquals();
             }
         });
-        
+
         BooleanBinding validFields = Bindings.and(validEmail, validPassword).and(equalPasswords);
-        
+
         register.disableProperty().bind(Bindings.not(validFields));
-    }  
-    
+
+        stackPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));
+    }
+
     //Method that checks email correctness
-    private void checkEditEmail(){
-        if(!Utils.checkEmail(eemail.textProperty().getValueSafe()))
+    private void checkEditEmail() {
+        if (!Utils.checkEmail(eemail.textProperty().getValueSafe())) {
             manageError(lIncorrectEmail, eemail, validEmail);
-        else 
+        } else {
             manageCorrect(lIncorrectEmail, eemail, validEmail);
+        }
     }
-    
+
     //Method that checks password correctness
-    private void checkPassword(){
-        if(!Utils.checkPassword(password1.textProperty().getValueSafe()))
+    private void checkPassword() {
+        if (!Utils.checkPassword(password1.textProperty().getValueSafe())) {
             manageError(lPassDifferent, password1, validPassword);
-        else 
+        } else {
             manageCorrect(lPassDifferent, password1, validPassword);
+        }
     }
-    
+
     //Go to login page  
     @FXML
-    private void goLogin(MouseEvent event){
+    private void goLogin(ActionEvent event) {
         try {
-                Pane loginPane = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-                regPane.getScene().setRoot(loginPane);
-            } catch (IOException e) {
-                System.out.println(e);
-            }
+            Pane loginPane = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
+            regPane.getScene().setRoot(loginPane);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
-    
+
     //Method thhat checks if both passwords are equals
-    private void checkEquals(){
-        if(password1.textProperty().getValueSafe().compareTo(password2.textProperty().getValueSafe()) != EQUALS){
-            showErrorMessage(lPassDifferent,password2);
+    private void checkEquals() {
+        if (password1.textProperty().getValueSafe().compareTo(password2.textProperty().getValueSafe()) != EQUALS) {
+            showErrorMessage(lPassDifferent, password2);
             equalPasswords.setValue(Boolean.FALSE);
             password2.textProperty().setValue("");
-        }else
-            manageCorrect(lPassDifferent,password2,equalPasswords);
+        } else {
+            manageCorrect(lPassDifferent, password2, equalPasswords);
+        }
     }
-    
+
     @FXML
     //obtain image
-    private void openFiles(MouseEvent event) {
+    private void openFiles(ActionEvent event) {
         scanedImage = Utils.codeOpenFiles();
+        if (scanedImage != null) {
+            imageView.setImage(scanedImage);
+
+        }
     }
-    
-    
+
     //Method that register the user
     @FXML
-    private void acceptRegister(MouseEvent event) throws AcountDAOException{
-        if ((Objects.equals(validEmail.getValue(), Boolean.TRUE)) && (Objects.equals(validPassword.getValue(), Boolean.TRUE)) && (Objects.equals(equalPasswords.getValue(), Boolean.TRUE))){
+    private void acceptRegister(MouseEvent event) throws AcountDAOException {
+        if ((Objects.equals(validEmail.getValue(), Boolean.TRUE)) && (Objects.equals(validPassword.getValue(), Boolean.TRUE)) && (Objects.equals(equalPasswords.getValue(), Boolean.TRUE))) {
             String[] name = nname.textProperty().getValueSafe().split(" ");
             String retname = name[0];
             String surname = name[1];
-            String email= eemail.textProperty().getValueSafe();
+            String email = eemail.textProperty().getValueSafe();
             String login = nnickname.textProperty().getValueSafe();
             String password = password2.textProperty().getValueSafe();
             Image image = scanedImage;
             LocalDate date = LocalDate.now();
-            
+
             acount.registerUser(retname, surname, email, login, password, image, date);
-            
+
             try {
                 Pane loginPane = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
                 regPane.getScene().setRoot(loginPane);
@@ -193,7 +207,7 @@ public class RegisterController implements Initializable {
             handleBAcceptOnAction();
         }
     }
-    
+
     //Methods for checking fields
     private void handleBAcceptOnAction() {
         password2.textProperty().setValue("");
@@ -202,28 +216,25 @@ public class RegisterController implements Initializable {
         equalPasswords.setValue(Boolean.FALSE);
     }
 
-    private void manageError(Label errorLabel,TextField textField, BooleanProperty boolProp ){
+    private void manageError(Label errorLabel, TextField textField, BooleanProperty boolProp) {
         boolProp.setValue(Boolean.FALSE);
-        showErrorMessage(errorLabel,textField);
+        showErrorMessage(errorLabel, textField);
     }
-    
-    private void manageCorrect(Label errorLabel,TextField textField, BooleanProperty boolProp ){
+
+    private void manageCorrect(Label errorLabel, TextField textField, BooleanProperty boolProp) {
         boolProp.setValue(Boolean.TRUE);
-        hideErrorMessage(errorLabel,textField);
+        hideErrorMessage(errorLabel, textField);
     }
-    
-    private void showErrorMessage(Label errorLabel,TextField textField){
+
+    private void showErrorMessage(Label errorLabel, TextField textField) {
         errorLabel.visibleProperty().set(true);
         textField.styleProperty().setValue("-fx-background-colo: #FCE5E0");
     }
-    
-    private void hideErrorMessage(Label errorLabel,TextField textField){
+
+    private void hideErrorMessage(Label errorLabel, TextField textField) {
         errorLabel.visibleProperty().set(false);
         textField.styleProperty().setValue("");
     }
 
     //registerUser();
-
-
-
 }
