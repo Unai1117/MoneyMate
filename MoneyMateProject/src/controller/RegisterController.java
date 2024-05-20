@@ -71,6 +71,10 @@ public class RegisterController implements Initializable {
     @FXML
     private Label password2Label;
     @FXML
+    private Label surnameLabel;
+    @FXML
+    private TextField ssurname;
+    @FXML
     private TextField nname;
     @FXML
     private TextField nnickname;
@@ -88,6 +92,9 @@ public class RegisterController implements Initializable {
     private Acount acount;
 
     //properties to control valid fields
+    private BooleanProperty validName;
+    private BooleanProperty validSurname;
+    private BooleanProperty validNickname;
     private BooleanProperty validEmail;
     private BooleanProperty validPassword;
     private BooleanProperty equalPasswords;
@@ -110,6 +117,15 @@ public class RegisterController implements Initializable {
         }
 
         //Booleans for checking fields
+        validName = new SimpleBooleanProperty();
+        validName.setValue(Boolean.FALSE);
+        
+        validSurname = new SimpleBooleanProperty();
+        validSurname.setValue(Boolean.FALSE);
+        
+        validNickname = new SimpleBooleanProperty();
+        validNickname.setValue(Boolean.FALSE);
+        
         validEmail = new SimpleBooleanProperty();
         validEmail.setValue(Boolean.FALSE);
 
@@ -118,26 +134,10 @@ public class RegisterController implements Initializable {
 
         equalPasswords = new SimpleBooleanProperty();
         equalPasswords.setValue(Boolean.FALSE);
-        /*
-        eemail.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                User.checkEmail(newValue);
-            }
-        });
-        password1.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                checkPassword();
-            }
-        });
-        password2.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                checkEquals();
-            }
-        });*/
 
         BooleanBinding validFields = Bindings.and(validEmail, validPassword).and(equalPasswords);
 
-        register.disableProperty().bind(Bindings.not(validFields));
+        //register.disableProperty().bind(Bindings.not(validFields));
         stackPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));
         
     }
@@ -145,23 +145,21 @@ public class RegisterController implements Initializable {
      //Method that register the user
     @FXML
     private void acceptRegister(MouseEvent event) throws AcountDAOException {
-        /*
         checkname();
         checksurname();
         checknickname();
         checkemail();
-        checkpasswords();*/
-        if ((Objects.equals(validEmail.getValue(), Boolean.TRUE)) && (Objects.equals(validPassword.getValue(), Boolean.TRUE)) && (Objects.equals(equalPasswords.getValue(), Boolean.TRUE))) {
-            String[] name = nname.textProperty().getValueSafe().split(" ");
-            String retname = name[0];
-            String surname = name[1];
+        checkpasswords();
+        if ((Objects.equals(validName.getValue(), Boolean.TRUE)) && (Objects.equals(validSurname.getValue(), Boolean.TRUE)) && (Objects.equals(validNickname.getValue(), Boolean.TRUE)) && (Objects.equals(validEmail.getValue(), Boolean.TRUE)) && (Objects.equals(validPassword.getValue(), Boolean.TRUE))) {
+            String name = nname.textProperty().getValueSafe();
+            String surname = ssurname.textProperty().getValueSafe();
             String email = eemail.textProperty().getValueSafe();
             String login = nnickname.textProperty().getValueSafe();
             String password = password2.textProperty().getValueSafe();
             Image image = scanedImage;
             LocalDate date = LocalDate.now();
 
-            acount.registerUser(retname, surname, email, login, password, image, date);
+            acount.registerUser(name, surname, email, login, password, image, date);
 
             try {
                 Pane loginPane = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
@@ -195,89 +193,93 @@ public class RegisterController implements Initializable {
 
         }
     }
-    /*
+    
     @FXML
     private void checkname() {
-        if (checkEmail())
+        if (!nname.textProperty().getValueSafe().isEmpty() ){
+            nameLabel.getStyleClass().remove("destructive-label");
+            nname.getStyleClass().remove("destructive-input");
+            nameLabel.setText("Name*");
+            validName.setValue(Boolean.TRUE);
+        } else {
+            nameLabel.setText("Name* - Invalid Name!");
+            nameLabel.getStyleClass().add("destructive-label");
+            nname.getStyleClass().add("destructive-input");
+        }
     }
     
     @FXML
     private void checksurname() {
-        if (checkEmail())
-    } 
+        if (!ssurname.textProperty().getValueSafe().isEmpty()){
+            surnameLabel.getStyleClass().remove("destructive-label");
+            ssurname.getStyleClass().remove("destructive-input");
+            surnameLabel.setText("Surname*");
+            validSurname.setValue(Boolean.TRUE);
+        } else {
+            surnameLabel.setText("Surname* - Invalid Surname!");
+            surnameLabel.getStyleClass().add("destructive-label");
+            ssurname.getStyleClass().add("destructive-input");
+        }
+    }
     
     @FXML
     private void checknickname() {
-        if (checkEmail())
+        if (!nnickname.textProperty().getValueSafe().isEmpty()){
+            nicknameLabel.getStyleClass().remove("destructive-label");
+            nnickname.getStyleClass().remove("destructive-input");
+            nicknameLabel.setText("Nickname*");
+            validName.setValue(Boolean.TRUE);
+        } else {
+            nicknameLabel.setText("Nickname* - Invalid Nickname!");
+            nnickname.getStyleClass().add("destructive-input");
+            nicknameLabel.getStyleClass().add("destructive-label");
+        }
     } 
     
     @FXML
     private void checkemail() {
-        if (checkEmail())
+        if (User.checkEmail(eemail.textProperty().getValueSafe())){
+            emailLabel.getStyleClass().remove("destructive-label");
+            eemail.getStyleClass().remove("destructive-input");
+            emailLabel.setText("Email*");
+            validName.setValue(Boolean.TRUE);
+        } else {
+            emailLabel.setText("Email* - Invalid Email!");
+            emailLabel.getStyleClass().add("destructive-label");
+            eemail.getStyleClass().add("destructive-input");
+        }
     } 
     
     @FXML
     private void checkpasswords() {
-        if (checkEmail())
+        if (password1.textProperty().getValueSafe().isEmpty()){
+            password1Label.setText("Password* - Invalid Password!");
+            password1Label.getStyleClass().add("destructive-label");
+            password2Label.getStyleClass().add("destructive-label");
+            password1.getStyleClass().add("destructive-input");
+            password2.getStyleClass().add("destructive-input");
+        } else {
+                password1Label.setText("Password*");
+                password1Label.getStyleClass().remove("destructive-label");
+                password2Label.getStyleClass().remove("destructive-label");
+                password1.getStyleClass().remove("destructive-input");
+                password2.getStyleClass().remove("destructive-input");
+            if (!password1.textProperty().getValueSafe().equals(password2.textProperty().getValueSafe())){
+                password2Label.setText("Confirm Password* - Passwords don't match!");
+                //password1Label.setStyle("-fx-text-fill: #ed0c2a");
+                password2Label.getStyleClass().add("destructive-label");
+                password2.getStyleClass().add("destructive-input");
+            } else {
+                password2Label.setText("Confirm Password*");
+                password1Label.setStyle("-fx-text-fill: #eeeeee");
+                password2Label.setStyle("-fx-text-fill: #eeeeee");password1Label.setText("Password* - Invalid Password!");
+                password1Label.getStyleClass().remove("destructive-label");
+                password2Label.getStyleClass().remove("destructive-label");
+                password1.getStyleClass().remove("destructive-input");
+                password2.getStyleClass().remove("destructive-input");
+                validPassword.setValue(Boolean.TRUE);
+                
+            }
+        }
     } 
-    */
-    /*
-    //Method that checks email correctness
-    private void checkEditEmail() {
-        if (!Utils.checkEmail(eemail.textProperty().getValueSafe())) {
-            manageError(emailLabel, eemail, validEmail);
-        } else {
-            manageCorrect(emailLabel, eemail, validEmail);
-        }
-    }
-
-    //Method that checks password correctness
-    private void checkPassword() {
-        if (!Utils.checkPassword(password1.textProperty().getValueSafe())) {
-            manageError(password1Label, password1, validPassword);
-        } else {
-            manageCorrect(password1Label, password1, validPassword);
-        }
-    }
-
-    //Method thhat checks if both passwords are equals
-    private void checkEquals() {
-        if (password1.textProperty().getValueSafe().compareTo(password2.textProperty().getValueSafe()) != EQUALS) {
-            showErrorMessage(lPassDifferent, password2);
-            equalPasswords.setValue(Boolean.FALSE);
-            password2.textProperty().setValue("");
-        } else {
-            manageCorrect(lPassDifferent, password2, equalPasswords);
-        }
-    }
-    
-    
-    //Methods for checking fields
-    
-
-    private void manageError(Label errorLabel, TextField textField, BooleanProperty boolProp) {
-        boolProp.setValue(Boolean.FALSE);
-        if (errorlabel == ){
-            
-        }
-        showErrorMessage(errorLabel, textField);
-    }
-
-    private void manageCorrect(Label errorLabel, TextField textField, BooleanProperty boolProp) {
-        boolProp.setValue(Boolean.TRUE);
-        hideErrorMessage(errorLabel, textField);
-    }
-
-    private void showErrorMessage(Label errorLabel, TextField textField) {
-        errorLabel.visibleProperty().set(true);
-        textField.styleProperty().setValue("-fx-background-colo: #FCE5E0");
-    }
-
-    private void hideErrorMessage(Label errorLabel, TextField textField) {
-        errorLabel.visibleProperty().set(false);
-        textField.styleProperty().setValue("");
-    }
-    
-    */
-    //registerUser();
 }
