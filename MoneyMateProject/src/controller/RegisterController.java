@@ -266,13 +266,12 @@ public class RegisterController implements Initializable {
                 password2.getStyleClass().remove("destructive-input");
             if (!password1.textProperty().getValueSafe().equals(password2.textProperty().getValueSafe())){
                 password2Label.setText("Confirm Password* - Passwords don't match!");
-                //password1Label.setStyle("-fx-text-fill: #ed0c2a");
                 password2Label.getStyleClass().add("destructive-label");
                 password2.getStyleClass().add("destructive-input");
             } else {
                 password2Label.setText("Confirm Password*");
                 password1Label.setStyle("-fx-text-fill: #eeeeee");
-                password2Label.setStyle("-fx-text-fill: #eeeeee");password1Label.setText("Password* - Invalid Password!");
+                password2Label.setStyle("-fx-text-fill: #eeeeee");
                 password1Label.getStyleClass().remove("destructive-label");
                 password2Label.getStyleClass().remove("destructive-label");
                 password1.getStyleClass().remove("destructive-input");
