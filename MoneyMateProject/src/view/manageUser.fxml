@@ -4,100 +4,113 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="regPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="600.0" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.manageUserController">
+
+<VBox fx:id="regPane" prefHeight="919.0" prefWidth="822.0" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.manageUserController">
    <children>
-      <BorderPane prefHeight="400.0" prefWidth="600.0">
-         <bottom>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" styleClass="root" BorderPane.alignment="CENTER">
-               <children>
-                  <Button fx:id="cancel" mnemonicParsing="false" onMouseClicked="#openMainPane" text="Cancel">
-                     <HBox.margin>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button mnemonicParsing="false" text="Save">
-                     <HBox.margin>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-            </HBox>
-         </bottom>
-         <top>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="root" BorderPane.alignment="CENTER">
-               <children>
-                  <Circle fx:id="circle" fill="DODGERBLUE" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
-                  <Label fx:id="nickname" text="Jorge">
-                     <font>
-                        <Font size="46.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets bottom="20.0" />
-                     </VBox.margin>
-                  </Label>
-               </children>
-               <BorderPane.margin>
+      <HBox prefHeight="100.0" prefWidth="200.0" styleClass="header">
+         <children>
+            <Button alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#openMainPane" prefHeight="61.0" prefWidth="72.0">
+               <HBox.margin>
                   <Insets />
-               </BorderPane.margin>
-            </VBox>
-         </top>
-         <center>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+               </HBox.margin>
+               <graphic>
+                  <ImageView>
+                     <image>
+                        <Image url="@../assets/icons/caret-left.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Label text="Manage Account" />
+         </children>
+      </HBox>
+      <ScrollPane fx:id="scrollPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+         <content>
+            <StackPane fx:id="stackPane" prefHeight="750.0" prefWidth="820.0">
                <children>
-                  <HBox alignment="CENTER">
+                  <VBox alignment="CENTER" maxWidth="400.0" styleClass="input-vbox">
                      <children>
-                        <VBox alignment="CENTER">
+                        <StackPane prefHeight="150.0" prefWidth="200.0">
                            <children>
-                              <Label alignment="CENTER" contentDisplay="CENTER" text="Name:" />
-                              <TextField fx:id="nname1" alignment="CENTER" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
+                              <Button mnemonicParsing="false" onAction="#openFiles" prefHeight="209.0" style="-fx-background-radius: 100%; -fx-border-color: #EEEEEE; -fx-border-radius: 100%; -fx-min-width: 170px; -fx-min-height: 170px; -fx-max-width: 170px;">
+                                 <graphic>
+                                    <ImageView fx:id="imageView" disable="true" fitHeight="170.0" fitWidth="170.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../assets/icons/camera-plus.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Circle fx:id="circle" disable="true" fill="DODGERBLUE" radius="84.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
+                           </children>
+                        </StackPane>
+                        <Label fx:id="nickname" text="Hello, Jose!">
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <VBox prefHeight="25.0" prefWidth="332.0" styleClass="input-component">
+                           <children>
+                              <Label fx:id="nameLabel" text="Name" />
+                              <TextField fx:id="nname" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
                            </children>
                         </VBox>
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER">
-                     <children>
-                        <VBox alignment="CENTER">
+                        <VBox prefHeight="25.0" prefWidth="332.0" styleClass="input-component">
                            <children>
-                              <Label contentDisplay="CENTER" text="Email:" />
-                              <TextField fx:id="eemail1" alignment="CENTER" minHeight="26.0" minWidth="150.0" prefHeight="25.0" prefWidth="350.0" promptText="yourEmail@domain.com" />
+                              <Label fx:id="surnameLabel" text="Surname" />
+                              <TextField fx:id="ssurname" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
                            </children>
                         </VBox>
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER">
-                     <children>
-                        <VBox alignment="CENTER">
+                        <VBox prefHeight="25.0" prefWidth="332.0" styleClass="input-component">
                            <children>
-                              <Label contentDisplay="CENTER" text="New Password:" />
-                              <PasswordField fx:id="password1" alignment="CENTER" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
+                              <Label fx:id="emailLabel" text="Email" />
+                              <TextField fx:id="eemail1" minHeight="26.0" minWidth="150.0" prefHeight="25.0" prefWidth="350.0" promptText="yourEmail@domain.com" />
                            </children>
                         </VBox>
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER">
-                     <children>
-                        <VBox alignment="CENTER">
+                        <VBox prefHeight="25.0" prefWidth="332.0" styleClass="input-component">
                            <children>
-                              <Label text="Confirm Password:" />
-                              <PasswordField fx:id="password2" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
+                              <Label fx:id="password1Label" text="New Password" />
+                              <PasswordField fx:id="password1" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
                            </children>
                         </VBox>
+                        <VBox prefHeight="25.0" prefWidth="332.0" styleClass="input-component">
+                           <children>
+                              <Label fx:id="password2Label" text="Confirm New Password" />
+                              <PasswordField fx:id="password2" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="317.0" />
+                           </children>
+                        </VBox>
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="21.0" prefWidth="212.0" style="-fx-text-fill: #ed0c2a;" textAlignment="CENTER">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <HBox alignment="CENTER" prefHeight="50.0" prefWidth="100.0" styleClass="input-component-button-container">
+                           <children>
+                              <Button fx:id="save" alignment="CENTER" contentDisplay="RIGHT" minHeight="60.0" mnemonicParsing="false" onMouseClicked="#acceptRegister" styleClass="button-accent" text="Save">
+                                 <HBox.margin>
+                                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                        </HBox>
                      </children>
-                  </HBox>
+                  </VBox>
                </children>
-            </VBox>
-         </center>
-         <padding>
-            <Insets top="20.0" />
-         </padding>
-      </BorderPane>
+            </StackPane>
+         </content>
+      </ScrollPane>
    </children>
-</Pane>
+</VBox>

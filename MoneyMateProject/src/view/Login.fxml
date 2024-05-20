@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="logPane" prefHeight="734.0" prefWidth="949.0" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
+<StackPane fx:id="logPane" prefHeight="734.0" prefWidth="949.0" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
    <children>
       <VBox alignment="CENTER" maxWidth="400.0" styleClass="input-vbox">
          <children>
@@ -43,7 +43,7 @@
                   <Insets />
                </VBox.margin>
             </VBox>
-            <Label fx:id="incorrectLabel" text="Incorrect Username or Password" textFill="#ed0c2a" visible="false">
+            <Label fx:id="incorrectLabel" style="-fx-text-fill: #ed0c2a;" text="Incorrect Username or Password!" textFill="#ed0c2a" visible="false">
                <VBox.margin>
                   <Insets />
                </VBox.margin>

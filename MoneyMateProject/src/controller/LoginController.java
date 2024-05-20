@@ -104,7 +104,6 @@ public class LoginController implements Initializable {
 
     private void showErrorMessage(Label errorLabel, TextField textField) {
         errorLabel.visibleProperty().set(true);
-        textField.styleProperty().setValue("-fx-background-colo: #FCE5E0");
     }
 
     private void hideErrorMessage(Label errorLabel, TextField textField) {
