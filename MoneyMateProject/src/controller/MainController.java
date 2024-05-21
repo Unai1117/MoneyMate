@@ -333,7 +333,7 @@ public class MainController implements Initializable {
 
             auxMap.put("Other", new Pair(otherTotal, "#9c9c9c"));
 
-            if (userCharges.isEmpty()) {
+            if (map.keySet().isEmpty()) {
                 auxMap.put("No charges!", new Pair(1.0, "#EEEEEE"));
             } else {
                 auxMap.put("No charges!", new Pair(0.0, "#EEEEEE"));
