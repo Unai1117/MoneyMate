@@ -89,6 +89,16 @@ public class manageUserController implements Initializable {
     @FXML
     private Image scanedImage;
     
+    private BooleanProperty validName;
+    private BooleanProperty validSurname;
+    private BooleanProperty validNickname;
+    private BooleanProperty validEmail;
+    private BooleanProperty validPassword;
+    private BooleanProperty equalPasswords;
+    
+    private User user;
+    private AcountDAO acountDAO;
+    
 
     /**
      * Initializes the controller class.
@@ -100,7 +110,7 @@ public class manageUserController implements Initializable {
        //Initialise Account
         try {
             Acount acount = Acount.getInstance();
-            User user = acount.getLoggedUser();
+            user = acount.getLoggedUser();
             if (user.getImage() != null) {
                 circle.setVisible(true);
                 circle.setFill(new ImagePattern(user.getImage()));
@@ -108,16 +118,33 @@ public class manageUserController implements Initializable {
                 circle.setVisible(true);
                 circle.setFill(new ImagePattern(null));
             }
-            if (user.getSurname() == null) {
-                nickname.setText("Hello, " + user.getName() + "!");
-            } else {
-                nickname.setText("Hello, " + user.getName() + " " + user.getSurname() + "!");
-            }
-            eemail1.setText(user.getEmail());
+            nickname.setText("Hello, " + user.getName() + " " + user.getSurname() + "!");
+            eemail1.setPromptText(user.getEmail());
+            nname.setPromptText(user.getName());
+            ssurname.setPromptText(user.getSurname());
+            
         } catch (AcountDAOException | IOException ex) {
             java.util.logging.Logger.getLogger(manageUserController.class.getName()).log(Level.SEVERE, null, ex);
         }
         stackPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));
+        
+        validName = new SimpleBooleanProperty();
+        validName.setValue(Boolean.FALSE);
+        
+        validSurname = new SimpleBooleanProperty();
+        validSurname.setValue(Boolean.FALSE);
+        
+        validNickname = new SimpleBooleanProperty();
+        validNickname.setValue(Boolean.FALSE);
+        
+        validEmail = new SimpleBooleanProperty();
+        validEmail.setValue(Boolean.FALSE);
+
+        validPassword = new SimpleBooleanProperty();
+        validPassword.setValue(Boolean.FALSE);
+
+        equalPasswords = new SimpleBooleanProperty();
+        equalPasswords.setValue(Boolean.FALSE);
     }
     
     @FXML
@@ -128,19 +155,6 @@ public class manageUserController implements Initializable {
         } catch (Exception e) {
             System.out.println(e);
         }
-    }
-    
-    private void putImage(){
-        
-    }
-    
-    /*@FXML 
-    private void toSecondaryColour(MouseEvent event){
-        cancel.setStyle("button-secondary");
-    }*/
-
-    @FXML
-    private void goLogin(ActionEvent event) {
     }
 
     @FXML
@@ -153,8 +167,111 @@ public class manageUserController implements Initializable {
 
         }
     }
-
+    
+    /*
     @FXML
-    private void acceptRegister(MouseEvent event) {
+    private void saveChanges(MouseEvent event) {
+        if (!nname.textProperty().getValueSafe().isEmpty()){
+            checkname();
+            if ((Objects.equals(validName.getValue(), Boolean.TRUE))){
+                AcountDAO.updateNameUser(user, nname.textProperty().getValueSafe());
+            }
+        }
+        if (!ssurname.textProperty().getValueSafe().isEmpty()){
+            checkname();
+            if ((Objects.equals(validSurname.getValue(), Boolean.TRUE))){
+                AcountDAO.updateSurnameUser(user, ssurname.textProperty().getValueSafe());
+            }
+        }
+        if (!eemail1.textProperty().getValueSafe().isEmpty()){
+            checkname();
+            if ((Objects.equals(validEmail.getValue(), Boolean.TRUE))){
+                AcountDsAO.updateEmailUser(user, eemail1.textProperty().getValueSafe());
+            }
+        }
+        if (!password1.textProperty().getValueSafe().isEmpty() && !password2.textProperty().getValueSafe().isEmpty()){
+            checkpasswords();
+            if ((Objects.equals(validPassords.getValue(), Boolean.TRUE))){
+                AcountDAO.updatePasswordUser(user, password2.textProperty().getValueSafe());
+            }
+        }
+        if (scanedImage != user.getImage()){
+            AcountDAO.updateImageUser(user, scanedImage);
+        }
+    } */
+    
+    @FXML
+    private void checkname() {
+        if (!nname.textProperty().getValueSafe().isEmpty() ){
+            nameLabel.getStyleClass().remove("destructive-label");
+            nname.getStyleClass().remove("destructive-input");
+            nameLabel.setText("Name");
+            validName.setValue(Boolean.TRUE);
+        } else {
+            nameLabel.setText("Name - Invalid Name!");
+            nameLabel.getStyleClass().add("destructive-label");
+            nname.getStyleClass().add("destructive-input");
+        }
+    }
+    
+    @FXML
+    private void checksurname() {
+        if (!ssurname.textProperty().getValueSafe().isEmpty()){
+            surnameLabel.getStyleClass().remove("destructive-label");
+            ssurname.getStyleClass().remove("destructive-input");
+            surnameLabel.setText("Surname");
+            validSurname.setValue(Boolean.TRUE);
+        } else {
+            surnameLabel.setText("Surname - Invalid Surname!");
+            surnameLabel.getStyleClass().add("destructive-label");
+            ssurname.getStyleClass().add("destructive-input");
+        }
+    }
+    
+    
+    @FXML
+    private void checkemail() {
+        if (User.checkEmail(eemail1.textProperty().getValueSafe())){
+            emailLabel.getStyleClass().remove("destructive-label");
+            eemail1.getStyleClass().remove("destructive-input");
+            emailLabel.setText("Email");
+            validName.setValue(Boolean.TRUE);
+        } else {
+            emailLabel.setText("Email - Invalid Email!");
+            emailLabel.getStyleClass().add("destructive-label");
+            eemail1.getStyleClass().add("destructive-input");
+        }
+    } 
+    
+    @FXML
+    private void checkpasswords() {
+        if (password1.textProperty().getValueSafe().isEmpty()){
+            password1Label.setText("New Password - Invalid Password!");
+            password1Label.getStyleClass().add("destructive-label");
+            password2Label.getStyleClass().add("destructive-label");
+            password1.getStyleClass().add("destructive-input");
+            password2.getStyleClass().add("destructive-input");
+        } else {
+                password1Label.setText("New Password");
+                password1Label.getStyleClass().remove("destructive-label");
+                password2Label.getStyleClass().remove("destructive-label");
+                password1.getStyleClass().remove("destructive-input");
+                password2.getStyleClass().remove("destructive-input");
+            if (!password1.textProperty().getValueSafe().equals(password2.textProperty().getValueSafe())){
+                password2Label.setText("Confirm New Password - Passwords don't match!");
+                password2Label.getStyleClass().add("destructive-label");
+                password2.getStyleClass().add("destructive-input");
+            } else {
+                password2Label.setText("Confirm New Password");
+                password1Label.setStyle("-fx-text-fill: #eeeeee");
+                password2Label.setStyle("-fx-text-fill: #eeeeee");
+                password1Label.getStyleClass().remove("destructive-label");
+                password2Label.getStyleClass().remove("destructive-label");
+                password1.getStyleClass().remove("destructive-input");
+                password2.getStyleClass().remove("destructive-input");
+                validPassword.setValue(Boolean.TRUE);
+                
+            }
+        }
     }
 }
