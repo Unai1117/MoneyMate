@@ -24,12 +24,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
@@ -98,6 +101,8 @@ public class MainController implements Initializable {
     private ObservableList<PieChart.Data> userCategoriesData = FXCollections.observableArrayList();
     @FXML
     private Button addExpense1;
+    @FXML
+    private ChoiceBox<String> chartDisplayMode;
 
     /**
      * Initializes the controller class.
@@ -106,7 +111,7 @@ public class MainController implements Initializable {
         try {
             chart.setData(userCategoriesData);
 
-            computeChartData();
+            computeChartData("All");
 
             // Inner circle default value
             chartInnerCircle.radiusProperty().bind(chartStackPane.widthProperty().multiply(0.85).divide(2));
@@ -174,7 +179,7 @@ public class MainController implements Initializable {
                         // callback function to remove an item
                         cic.setOnRemove(() -> {
                             chargesList.getChildren().remove(item);
-                            computeChartData();
+                            computeChartData(chartDisplayMode.getSelectionModel().getSelectedItem());
 
                         });
                         chargesList.getChildren().add(item);
@@ -201,6 +206,15 @@ public class MainController implements Initializable {
         } catch (AcountDAOException | IOException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        chartDisplayMode.getItems().addAll("All", "Month", "Year");
+        chartDisplayMode.getSelectionModel().selectFirst();
+
+        chartDisplayMode.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                computeChartData(newVal);
+            }
+        });
     }
 
     @FXML
@@ -269,7 +283,7 @@ public class MainController implements Initializable {
         }
     }
 
-    private void computeChartData() {
+    private void computeChartData(String mode) {
         totalMoney = 0;
         try {
             // Generates a Category - Charges map
@@ -277,8 +291,15 @@ public class MainController implements Initializable {
             userCategories = Acount.getInstance().getUserCategories();
             //List<String> chartColors = new ArrayList<>();
             Map<Category, List<Charge>> map = new HashMap();
+            LocalDate currentDate = LocalDate.now();
             for (int i = 0; i < userCharges.size(); i++) {
                 Charge charge = userCharges.get(i);
+                LocalDate chargeDate = charge.getDate();
+                if ("Month".equals(mode) && (chargeDate.getYear() != currentDate.getYear() || chargeDate.getMonth() != currentDate.getMonth())) {
+                    continue;
+                } else if ("Year".equals(mode) && chargeDate.getYear() != currentDate.getYear()) {
+                    continue;
+                }
                 totalMoney += charge.getCost() * charge.getUnits();
                 Category category = charge.getCategory();
                 if (map.containsKey(category)) {
@@ -290,6 +311,7 @@ public class MainController implements Initializable {
                     aux.add(charge);
                     map.put(category, aux);
                 }
+
             }
 
             Map<String, Pair<Double, String>> auxMap = new HashMap();
