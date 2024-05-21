@@ -91,14 +91,14 @@
                               <PasswordField fx:id="password2" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="317.0" />
                            </children>
                         </VBox>
-                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="21.0" prefWidth="212.0" style="-fx-text-fill: #ed0c2a;" textAlignment="CENTER">
+                        <Label fx:id="changedSaved" alignment="CENTER" contentDisplay="CENTER" prefHeight="21.0" prefWidth="212.0" styleClass="agreed-label" text="Changes Saved!" textAlignment="CENTER" textFill="#f20a0a" visible="false">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
                         <HBox alignment="CENTER" prefHeight="50.0" prefWidth="100.0" styleClass="input-component-button-container">
                            <children>
-                              <Button fx:id="save" alignment="CENTER" contentDisplay="RIGHT" minHeight="60.0" mnemonicParsing="false" styleClass="button-accent" text="Save">
+                              <Button fx:id="save" alignment="CENTER" contentDisplay="RIGHT" minHeight="60.0" mnemonicParsing="false" onAction="#saveChanges" styleClass="button-accent" text="Save">
                                  <HBox.margin>
                                     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                                  </HBox.margin>

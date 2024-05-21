@@ -88,6 +88,8 @@ public class manageUserController implements Initializable {
     private VBox regPane;
     @FXML
     private Image scanedImage;
+    @FXML
+    private Label changedSaved;
     
     private BooleanProperty validName;
     private BooleanProperty validSurname;
@@ -168,37 +170,44 @@ public class manageUserController implements Initializable {
         }
     }
     
-    /*
+    
     @FXML
-    private void saveChanges(MouseEvent event) {
+    private void saveChanges(ActionEvent event) {
         if (!nname.textProperty().getValueSafe().isEmpty()){
             checkname();
             if ((Objects.equals(validName.getValue(), Boolean.TRUE))){
-                AcountDAO.updateNameUser(user, nname.textProperty().getValueSafe());
+                user.setName(nname.textProperty().getValueSafe());
+                nname.setText("");
             }
         }
         if (!ssurname.textProperty().getValueSafe().isEmpty()){
-            checkname();
+            checksurname();
             if ((Objects.equals(validSurname.getValue(), Boolean.TRUE))){
-                AcountDAO.updateSurnameUser(user, ssurname.textProperty().getValueSafe());
+                user.setSurname(ssurname.textProperty().getValueSafe());
+                ssurname.setText("");
             }
         }
         if (!eemail1.textProperty().getValueSafe().isEmpty()){
-            checkname();
+            checkemail();
             if ((Objects.equals(validEmail.getValue(), Boolean.TRUE))){
-                AcountDsAO.updateEmailUser(user, eemail1.textProperty().getValueSafe());
+                user.setEmail(eemail1.textProperty().getValueSafe());
+                eemail1.setText("");
             }
         }
         if (!password1.textProperty().getValueSafe().isEmpty() && !password2.textProperty().getValueSafe().isEmpty()){
             checkpasswords();
-            if ((Objects.equals(validPassords.getValue(), Boolean.TRUE))){
-                AcountDAO.updatePasswordUser(user, password2.textProperty().getValueSafe());
+            if ((Objects.equals(validPassword.getValue(), Boolean.TRUE))){
+                user.setPassword(password2.textProperty().getValueSafe());
+                password1.setText("");
+                password2.setText("");
             }
         }
         if (scanedImage != user.getImage()){
-            AcountDAO.updateImageUser(user, scanedImage);
+            user.setImage(scanedImage);
         }
-    } */
+        changedSaved.setVisible(true);
+        
+    } 
     
     @FXML
     private void checkname() {
