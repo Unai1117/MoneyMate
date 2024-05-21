@@ -8,12 +8,15 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -70,6 +73,8 @@ public class AddExpenseController implements Initializable {
     private TextField unitsField;
     @FXML
     private Button selectImageExpense;
+    @FXML
+    private Button createNewCategory;
 
     private Image scanedImage;
     @FXML
@@ -146,10 +151,23 @@ public class AddExpenseController implements Initializable {
 
         flowPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(2));
         responsiveVBox.maxWidthProperty().bind(scrollPane.widthProperty().subtract(50));
+
+        // Listeners to only accept numbers (doubles for cost and integers for units)
+        costField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("\\d*\\.?\\d*")) {
+                costField.setText(oldVal);
+            }
+        });
+
+        unitsField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("\\d*")) {
+                unitsField.setText(oldVal);
+            }
+        });
     }
 
     @FXML
-    private void doneButton(MouseEvent event) throws AcountDAOException {
+    private void doneButton(ActionEvent event) throws AcountDAOException {
         //obtain all the fields needed to add an expense
         double cost = Double.parseDouble(costField.getText());
         String name = nameField.getText();
@@ -203,14 +221,14 @@ public class AddExpenseController implements Initializable {
 
     @FXML
     //obtain image
-    private void openFiles(MouseEvent event) {
+    private void openFiles(ActionEvent event) {
         scanedImage = Utils.codeOpenFiles();
         showImage.setFitHeight(345.0);
         showImage.setImage(scanedImage);
     }
 
     @FXML
-    private void cancelAction(MouseEvent event) {
+    private void cancelAction(ActionEvent event) {
         try {
             mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml"));
             cancelButton.getScene().setRoot(mainPane);
@@ -223,12 +241,31 @@ public class AddExpenseController implements Initializable {
     private void openInputOverlay(ActionEvent event) {
         inputOverlay.setVisible(true);
         newCategoryField.requestFocus();
+        nameField.setFocusTraversable(false);
+        descriptionField.setFocusTraversable(false);
+        costField.setFocusTraversable(false);
+        datePicker.setFocusTraversable(false);
+        unitsField.setFocusTraversable(false);
+        selectImageExpense.setFocusTraversable(false);
+        cancelButton.setFocusTraversable(false);
+        createNewCategory.setFocusTraversable(false);
+        categoryMenu.setFocusTraversable(false);
 
     }
 
     @FXML
     private void closeInputOverlay(ActionEvent event) {
         inputOverlay.setVisible(false);
+        nameField.setFocusTraversable(true);
+        descriptionField.setFocusTraversable(true);
+        costField.setFocusTraversable(true);
+        datePicker.setFocusTraversable(true);
+        unitsField.setFocusTraversable(true);
+        selectImageExpense.setFocusTraversable(true);
+        cancelButton.setFocusTraversable(true);
+        createNewCategory.setFocusTraversable(true);
+        createNewCategory.requestFocus();
+        categoryMenu.setFocusTraversable(true);
     }
 
     @FXML
@@ -248,15 +285,13 @@ public class AddExpenseController implements Initializable {
                 String colorString = selColor.toString();
                 //add new category
                 acount.registerCategory(newCategoryField.getText().trim() + "|" + colorString, descriptionNewCategory.getText().trim());
-                inputOverlay.setVisible(false);
+                closeInputOverlay(null);
 
                 //============================================
                 // empty text fields after adding to the list
                 newCategoryField.clear();
                 descriptionNewCategory.clear();
 
-                //change focus to inital textfield
-                newCategoryField.requestFocus();
             }
         } catch (Exception e) {
             System.out.println(e);

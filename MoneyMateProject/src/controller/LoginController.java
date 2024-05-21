@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -59,22 +61,32 @@ public class LoginController implements Initializable {
         } catch (AcountDAOException | IOException ex) {
             java.util.logging.Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        password1.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                openMainPane(null);
+            }
+        });
     }
 
     @FXML
-    private void openMainPane(MouseEvent event) throws AcountDAOException {
+    private void openMainPane(MouseEvent event) {
         if ((nnickname.getText() != null || !nnickname.getText().trim().isEmpty()) && (password1.getText() != null || !password1.getText().trim().isEmpty())) {
-            String nickname = nnickname.textProperty().getValueSafe();
-            String password = password1.textProperty().getValueSafe();
-            if (acount.logInUserByCredentials(nickname, password)) {
-                try {
-                    Pane mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml"));
-                    logPane.getScene().setRoot(mainPane);
-                } catch (IOException e) {
-                    System.out.println(e);
+            try {
+                String nickname = nnickname.textProperty().getValueSafe();
+                String password = password1.textProperty().getValueSafe();
+                if (acount.logInUserByCredentials(nickname, password)) {
+                    try {
+                        Pane mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml"));
+                        logPane.getScene().setRoot(mainPane);
+                    } catch (IOException e) {
+                        System.out.println(e);
+                    }
+                } else {
+                    incorrectLabel.visibleProperty().set(true);
                 }
-            } else {
-                incorrectLabel.visibleProperty().set(true);
+            } catch (AcountDAOException ex) {
+                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }

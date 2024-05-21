@@ -22,7 +22,7 @@
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" styleClass="header">
                <children>
-                  <Button fx:id="cancelButton" mnemonicParsing="false" onMouseClicked="#cancelAction">
+                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelAction">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
@@ -91,7 +91,7 @@
                                                    <children>
                                                       <ChoiceBox fx:id="categoryMenu" maxHeight="-Infinity" prefHeight="36.0" prefWidth="158.0" />
                                                       <Label minWidth="-Infinity" text="or" />
-                                                      <Button fx:id="openInputOverlay" minHeight="60.0" mnemonicParsing="false" onAction="#openInputOverlay" prefWidth="159.0" text="Create new">
+                                                      <Button fx:id="createNewCategory" minHeight="60.0" mnemonicParsing="false" onAction="#openInputOverlay" prefWidth="159.0" text="Create new">
                                                          <graphic>
                                                             <ImageView>
                                                                <image>
@@ -108,7 +108,7 @@
                                     <VBox prefHeight="394.0" prefWidth="196.0" styleClass="input-component">
                                        <children>
                                           <Label text="Image" />
-                                          <Button fx:id="selectImageExpense" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#openFiles" prefWidth="156.0" text="Choose file">
+                                          <Button fx:id="selectImageExpense" alignment="CENTER" mnemonicParsing="false" onAction="#openFiles" prefWidth="156.0" text="Choose file">
                                              <graphic>
                                                 <ImageView>
                                                    <image>
@@ -127,7 +127,7 @@
                               </FlowPane>
                               <HBox alignment="BOTTOM_CENTER" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <Button fx:id="doneButton" contentDisplay="RIGHT" minHeight="-Infinity" mnemonicParsing="false" onMouseClicked="#doneButton" prefWidth="105.0" styleClass="button-accent" text="Done" />
+                                    <Button fx:id="doneButton" contentDisplay="RIGHT" minHeight="-Infinity" mnemonicParsing="false" onAction="#doneButton" prefWidth="105.0" styleClass="button-accent" text="Done" />
                                  </children>
                                  <padding>
                                     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

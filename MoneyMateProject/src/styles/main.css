@@ -1,8 +1,10 @@
 .root {
     -fx-bg: #222831;
     -fx-p: #31363F;
+    -fx-pf: #5c6473;
     -fx-s: #EEEEEE;
     -fx-accent: #76ABAE;
+    -fx-accentf: #a1c5c7;
     -fx-destructive: #ed0c2a;
     -fx-background-color: -fx-bg;
 }
@@ -254,6 +256,7 @@
 
 }
 
+
 .link-button {
     -fx-background-color: transparent;
     -fx-max-height: 10px;
@@ -271,5 +274,14 @@
 }
 
 .agreed-label{
-    -fx-text-fill: greenyellow !important; 
+    -fx-text-fill: greenyellow !important;
+}
+
+.menu-item:focused, .button:focused, .menu-button:focused,
+.choice-box:focused, .text-field:focused, .text-area:focused, .color-picker:focused  {
+    -fx-background-color: -fx-pf;
+}
+
+.button-accent:focused {
+    -fx-background-color: -fx-accentf;
 }

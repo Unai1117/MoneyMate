@@ -46,6 +46,8 @@ public class manageCateController implements Initializable {
     private Button addButton;
     @FXML
     private Button deleteButton;
+    @FXML
+    private Button newButton;
 
     private List<Category> categorias;
 
@@ -178,6 +180,10 @@ public class manageCateController implements Initializable {
     @FXML
     private void openInputOverlay(ActionEvent event) {
         inputOverlay.setVisible(true);
+        exitButton.setFocusTraversable(false);
+        categoriesListView.setFocusTraversable(false);
+        newButton.setFocusTraversable(false);
+        deleteButton.setFocusTraversable(false);
         nameTextField.requestFocus();
 
     }
@@ -185,5 +191,10 @@ public class manageCateController implements Initializable {
     @FXML
     private void closeInputOverlay(ActionEvent event) {
         inputOverlay.setVisible(false);
+        exitButton.setFocusTraversable(true);
+        categoriesListView.setFocusTraversable(true);
+        newButton.setFocusTraversable(true);
+        deleteButton.setFocusTraversable(true);
+        newButton.requestFocus();
     }
 }

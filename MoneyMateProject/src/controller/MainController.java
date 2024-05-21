@@ -204,7 +204,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void openAddExpensePane(MouseEvent event) {
+    private void openAddExpensePane(ActionEvent event) {
         try {
             StackPane addExpensePane = FXMLLoader.load(getClass().getResource("/view/AddExpense.fxml"));
             addExpense.getScene().setRoot(addExpensePane);

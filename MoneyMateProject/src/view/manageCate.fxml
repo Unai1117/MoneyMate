@@ -12,7 +12,6 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <StackPane prefHeight="622.0" prefWidth="721.0" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.manageCateController">
    <children>
       <VBox prefHeight="622.0" prefWidth="954.0">
@@ -55,7 +54,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openInputOverlay" prefWidth="60.0" style="-fx-background-radius: 100%; -fx-pref-height: 75px; -fx-pref-width: 75px;" styleClass="button-accent">
+            <Button fx:id="newButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openInputOverlay" prefWidth="60.0" style="-fx-background-radius: 100%; -fx-pref-height: 75px; -fx-pref-width: 75px;" styleClass="button-accent">
                <graphic>
                   <ImageView>
                      <image>
