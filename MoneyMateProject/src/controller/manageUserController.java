@@ -202,7 +202,7 @@ public class manageUserController implements Initializable {
                 password2.setText("");
             }
         }
-        if (scanedImage != user.getImage()){
+        if (scanedImage != user.getImage() && scanedImage != null){
             user.setImage(scanedImage);
         }
         changedSaved.setVisible(true);
