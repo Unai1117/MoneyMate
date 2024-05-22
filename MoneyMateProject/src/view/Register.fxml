@@ -14,7 +14,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="regPane" prefHeight="919.0" prefWidth="822.0" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
+<VBox fx:id="regPane" prefHeight="919.0" prefWidth="838.0" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0" styleClass="header">
          <children>
@@ -55,22 +55,26 @@
                         </StackPane>
                         <VBox prefHeight="25.0" prefWidth="332.0" styleClass="input-component">
                            <children>
-                              <Label fx:id="nameLabel" text="Name*" />
-                              <TextField fx:id="nname" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
-                           </children>
-                        </VBox>
-                        <VBox prefHeight="25.0" prefWidth="332.0" styleClass="input-component">
-                           <children>
-                              <Label fx:id="surnameLabel" text="Surname*" />
-                              <TextField fx:id="ssurname" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
-                           </children>
-                        </VBox>
-                        <VBox prefHeight="25.0" prefWidth="332.0" styleClass="input-component">
-                           <children>
                               <Label fx:id="nicknameLabel" text="Nickname*" />
                               <TextField fx:id="nnickname" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
                            </children>
                         </VBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                           <children>
+                              <VBox prefHeight="25.0" prefWidth="332.0" styleClass="input-component">
+                                 <children>
+                                    <Label fx:id="nameLabel" text="Name*" />
+                                    <TextField fx:id="nname" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
+                                 </children>
+                              </VBox>
+                              <VBox prefHeight="25.0" prefWidth="332.0" styleClass="input-component">
+                                 <children>
+                                    <Label fx:id="surnameLabel" text="Surname*" />
+                                    <TextField fx:id="ssurname" minHeight="26.0" minWidth="150.0" prefHeight="26.0" prefWidth="350.0" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
                         <VBox prefHeight="25.0" prefWidth="332.0" styleClass="input-component">
                            <children>
                               <Label fx:id="emailLabel" text="Email*" />
