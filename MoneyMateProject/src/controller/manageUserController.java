@@ -207,6 +207,13 @@ public class manageUserController implements Initializable {
         }
         changedSaved.setVisible(true);
         
+        try {
+            Pane mainPane = FXMLLoader.load(getClass().getResource("/view/Main.fxml"));
+            regPane.getScene().setRoot(mainPane);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
     } 
     
     @FXML
