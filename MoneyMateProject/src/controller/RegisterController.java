@@ -135,7 +135,7 @@ public class RegisterController implements Initializable {
         equalPasswords = new SimpleBooleanProperty();
         equalPasswords.setValue(Boolean.FALSE);
 
-        BooleanBinding validFields = Bindings.and(validEmail, validPassword).and(equalPasswords);
+        //BooleanBinding validFields = Bindings.and(validEmail, validPassword).and(equalPasswords);
 
         //register.disableProperty().bind(Bindings.not(validFields));
         stackPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));
@@ -150,7 +150,9 @@ public class RegisterController implements Initializable {
         checknickname();
         checkemail();
         checkpasswords();
+        if ((Objects.equals(validEmail.getValue(), Boolean.TRUE))) System.out.println("works");
         if ((Objects.equals(validName.getValue(), Boolean.TRUE)) && (Objects.equals(validSurname.getValue(), Boolean.TRUE)) && (Objects.equals(validNickname.getValue(), Boolean.TRUE)) && (Objects.equals(validEmail.getValue(), Boolean.TRUE)) && (Objects.equals(validPassword.getValue(), Boolean.TRUE))) {
+            
             String name = nname.textProperty().getValueSafe();
             String surname = ssurname.textProperty().getValueSafe();
             String email = eemail.textProperty().getValueSafe();
@@ -228,7 +230,7 @@ public class RegisterController implements Initializable {
             nicknameLabel.getStyleClass().remove("destructive-label");
             nnickname.getStyleClass().remove("destructive-input");
             nicknameLabel.setText("Nickname*");
-            validName.setValue(Boolean.TRUE);
+            validNickname.setValue(Boolean.TRUE);
         } else {
             nicknameLabel.setText("Nickname* - Invalid Nickname!");
             nnickname.getStyleClass().add("destructive-input");
@@ -242,7 +244,7 @@ public class RegisterController implements Initializable {
             emailLabel.getStyleClass().remove("destructive-label");
             eemail.getStyleClass().remove("destructive-input");
             emailLabel.setText("Email*");
-            validName.setValue(Boolean.TRUE);
+            validEmail.setValue(Boolean.TRUE);
         } else {
             emailLabel.setText("Email* - Invalid Email!");
             emailLabel.getStyleClass().add("destructive-label");
