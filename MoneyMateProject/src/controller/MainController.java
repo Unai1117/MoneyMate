@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -29,6 +30,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
@@ -292,13 +295,19 @@ public class MainController implements Initializable {
 
     @FXML
     private void logOut(ActionEvent event) throws AcountDAOException, IOException {
-        Acount.getInstance().logOutUser();
-        try {
-            StackPane logIn = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-            addExpense.getScene().setRoot(logIn);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Log out confirmation");
+                alert.setContentText("Are you sure you want to Log out?");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    Acount.getInstance().logOutUser();
+                    try {
+                        StackPane logIn = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
+                        addExpense.getScene().setRoot(logIn);
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                }
     }
 
     private void computeChartData(String mode) {
