@@ -244,7 +244,7 @@ public class manageUserController implements Initializable {
             emailLabel.getStyleClass().remove("destructive-label");
             eemail1.getStyleClass().remove("destructive-input");
             emailLabel.setText("Email");
-            validName.setValue(Boolean.TRUE);
+            validEmail.setValue(Boolean.TRUE);
         } else {
             emailLabel.setText("Email - Invalid Email!");
             emailLabel.getStyleClass().add("destructive-label");
