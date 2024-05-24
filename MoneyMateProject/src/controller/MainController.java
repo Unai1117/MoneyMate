@@ -307,7 +307,6 @@ public class MainController implements Initializable {
             // Generates a Category - Charges map
             userCharges = Acount.getInstance().getUserCharges();
             userCategories = Acount.getInstance().getUserCategories();
-            //List<String> chartColors = new ArrayList<>();
             Map<Category, List<Charge>> map = new HashMap();
             LocalDate currentDate = LocalDate.now();
             for (int i = 0; i < userCharges.size(); i++) {

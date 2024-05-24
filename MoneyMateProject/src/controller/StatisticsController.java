@@ -7,11 +7,13 @@ package controller;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -51,6 +53,10 @@ public class StatisticsController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        LocalDate currentDate = LocalDate.now();
+        lineChart.setCreateSymbols(false);
+        String style = "";
+        int styleIndex = 1;
         try {
             userCharges = Acount.getInstance().getUserCharges();
             userCategories = Acount.getInstance().getUserCategories();
@@ -72,6 +78,40 @@ public class StatisticsController implements Initializable {
             }
 
             for (Category key : map.keySet()) {
+                XYChart.Series series = new XYChart.Series();
+                series.setName(key.getName().split("\\|")[0]);
+                List<Charge> chargeList = map.get(key);
+
+                Map<String, Double> monthMap = new HashMap();
+
+                for (Charge categoryCharge : chargeList) {
+                    LocalDate date = categoryCharge.getDate();
+
+                    if (date.getYear() == currentDate.getYear()) {
+                        if (monthMap.containsKey(date.getMonth().toString())) {
+                            monthMap.put(date.getMonth().toString(), monthMap.remove(date.getMonth().toString()) + categoryCharge.getCost() * categoryCharge.getUnits());
+                        } else {
+                            monthMap.put(date.getMonth().toString(), categoryCharge.getCost() * categoryCharge.getUnits());
+                        }
+                    }
+                }
+
+                for (Month month : Month.values()) {
+                    if (month.getValue() > currentDate.getMonthValue()) {
+                        break;
+                    }
+                    String monthString = month.toString();
+                    double money = monthMap.containsKey(monthString) ? monthMap.get(monthString) : 0.0;
+                    series.getData().add(new XYChart.Data(monthString, money));
+                }
+
+                lineChart.getData().add(series);
+                style = style + "CHART_COLOR_" + styleIndex + ": " + key.getName().split("\\|")[1].replace("0x", "#") + ";";
+            }
+
+            lineChart.setStyle(style);
+
+            /*for (Category key : map.keySet()) {
 
                 XYChart.Series series = new XYChart.Series();
                 series.setName(key.getName().split("\\|")[0]);
@@ -79,15 +119,26 @@ public class StatisticsController implements Initializable {
                 List<Charge> chargeList = map.get(key);
                 Map<String, Double> auxMap = new HashMap();
 
-                for (Charge charge : chargeList) {
-                    series.getData().add(new XYChart.Data(charge.getDate().getMonth().toString() + charge.getDate().getYear(), charge.getCost() * charge.getUnits()));
-                    
+                TreeMap<LocalDate, List<Charge>> sortedCharges = new TreeMap<>();
+
+                for (Charge userCharge : chargeList) {
+                    sortedCharges.computeIfAbsent(userCharge.getDate(), k -> new ArrayList<>()).add(userCharge);
                 }
                 
+
+                for (Map.Entry<LocalDate, List<Charge>> entry : sortedCharges.entrySet()) {
+                    List<Charge> chargesOnDate = entry.getValue();
+                    // We add the sorted charges to the layout
+                    for (Charge sortedCharge : chargesOnDate) {
+                        series.getData().add(new XYChart.Data(sortedCharge.getDate().getYear() + sortedCharge.getDate().getMonth().toString(), sortedCharge.getCost() * sortedCharge.getUnits()));
+
+                    }
+                }
+
                 lineChart.getData().add(series);
             }
 
-            /*List<String> chartColors = new ArrayList<>();
+            List<String> chartColors = new ArrayList<>();
 
             Map<String, List<Charge>> map = new HashMap();
             for (int i = 0; i < userCharges.size(); i++) {

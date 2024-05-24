@@ -293,3 +293,7 @@
 .date-picker-popup  > .month-year-pane{
     -fx-background-color: -fx-p;
 }
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
