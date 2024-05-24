@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -159,10 +160,19 @@ public class MainController implements Initializable {
                 sortedCharges.computeIfAbsent(userCharge.getDate(), k -> new ArrayList<>()).add(userCharge);
             }
 
+            int currentYear = 0;
+            String currentMonth = "";
+
             for (Map.Entry<LocalDate, List<Charge>> entry : sortedCharges.entrySet()) {
                 List<Charge> chargesOnDate = entry.getValue();
                 // We add the sorted charges to the layout
                 for (Charge sortedCharge : chargesOnDate) {
+                    if (currentYear != sortedCharge.getDate().getYear() || !currentMonth.equals(sortedCharge.getDate().getMonth().toString())) {
+                        Label yearLabel = new Label(sortedCharge.getDate().getYear() + " - " + sortedCharge.getDate().getMonth().toString());
+                        chargesList.getChildren().add(yearLabel);
+                    }
+                    currentYear = sortedCharge.getDate().getYear();
+                    currentMonth = sortedCharge.getDate().getMonth().toString();
                     FXMLLoader fxmlLoader = new FXMLLoader();
                     fxmlLoader.setLocation(getClass().getResource("/view/ChargeItem.fxml"));
 
@@ -172,6 +182,10 @@ public class MainController implements Initializable {
                         cic.setData(sortedCharge);
                         // callback function to remove an item
                         cic.setOnRemove(() -> {
+                            int itemIndex = chargesList.getChildren().indexOf(item);
+                            if (chargesList.getChildren().get(itemIndex - 1).getClass().getSimpleName().equals("Label") && (itemIndex == chargesList.getChildren().size() - 1 || "Label".equals(chargesList.getChildren().get(itemIndex + 1).getClass().getSimpleName()))) {
+                                chargesList.getChildren().remove(itemIndex - 1);
+                            }
                             chargesList.getChildren().remove(item);
                             computeChartData(chartDisplayMode.getSelectionModel().getSelectedItem());
 
