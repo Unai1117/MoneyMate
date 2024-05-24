@@ -14,7 +14,6 @@ import javafx.scene.layout.Pane;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,12 +23,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.ChoiceBox;
@@ -39,9 +35,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -221,6 +215,16 @@ public class MainController implements Initializable {
     private void openAddExpensePane(ActionEvent event) {
         try {
             StackPane addExpensePane = FXMLLoader.load(getClass().getResource("/view/AddExpense.fxml"));
+            addExpense.getScene().setRoot(addExpensePane);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+    }
+
+    @FXML
+    private void openStatisticsPane(ActionEvent event) {
+        try {
+            VBox addExpensePane = FXMLLoader.load(getClass().getResource("/view/Statistics.fxml"));
             addExpense.getScene().setRoot(addExpensePane);
         } catch (IOException e) {
             System.out.println(e);

@@ -285,3 +285,11 @@
 .button-accent:focused {
     -fx-background-color: -fx-accentf;
 }
+
+.chart-legend {
+    -fx-background-color: transparent;
+}
+
+.date-picker-popup  > .month-year-pane{
+    -fx-background-color: -fx-p;
+}

@@ -69,7 +69,7 @@
                                                         </ImageView>
                                                     </graphic>
                                                 </Button>
-                                    <Button fx:id="addExpense1" alignment="CENTER" mnemonicParsing="false" prefHeight="60.0" prefWidth="1000.0" styleClass="button-secondary" text="Statistics" GridPane.columnIndex="1">
+                                    <Button fx:id="addExpense1" alignment="CENTER" mnemonicParsing="false" onAction="#openStatisticsPane" prefHeight="60.0" prefWidth="1000.0" styleClass="button-secondary" text="Statistics" GridPane.columnIndex="1">
                                        <graphic>
                                           <ImageView preserveRatio="true">
                                              <image>
