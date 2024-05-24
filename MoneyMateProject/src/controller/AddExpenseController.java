@@ -129,11 +129,6 @@ public class AddExpenseController implements Initializable {
             BooleanProperty categorySelected = new SimpleBooleanProperty();
             BooleanProperty dateSelected = new SimpleBooleanProperty();
 
-            doneButton.disableProperty().bind(nameField.textProperty().isEmpty());
-            doneButton.disableProperty().bind(descriptionField.textProperty().isEmpty());
-            doneButton.disableProperty().bind(costField.textProperty().isEmpty());
-            doneButton.disableProperty().bind(unitsField.textProperty().isEmpty());
-
             categoryMenu.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
                 categorySelected.set(newVal != null);
             });
@@ -142,10 +137,14 @@ public class AddExpenseController implements Initializable {
                 dateSelected.set(newVal != null);
             });
 
-            doneButton.disableProperty().bind(Bindings.createBooleanBinding(()
-                    -> !categorySelected.get() || !dateSelected.get(),
-                    categorySelected, dateSelected
-            ));
+            doneButton.disableProperty().bind(
+                    nameField.textProperty().isEmpty()
+                            .or(descriptionField.textProperty().isEmpty())
+                            .or(costField.textProperty().isEmpty())
+                            .or(unitsField.textProperty().isEmpty())
+                            .or(categorySelected.not())
+                            .or(dateSelected.not())
+            );
         } catch (Exception e) {
             System.out.println(e);
         }

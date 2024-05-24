@@ -160,6 +160,7 @@ public class manageCateController implements Initializable {
                         }
                     }
                     categoriesListView.getItems().remove(categoriesListView.getSelectionModel().getSelectedItem());
+                    categoriesListView.getSelectionModel().select(-1);
                 }
             }
         } catch (Exception e) {
