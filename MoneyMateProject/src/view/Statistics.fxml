@@ -11,11 +11,11 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox fx:id="statisticsMain" prefHeight="684.0" prefWidth="874.0" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.StatisticsController">
+<VBox fx:id="statisticsMain" prefHeight="684.0" prefWidth="875.0" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.StatisticsController">
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0" styleClass="header">
          <children>
@@ -31,9 +31,9 @@
             <Label text="Statistics" />
          </children>
       </HBox>
-      <ScrollPane prefHeight="474.0" prefWidth="617.0" VBox.vgrow="ALWAYS">
+      <ScrollPane fx:id="scrollPane" prefHeight="474.0" prefWidth="617.0" VBox.vgrow="ALWAYS">
          <content>
-            <FlowPane hgap="20.0" prefHeight="625.0" prefWidth="843.0" vgap="20.0">
+            <FlowPane fx:id="flowPane" hgap="20.0" prefHeight="625.0" prefWidth="843.0" style="-fx-background-color: #222831;" stylesheets="@../styles/main.css" vgap="20.0">
                <children>
                   <LineChart fx:id="lineChart" prefHeight="405.0" prefWidth="515.0">
                     <xAxis>
@@ -43,23 +43,29 @@
                       <NumberAxis side="LEFT" tickLabelFill="#eeeeee" />
                     </yAxis>
                   </LineChart>
-                  <VBox prefHeight="405.0" prefWidth="242.0" spacing="10.0" style="-fx-background-color: #31363F; -fx-background-radius: 10px;">
+                  <VBox spacing="10.0" style="-fx-background-color: #31363F; -fx-background-radius: 10px;">
                      <children>
-                        <Label text="Total expense: 1234 €">
+                        <Label fx:id="totalExpense" text="Total expense: 1234 €">
                            <font>
                               <Font size="17.0" />
                            </font>
                         </Label>
-                        <Label layoutX="30.0" layoutY="30.0" text="This month: 123 €">
+                        <Label fx:id="yearlyExpense" layoutX="30.0" layoutY="64.0" text="This year: 1234 €">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <Label layoutX="30.0" layoutY="64.0" text="This year: 1234 €">
+                        <Label fx:id="monthlyExpense" layoutX="30.0" layoutY="30.0" text="This month: 123 €">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Label>
+                        <Region prefHeight="200.0" />
+                        <HBox prefWidth="200.0">
+                           <children>
+                              <Button fx:id="printButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#print" styleClass="button-accent" text="Print Report" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
                      </children>
                      <padding>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

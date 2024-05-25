@@ -22,11 +22,20 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.print.PrinterJob;
+import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import model.Acount;
 import model.AcountDAOException;
 import model.Category;
@@ -43,21 +52,41 @@ public class StatisticsController implements Initializable {
     private VBox statisticsMain;
     @FXML
     private LineChart lineChart;
+    @FXML
+    private FlowPane flowPane;
+    @FXML
+    private ScrollPane scrollPane;
+
+    @FXML
+    private Label totalExpense;
+    @FXML
+    private Label monthlyExpense;
+    @FXML
+    private Label yearlyExpense;
+
+    @FXML
+    private Button printButton;
 
     private List<Charge> userCharges;
     private List<Category> userCategories;
     private double totalMoney;
+    private double monthlyTotal;
+    private double yearlyTotal;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        flowPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));
+
         LocalDate currentDate = LocalDate.now();
         lineChart.setCreateSymbols(false);
         String style = "";
         int styleIndex = 1;
         try {
+
             userCharges = Acount.getInstance().getUserCharges();
             userCategories = Acount.getInstance().getUserCategories();
 
@@ -65,7 +94,17 @@ public class StatisticsController implements Initializable {
             for (int i = 0; i < userCharges.size(); i++) {
                 Charge charge = userCharges.get(i);
                 totalMoney += charge.getCost() * charge.getUnits();
+
+                if (charge.getDate().getYear() == currentDate.getYear()) {
+                    yearlyTotal += charge.getCost() * charge.getUnits();
+
+                    if (charge.getDate().getMonthValue() == currentDate.getMonthValue()) {
+                        monthlyTotal += charge.getCost() * charge.getUnits();
+                    }
+                }
+
                 Category category = charge.getCategory();
+
                 if (map.containsKey(category)) {
                     List<Charge> aux = map.remove(category);
                     aux.add(charge);
@@ -76,6 +115,10 @@ public class StatisticsController implements Initializable {
                     map.put(category, aux);
                 }
             }
+
+            totalExpense.setText("Total expense: " + totalMoney + " €");
+            yearlyExpense.setText("This year: " + yearlyTotal + " €");
+            monthlyExpense.setText("This month: " + monthlyTotal + " €");
 
             for (Category key : map.keySet()) {
                 XYChart.Series series = new XYChart.Series();
@@ -110,68 +153,6 @@ public class StatisticsController implements Initializable {
             }
 
             lineChart.setStyle(style);
-
-            /*for (Category key : map.keySet()) {
-
-                XYChart.Series series = new XYChart.Series();
-                series.setName(key.getName().split("\\|")[0]);
-
-                List<Charge> chargeList = map.get(key);
-                Map<String, Double> auxMap = new HashMap();
-
-                TreeMap<LocalDate, List<Charge>> sortedCharges = new TreeMap<>();
-
-                for (Charge userCharge : chargeList) {
-                    sortedCharges.computeIfAbsent(userCharge.getDate(), k -> new ArrayList<>()).add(userCharge);
-                }
-                
-
-                for (Map.Entry<LocalDate, List<Charge>> entry : sortedCharges.entrySet()) {
-                    List<Charge> chargesOnDate = entry.getValue();
-                    // We add the sorted charges to the layout
-                    for (Charge sortedCharge : chargesOnDate) {
-                        series.getData().add(new XYChart.Data(sortedCharge.getDate().getYear() + sortedCharge.getDate().getMonth().toString(), sortedCharge.getCost() * sortedCharge.getUnits()));
-
-                    }
-                }
-
-                lineChart.getData().add(series);
-            }
-
-            List<String> chartColors = new ArrayList<>();
-
-            Map<String, List<Charge>> map = new HashMap();
-            for (int i = 0; i < userCharges.size(); i++) {
-                Charge charge = userCharges.get(i);
-                totalMoney += charge.getCost() * charge.getUnits();
-                Category category = charge.getCategory();
-                String key = category.getName() + "|" + charge.getDate().getYear() + charge.getDate().getMonth();
-                if (map.containsKey(key)) {
-                    List<Charge> aux = map.remove(key);
-                    aux.add(charge);
-                    map.put(key, aux);
-                } else {
-                    List<Charge> aux = new ArrayList();
-                    aux.add(charge);
-                    map.put(key, aux);
-                }
-            }
-
-            for (String key : map.keySet()) {
-                double categoryTotal = 0;
-                List<Charge> charges = map.get(key);
-                for (int i = 0; i < charges.size(); i++) {
-                    categoryTotal += charges.get(i).getCost() * charges.get(i).getUnits();
-                }
-
-                chartColors.add(key.split("\\|")[1]);
-                userCategoriesData.add(new LineChart.Data(key.split("\\|")[0], categoryTotal, key.split("\\|")[2]));
-
-            }
-            
-            System.out.println(userCategoriesData);
-
-            lineChart.setData(userCategoriesData); */
         } catch (AcountDAOException | IOException ex) {
             Logger.getLogger(StatisticsController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -184,6 +165,32 @@ public class StatisticsController implements Initializable {
             statisticsMain.getScene().setRoot(addExpensePane);
         } catch (IOException e) {
             System.out.println(e);
+        }
+    }
+
+    @FXML
+    private void print(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("/view/Print.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 600, 600);
+            Stage stage = new Stage();
+            stage.setTitle("MoneyMate - Print");
+            stage.setMinHeight(600);
+            stage.setMinWidth(600);
+            stage.setScene(scene);
+            flowPane.prefWidthProperty().bind(scrollPane.widthProperty().add(400));
+            printButton.setVisible(false);
+            WritableImage image = flowPane.snapshot(new SnapshotParameters(), null);
+            flowPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));
+            printButton.setVisible(true);
+
+            PrintController pc = fxmlLoader.getController();
+            pc.setImage(image);
+            stage.showAndWait();
+
+        } catch (IOException ex) {
+            Logger.getLogger(StatisticsController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
