@@ -9,10 +9,13 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +32,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.WritableImage;
@@ -67,6 +71,9 @@ public class StatisticsController implements Initializable {
     @FXML
     private Button printButton;
 
+    @FXML
+    private ChoiceBox<String> mode;
+
     private List<Charge> userCharges;
     private List<Category> userCategories;
     private double totalMoney;
@@ -78,11 +85,27 @@ public class StatisticsController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        mode.getItems().addAll("All", "Year");
+        mode.getSelectionModel().selectFirst();
         flowPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));
 
-        LocalDate currentDate = LocalDate.now();
         lineChart.setCreateSymbols(false);
+        lineChart.setAnimated(false);
+        computeChart("All");
+
+        mode.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                computeChart(newVal);
+            }
+        });
+    }
+
+    private void computeChart(String mode) {
+        totalMoney = 0;
+        yearlyTotal = 0;
+        monthlyTotal = 0;
+        LocalDate currentDate = LocalDate.now();
+        lineChart.getData().clear();
         String style = "";
         int styleIndex = 1;
         try {
@@ -91,10 +114,13 @@ public class StatisticsController implements Initializable {
             userCategories = Acount.getInstance().getUserCategories();
 
             Map<Category, List<Charge>> map = new HashMap();
+
+            Set<Integer> years = new HashSet();
+
             for (int i = 0; i < userCharges.size(); i++) {
                 Charge charge = userCharges.get(i);
                 totalMoney += charge.getCost() * charge.getUnits();
-
+                years.add(charge.getDate().getYear());
                 if (charge.getDate().getYear() == currentDate.getYear()) {
                     yearlyTotal += charge.getCost() * charge.getUnits();
 
@@ -130,32 +156,59 @@ public class StatisticsController implements Initializable {
                 for (Charge categoryCharge : chargeList) {
                     LocalDate date = categoryCharge.getDate();
 
-                    if (date.getYear() == currentDate.getYear()) {
+                    if (mode.equals("All")) {
+                        if (monthMap.containsKey(date.getYear() + " - " + date.getMonth().toString())) {
+                            monthMap.put(date.getYear() + " - " + date.getMonth().toString(), monthMap.remove(date.getMonth().toString()) + categoryCharge.getCost() * categoryCharge.getUnits());
+                        } else {
+                            monthMap.put(date.getYear() + " - " + date.getMonth().toString(), categoryCharge.getCost() * categoryCharge.getUnits());
+                        }
+                    } else if (mode.equals("Year") && date.getYear() == currentDate.getYear()) {
                         if (monthMap.containsKey(date.getMonth().toString())) {
                             monthMap.put(date.getMonth().toString(), monthMap.remove(date.getMonth().toString()) + categoryCharge.getCost() * categoryCharge.getUnits());
                         } else {
                             monthMap.put(date.getMonth().toString(), categoryCharge.getCost() * categoryCharge.getUnits());
                         }
                     }
+
                 }
 
-                for (Month month : Month.values()) {
-                    if (month.getValue() > currentDate.getMonthValue()) {
-                        break;
+                List<Integer> sortedYears = new ArrayList<>(years);
+                Collections.sort(sortedYears);
+
+                if (mode.equals("Year")) {
+                    for (Month month : Month.values()) {
+                        if (month.getValue() > currentDate.getMonthValue()) {
+                            break;
+                        }
+                        String monthString = month.toString();
+                        double money = monthMap.containsKey(monthString) ? monthMap.get(monthString) : 0.0;
+                        series.getData().add(new XYChart.Data(monthString, money));
                     }
-                    String monthString = month.toString();
-                    double money = monthMap.containsKey(monthString) ? monthMap.get(monthString) : 0.0;
-                    series.getData().add(new XYChart.Data(monthString, money));
+                } else {
+                    for (int year : sortedYears) {
+                        for (Month month : Month.values()) {
+                            if (year == currentDate.getYear() && month.getValue() > currentDate.getMonthValue()) {
+                                break;
+                            }
+                            String monthString = month.toString();
+                            double money = monthMap.containsKey(year + " - " + monthString) ? monthMap.get(year + " - " + monthString) : 0.0;
+                            series.getData().add(new XYChart.Data(year + " - " + monthString, money));
+                        }
+                    }
                 }
 
                 lineChart.getData().add(series);
                 style = style + "CHART_COLOR_" + styleIndex + ": " + key.getName().split("\\|")[1].replace("0x", "#") + ";";
+                styleIndex++;
+
             }
 
             lineChart.setStyle(style);
+            
         } catch (AcountDAOException | IOException ex) {
             Logger.getLogger(StatisticsController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
 
     @FXML
@@ -181,9 +234,11 @@ public class StatisticsController implements Initializable {
             stage.setScene(scene);
             flowPane.prefWidthProperty().bind(scrollPane.widthProperty().add(400));
             printButton.setVisible(false);
+            mode.setVisible(false);
             WritableImage image = flowPane.snapshot(new SnapshotParameters(), null);
             flowPane.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));
             printButton.setVisible(true);
+            mode.setVisible(true);
 
             PrintController pc = fxmlLoader.getController();
             pc.setImage(image);

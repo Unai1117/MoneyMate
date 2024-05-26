@@ -12,6 +12,8 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -48,6 +50,12 @@ public class PrintController implements Initializable {
 
     @FXML
     private void print(ActionEvent event) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Print Job");
+        alert.setHeaderText("Printing started.");
+        alert.setContentText("The printing job has started in the nearest available printer.");
+        alert.showAndWait();
+        
         Stage stage = (Stage) image.getScene().getWindow();
         stage.close();
 
