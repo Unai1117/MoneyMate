@@ -32,11 +32,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import model.*;
 
-/**
- * FXML Controller class
- *
- * @author arnau
- */
 public class RegisterController implements Initializable {
 
     @FXML

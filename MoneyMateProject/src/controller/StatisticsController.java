@@ -45,11 +45,7 @@ import model.AcountDAOException;
 import model.Category;
 import model.Charge;
 
-/**
- * FXML Controller class
- *
- * @author jorge
- */
+
 public class StatisticsController implements Initializable {
 
     @FXML

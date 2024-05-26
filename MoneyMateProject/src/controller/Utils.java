@@ -11,10 +11,6 @@ import java.util.regex.Pattern;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 
-/**
- *
- * @author arnau
- */
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -22,8 +18,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 public class Utils {
 
     /**
-     * A password is considered valid if follows an accepted email syntax:
-     * name@domain.com
+     * 
      *
      * @param email String which contains the email to check
      * @return True if the email is valid. False otherwise.
@@ -43,8 +38,7 @@ public class Utils {
 
     /**
      *
-     * A password is considered valid if it is combination of 8 to 15 numbers or
-     * letters, without blank spaces.
+     * 
      *
      * @param password String which contains the password to check
      * @return True if the password is valid. False otherwise.

@@ -50,11 +50,6 @@ import javafx.util.Duration;
 import javafx.util.Pair;
 import model.*;
 
-/**
- * FXML Controller class
- *
- * @author jorge
- */
 public class MainController implements Initializable {
 
     @FXML

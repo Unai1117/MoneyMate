@@ -26,11 +26,6 @@ import javafx.scene.layout.StackPane;
 import model.Acount;
 import model.AcountDAOException;
 
-/**
- * FXML Controller class
- *
- * @author arnau
- */
 public class LoginController implements Initializable {
 
     @FXML

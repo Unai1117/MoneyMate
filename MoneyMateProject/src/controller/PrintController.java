@@ -20,11 +20,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
 
-/**
- * FXML Controller class
- *
- * @author jorge
- */
 public class PrintController implements Initializable {
 
     @FXML

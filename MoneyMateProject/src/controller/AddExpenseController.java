@@ -47,11 +47,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-/**
- * FXML Controller class
- *
- * @author unai
- */
+
 public class AddExpenseController implements Initializable {
 
     @FXML

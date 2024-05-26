@@ -30,11 +30,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-/**
- * FXML Controller class
- *
- * @author unai
- */
 public class manageCateController implements Initializable {
 
     @FXML
