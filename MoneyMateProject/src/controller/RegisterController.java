@@ -86,7 +86,6 @@ public class RegisterController implements Initializable {
     private BooleanProperty validNickname = new SimpleBooleanProperty(false);
     private BooleanProperty validEmail = new SimpleBooleanProperty(false);
     private BooleanProperty validPassword = new SimpleBooleanProperty(false);
-    private BooleanProperty equalPasswords = new SimpleBooleanProperty(false);
 
     private final int EQUALS = 0;
 
@@ -155,7 +154,7 @@ public class RegisterController implements Initializable {
         checknickname();
         checkemail();
         checkpasswords();
-        if ((Objects.equals(validName.getValue(), Boolean.TRUE)) && (Objects.equals(validSurname.getValue(), Boolean.TRUE)) && (Objects.equals(validNickname.getValue(), Boolean.TRUE)) && (Objects.equals(validEmail.getValue(), Boolean.TRUE)) && (Objects.equals(validPassword.getValue(), Boolean.TRUE))) {
+        if (validName.getValue() && validSurname.getValue() && validNickname.getValue() && validEmail.getValue() && validPassword.getValue()) {
 
             String name = nname.textProperty().getValueSafe();
             String surname = ssurname.textProperty().getValueSafe();
@@ -203,56 +202,67 @@ public class RegisterController implements Initializable {
     @FXML
     private void checkname() {
         if (!nname.textProperty().getValueSafe().isEmpty()) {
-            nameLabel.getStyleClass().remove("destructive-label");
-            nname.getStyleClass().remove("destructive-input");
+            nameLabel.setStyle("-fx-text-fill: #eeeeee");
+            nname.setStyle("");
             nameLabel.setText("Name*");
-            validName.setValue(Boolean.TRUE);
+            validName.setValue(true);
         } else {
             nameLabel.setText("Name* - Invalid Name!");
-            nameLabel.getStyleClass().add("destructive-label");
-            nname.getStyleClass().add("destructive-input");
+            nameLabel.setStyle("-fx-text-fill: #ed0c2a");
+            nname.setStyle("-fx-border-color: -fx-destructive !important;\n"
+                    + "    -fx-border-width: 1px !important;");
+            validName.setValue(false);
+
         }
     }
 
     @FXML
     private void checksurname() {
         if (!ssurname.textProperty().getValueSafe().isEmpty()) {
-            surnameLabel.getStyleClass().remove("destructive-label");
-            ssurname.getStyleClass().remove("destructive-input");
+            surnameLabel.setStyle("-fx-text-fill: #eeeeee");
+            ssurname.setStyle("");
             surnameLabel.setText("Surname*");
-            validSurname.setValue(Boolean.TRUE);
+            validSurname.setValue(true);
         } else {
             surnameLabel.setText("Surname* - Invalid Surname!");
-            surnameLabel.getStyleClass().add("destructive-label");
-            ssurname.getStyleClass().add("destructive-input");
+            surnameLabel.setStyle("-fx-text-fill: #ed0c2a");
+            ssurname.setStyle("-fx-border-color: -fx-destructive !important;\n"
+                    + "    -fx-border-width: 1px !important;");
+            validSurname.setValue(false);
+
         }
     }
 
     @FXML
     private void checknickname() {
         if (User.checkNickName(nnickname.textProperty().getValueSafe())) {
-            nicknameLabel.getStyleClass().remove("destructive-label");
-            nnickname.getStyleClass().remove("destructive-input");
+            nicknameLabel.setStyle("-fx-text-fill: #eeeeee");
+            nnickname.setStyle("");
             nicknameLabel.setText("Nickname*");
-            validNickname.setValue(Boolean.TRUE);
+            validNickname.setValue(true);
         } else {
             nicknameLabel.setText("Nickname* - Invalid Nickname!");
-            nnickname.getStyleClass().add("destructive-input");
-            nicknameLabel.getStyleClass().add("destructive-label");
+            nnickname.setStyle("-fx-border-color: -fx-destructive !important;\n"
+                    + "    -fx-border-width: 1px !important;");
+            nicknameLabel.setStyle("-fx-text-fill: #ed0c2a");
+            validNickname.setValue(false);
+
         }
     }
 
     @FXML
     private void checkemail() {
         if (User.checkEmail(eemail.textProperty().getValueSafe())) {
-            emailLabel.getStyleClass().remove("destructive-label");
-            eemail.getStyleClass().remove("destructive-input");
+            emailLabel.setStyle("-fx-text-fill: #eeeeee");
+            eemail.setStyle("");
             emailLabel.setText("Email*");
-            validEmail.setValue(Boolean.TRUE);
+            validEmail.setValue(true);
         } else {
             emailLabel.setText("Email* - Invalid Email!");
-            emailLabel.getStyleClass().add("destructive-label");
-            eemail.getStyleClass().add("destructive-input");
+            emailLabel.setStyle("-fx-text-fill: #ed0c2a");
+            eemail.setStyle("-fx-border-color: -fx-destructive !important;\n"
+                    + "    -fx-border-width: 1px !important;");
+            validEmail.setValue(false);
         }
     }
 
@@ -260,27 +270,31 @@ public class RegisterController implements Initializable {
     private void checkpasswords() {
         if (!User.checkPassword(password1.textProperty().getValueSafe())) {
             password1Label.setText("Password* - Invalid Password!");
-            password1Label.getStyleClass().add("destructive-label");
-            password2Label.getStyleClass().add("destructive-label");
-            password1.getStyleClass().add("destructive-input");
-            password2.getStyleClass().add("destructive-input");
+            password2Label.setText("Confirm Password*");
+            password1Label.setStyle("-fx-text-fill: #ed0c2a");
+            password2Label.setStyle("-fx-text-fill: #ed0c2a");
+            password1.setStyle("-fx-border-color: -fx-destructive !important;\n"
+                    + "    -fx-border-width: 1px !important;");
+            password2.setStyle("-fx-border-color: -fx-destructive !important;\n"
+                    + "    -fx-border-width: 1px !important;");
+            validPassword.setValue(false);
+
         } else {
             password1Label.setText("Password*");
-            password1Label.getStyleClass().remove("destructive-label");
-            password2Label.getStyleClass().remove("destructive-label");
-            password1.getStyleClass().remove("destructive-input");
-            password2.getStyleClass().remove("destructive-input");
             if (!password1.textProperty().getValueSafe().equals(password2.textProperty().getValueSafe())) {
                 password2Label.setText("Confirm Password* - Passwords don't match!");
-                password2Label.getStyleClass().add("destructive-label");
-                password2.getStyleClass().add("destructive-input");
+                password2Label.setStyle("-fx-text-fill: #ed0c2a");
+                password2.setStyle("-fx-border-color: -fx-destructive !important;\n"
+                    + "    -fx-border-width: 1px !important;");
+                validPassword.setValue(false);
+
             } else {
                 password2Label.setText("Confirm Password*");
-                password1Label.getStyleClass().remove("destructive-label");
-                password2Label.getStyleClass().remove("destructive-label");
-                password1.getStyleClass().remove("destructive-input");
-                password2.getStyleClass().remove("destructive-input");
-                validPassword.setValue(Boolean.TRUE);
+                password1Label.setStyle("-fx-text-fill: #eeeeee");
+                password2Label.setStyle("-fx-text-fill: #eeeeee");
+                password1.setStyle("");
+                password2.setStyle("");
+                validPassword.setValue(true);
 
             }
         }
